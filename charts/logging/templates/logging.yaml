@@ -1,0 +1,31 @@
+apiVersion: logging.openshift.io/v1
+kind: ClusterLogging
+metadata:
+  name: instance
+  namespace: "{{ .Values.logging_namespace }}"
+spec:
+  collection:
+    type: fluentd
+  logStore:
+    elasticsearch:
+      nodeCount: 3
+      redundancyPolicy: MultipleRedundancy
+      resources:
+        requests:
+          memory: 2Gi
+      storage:
+        size: {{ .Values.elastic.pvc.size }} 
+        {{- if .Values.mi }}
+        storageClassName: cinder-csi
+        {{- end }}
+    retentionPolicy:
+      application:
+        maxAge: {{ .Values.retention.app }} 
+      infra:
+        maxAge: {{ .Values.retention.infra }} 
+    type: elasticsearch
+  managementState: Managed
+  visualization:
+    kibana:
+      replicas: 1
+    type: kibana

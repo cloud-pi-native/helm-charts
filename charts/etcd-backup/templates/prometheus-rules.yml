@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: etcd-backup-cronjob-monitor
+  namespace: "{{ .Values.etcd_backup_ns }}"
+spec:
+  groups:
+  - name: cronjob-fail
+    rules:
+    - alert: EtcdBackupCronJobStatusFailed
+      expr: |
+        kube_job_status_succeeded{namespace="{{ .Values.etcd_backup_ns }}"} == 0
+      labels:
+        severity: critical

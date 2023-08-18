@@ -1,0 +1,15 @@
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: etcd-backup-pvc
+  namespace: "{{ .Values.etcd_backup_ns }}"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "{{ .Values.pvc_backup_size }}"
+  #storageClassName: cinder-csi
+  #volumeMode: Filesystem

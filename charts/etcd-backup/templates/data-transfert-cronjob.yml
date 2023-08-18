@@ -1,0 +1,51 @@
+kind: CronJob
+apiVersion: batch/v1
+metadata:
+  name: data-transfer-cronjob
+  namespace: "{{ .Values.etcd_backup_ns }}"
+spec:
+  schedule: "{{ .Values.data_transfert_cron }}"
+  concurrencyPolicy: Allow
+  suspend: false
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      backoffLimit: 4
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          volumes:
+          - name: backup
+            persistentVolumeClaim:
+              claimName: etcd-backup-pvc
+          containers:
+          - resources: {}
+            terminationMessagePath: /dev/termination-log
+            name: data-transfer-container
+            command:
+            - /bin/bash
+            - '-c'
+            env:
+            - name: AWS_ACCESS_KEY_ID
+              value: "{{ .Values.s3.accessKeyId }}"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "{{ .Values.s3.secretAccessKey }}"
+            imagePullPolicy: Always
+            volumeMounts:
+            - name: backup
+              mountPath: /data
+            terminationMessagePolicy: File
+            image: '{{ .Values.aws_cli_image }}:{{ .Values.aws_cli_image_tag }}'
+            args:
+            - >
+              aws --no-verify-ssl --endpoint-url "{{ .Values.s3.url }}" s3 sync /data/ s3://{{ .Values.s3.bucket }}/{{ .Values.s3.prefixetcd }}
+          restartPolicy: Never
+          terminationGracePeriodSeconds: 30
+          dnsPolicy: ClusterFirst
+          securityContext: {}
+          schedulerName: default-scheduler
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+

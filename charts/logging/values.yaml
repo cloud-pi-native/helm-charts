@@ -1,0 +1,17 @@
+elastic:
+  pvc:
+    size: 50G
+
+
+prometheus:
+  pvc:
+    size: 50G
+
+
+logging_namespace: openshift-monitoring
+
+retention: 
+  app: 7d
+  infra: 7d
+
+mi: true

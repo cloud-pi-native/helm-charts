@@ -1,0 +1,14 @@
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: cluster-resources
+  namespace: "{{ .Values.namespace_adp }}"
+spec:
+  schedule: "{{ .Values.schedule_cron }}"
+  template:
+    defaultVolumesToRestic: true
+    includeClusterResources: true
+    includedNamespaces:
+      - default
+    storageLocation: velero-1
+    ttl: 240h0m0s

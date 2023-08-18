@@ -1,0 +1,14 @@
+---
+
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: backup-config
+  namespace: "{{ .Values.etcd_backup_ns }}"
+data:
+  OCP_BACKUP_SUBDIR: "{{ .Values.ocp.backup.subdir }}"
+  OCP_BACKUP_DIRNAME: "{{ .Values.ocp.backup.dirname }}"
+  OCP_BACKUP_EXPIRE_TYPE: "{{ .Values.ocp.backup.expire_type }}"
+  OCP_BACKUP_KEEP_DAYS: "{{ .Values.ocp.backup.keep_days }}"
+  OCP_BACKUP_KEEP_COUNT: "{{ .Values.ocp.backup.keep_count }}"
+  OCP_BACKUP_UMASK: "{{ .Values.ocp.backup.umask }}"

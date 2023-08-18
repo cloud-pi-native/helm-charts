@@ -1,0 +1,31 @@
+# Default values for etcd-backup.
+# Declare variables to be passed into your templates.
+
+etcd_backup_ns: etcd-backup
+
+pvc_backup_size: 20Gi
+
+data_transfert_cron: "0 0 * * *"
+
+data_backup_cron: "0 22 * * *"
+
+
+aws_cli_image: amazon/aws-cli
+aws_cli_image_tag: latest
+
+ocp:
+  backup:
+    subdir: "/"
+    dirname: "+etcd-backup-%FT%T%:z"
+    expire_type: "days"
+    keep_days: "30"
+    keep_count: "10"
+    umask: "0027"
+
+#url must be "https://..."
+s3:
+  url:
+  bucket:
+  accessKeyId:
+  secretAccessKey:
+  prefixetcd: "etcd-backup"

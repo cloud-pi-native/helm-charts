@@ -1,0 +1,14 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cluster-monitoring-config
+  namespace: "{{ .Values.logging_namespace }}"
+data:
+  config.yaml: |
+    enableUserWorkload: true
+    prometheusK8s:
+      volumeClaimTemplate:
+        spec:
+          resources:
+            requests:
+              storage: {{ .Values.prometheus.pvc.size }}

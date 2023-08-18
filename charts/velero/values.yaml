@@ -1,0 +1,13 @@
+# Default values for velero.
+
+namespace_adp: openshift-adp
+
+schedule_cron: "38 12 * * * "
+
+#url must be "https://..."
+s3:
+  url:
+  bucket:
+  accessKeyId:
+  secretAccessKey:
+  prefixvelero: "velero"

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: operator
+description: A Helm chart for Operator and Subscription 
+type: application
+version: 1.1.0  # This is the chart version
+appVersion: 1.1.0  # This is the application version
