@@ -29,3 +29,5 @@ s3:
   accessKeyId:
   secretAccessKey:
   prefixetcd: "etcd-backup"
+
+ovh: true

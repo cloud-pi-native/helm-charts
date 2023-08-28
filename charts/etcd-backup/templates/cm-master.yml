@@ -1,0 +1,12 @@
+{{- if .Values.ovh }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rook-ceph-operator-config
+  namespace: openshift-storage
+data:
+  CSI_PLUGIN_TOLERATIONS: |
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/master
+      operator: Exists
+{{- if .Values.ovh }}
