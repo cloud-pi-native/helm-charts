@@ -7,6 +7,6 @@ metadata:
     argocd.argoproj.io/sync-wave: "0"
 spec:
   installPlanApproval: Automatic
-  name: oadp-operator
-  source: community-operators
+  name: redhat-oadp-operator
+  source: redhat-operators
   sourceNamespace: openshift-marketplace
