@@ -1,12 +1,14 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
-  name: oadp-operator-subscription
+  name: redhat-oadp-operator
   namespace: "{{ .Values.namespace_adp }}"
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 spec:
-  channel: stable
-  name: oadp-operator
+  channel: stable-1.2
+  installPlanApproval: Automatic
+  name: redhat-oadp-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
+  startingCSV: oadp-operator.v1.2.1
