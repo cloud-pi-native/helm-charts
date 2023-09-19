@@ -6,9 +6,9 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 spec:
-  channel: stable-1.2
+  channel: stable
   installPlanApproval: Automatic
   name: redhat-oadp-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
-  startingCSV: oadp-operator.v1.2.1
+#  startingCSV: oadp-operator.v1.2.1
