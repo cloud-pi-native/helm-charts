@@ -8,9 +8,9 @@ prometheus:
     size: 50G
 
 
-logging_namespace: openshift-monitoring
+logging_namespace: openshift-logging
 
-retention: 
+retention:
   app: 7d
   infra: 7d
 
