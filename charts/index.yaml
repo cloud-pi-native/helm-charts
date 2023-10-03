@@ -1,0 +1,48 @@
+apiVersion: v1
+entries:
+  etcd-backup:
+  - apiVersion: v2
+    appVersion: "1.0.0"
+    created: 2022-08-21T15:05:00Z
+    description: A Helm chart for etcd-backup in Kubernetes
+    name: etcd-backup
+    urls:
+      - https://github.com/cloud-pi-native/helm-charts/charts/etcd-backup
+    version: 1.0.0
+  ingress-keepalived:
+  - apiVersion: v2
+    appVersion: "1.0.0"
+    created: 2022-10-02T10:42:00Z
+    description: A Helm chart for ingress keepalived
+    name: ingress-keepalived
+    urls:
+      - https://github.com/cloud-pi-native/helm-charts/charts/ingress-keepalived
+    version: 1.0.0
+  logging-monitoring:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: 2022-10-02T10:42:00Z
+    description: A Helm chart for Post-config Openshift Cluster
+    name: logging-monitoring
+    urls:
+      - https://github.com/cloud-pi-native/helm-charts/charts/logging-monitoring
+    version: 1.0.0
+  operators:
+  - apiVersion: v2
+    appVersion: "1.0.0"
+    created: 2022-10-02T10:42:00Z
+    description: A Helm chart for Operator and Subscription 
+    name: operators
+    urls:
+      - https://github.com/cloud-pi-native/helm-charts/charts/operators
+    version: 1.0.0
+  velero:
+  - apiVersion: v2
+    appVersion: "1.0.0"
+    created: 2022-10-02T10:42:00Z
+    description: A Helm chart for Velero
+    name: velero
+    urls:
+      - https://github.com/cloud-pi-native/helm-charts/charts/velero
+    version: 1.0.0
+generated: 2022-10-02T10:42:00Z
