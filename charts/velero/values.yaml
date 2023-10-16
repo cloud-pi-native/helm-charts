@@ -11,3 +11,8 @@ s3:
   accessKeyId:
   secretAccessKey:
   prefixvelero: "velero"
+
+servicemonitor:
+  interval: 30s
+  targetPort: 8085
+  scheme: http
