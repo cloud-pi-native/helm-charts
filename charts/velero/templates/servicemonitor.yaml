@@ -3,9 +3,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    app: oadp-service-monitor
-  name: oadp-service-monitor
-  namespace: "{{ .Values.namespace_adp }}"
+    app: {{ include "velero.name" . }}
+  name: {{ include "velero.fullname" . }}
+  namespace: {{ include "velero.namespace" . }}
 spec:
   endpoints:
   - interval: "{{ .Values.servicemonitor.interval}}"
@@ -14,4 +14,4 @@ spec:
     scheme: "{{ .Values.servicemonitor.scheme}}"
   selector:
     matchLabels:
-      app.kubernetes.io/name: "velero"
+      {{- include "velero.selectorLabels" . | nindent 6 }}

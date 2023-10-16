@@ -3,27 +3,15 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
  labels:
+   app: {{ include "velero.name" . }}
    prometheus: k8s
    role: alert-rules
- name: velero-alerts
- namespace: "{{ .Values.namespace_adp }}"
+ name: {{ include "velero.fullname" . }}-alerts
+ namespace: {{ include "velero.namespace" . }}
 spec:
  groups:
- - name: velero_alerts
+ - name: {{ include "velero.name" . }}_alerts
+   {{- with .Values.prometheusRules.rules }}
    rules:
-   - alert: VeleroBackupFailed
-     expr: increase(velero_backup_failure_total[1h]) > 0
-     for: 5m
-     labels:
-       severity: critical
-     annotations:
-       summary: "Velero backup failure detected"
-       description: "The Velero backup has failed. Investigate immediately."
-   - alert: VeleroBackupPartialFailed
-     expr: increase(velero_backup_partial_failure_total[1h])> 0
-     for: 5m
-     labels:
-       severity: critical
-     annotations:
-       summary: "Velero backup partial failure detected"
-       description: "The Velero backup has some partial backup failure. Take a look"
+    {{- toYaml . | nindent 4 }}
+   {{- end }}
