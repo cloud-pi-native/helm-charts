@@ -3,8 +3,8 @@ kind: OperatorGroup
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "-3"
-  name: cluster-logging
-  namespace: "{{ .Values.namespace_logging }}"
+  name: {{ .Values.logging.name }}
+  namespace: "{{ .Values.logging.namespace }}"
 spec:
   targetNamespaces:
-  - "{{ .Values.namespace_logging }}"
+  - "{{ .Values.logging.namespace }}"

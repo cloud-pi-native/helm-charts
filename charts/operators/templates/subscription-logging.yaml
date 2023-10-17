@@ -3,10 +3,10 @@ kind: Subscription
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
-  name: cluster-logging
-  namespace: "{{ .Values.namespace_logging }}"
+  name: {{ .Values.logging.name }}
+  namespace: "{{ .Values.logging.namespace }}"
 spec:
   channel: stable
-  name: cluster-logging
+  name: {{ .Values.logging.name }}
   source: redhat-operators
   sourceNamespace: openshift-marketplace

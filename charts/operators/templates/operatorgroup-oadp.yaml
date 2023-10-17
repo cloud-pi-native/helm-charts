@@ -2,9 +2,9 @@ apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
   name: oadp-operator-group
-  namespace: "{{ .Values.namespace_adp }}"
+  namespace: {{ include "operators.namespace" . }}
   annotations:
     argocd.argoproj.io/sync-wave: "-2"
 spec:
   targetNamespaces:
-  - "{{ .Values.namespace_adp }}"
+  - {{ include "operators.namespace" . }}
