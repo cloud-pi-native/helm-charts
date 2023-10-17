@@ -1,8 +1,8 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: etcd-backup-cronjob-monitor
-  namespace: "{{ .Values.etcd_backup_ns }}"
+  name: {{ include "etcd-backup.name" . }}-cronjob-monitor
+  namespace: {{ include "etcd-backup.namespace" . }}
 spec:
   groups:
   - name: cronjob-fail

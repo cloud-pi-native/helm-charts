@@ -2,8 +2,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: rook-ceph-operator-config
-  namespace: openshift-storage
+  name: {{ .Values.rook_ceph_operator.name }}
+  namespace: {{ .Values.rook_ceph_operator.namespace }}
 data:
   CSI_PLUGIN_TOLERATIONS: |
     - effect: NoSchedule

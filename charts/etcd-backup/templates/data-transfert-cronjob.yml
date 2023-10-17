@@ -2,7 +2,7 @@ kind: CronJob
 apiVersion: batch/v1
 metadata:
   name: data-transfer-cronjob
-  namespace: "{{ .Values.etcd_backup_ns }}"
+  namespace: {{ include "etcd-backup.namespace" . }}
 spec:
   schedule: "{{ .Values.data_transfert_cron }}"
   concurrencyPolicy: Allow

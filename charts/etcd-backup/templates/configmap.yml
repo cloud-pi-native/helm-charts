@@ -3,8 +3,8 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: backup-config
-  namespace: "{{ .Values.etcd_backup_ns }}"
+  name: "{{ .Values.ocp.backup.configmap_name }}"
+  namespace:  {{ include "etcd-backup.namespace" . }}
 data:
   OCP_BACKUP_SUBDIR: "{{ .Values.ocp.backup.subdir }}"
   OCP_BACKUP_DIRNAME: "{{ .Values.ocp.backup.dirname }}"
