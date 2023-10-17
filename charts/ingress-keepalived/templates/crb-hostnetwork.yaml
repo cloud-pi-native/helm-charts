@@ -8,5 +8,5 @@ roleRef:
   name: system:openshift:scc:hostnetwork
 subjects:
 - kind: ServiceAccount
-  name: ipfailover
-  namespace: infra-keepalived
+  name: {{ .Values.serviceaccount.name }}
+  namespace: {{ include "ingress-keepalived.namespace" . }}

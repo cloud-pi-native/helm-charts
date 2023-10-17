@@ -1,3 +1,8 @@
+
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: infra-keepalived
+
 vip:
   internet:
   rie: 
@@ -5,3 +10,31 @@ vip:
 id_vrrp:
   internet:
   rie:
+
+rie:
+  name: rie
+  domain: interieur.rie.gouv.fr
+
+internet:
+  name: internet
+  domain: interieur.gouv.fr
+
+# serviceaccount, role and rolebinding
+serviceaccount:
+  name: ipfailover
+
+# IngressController namespaceSelector matchExpressions:
+IngressController:
+  namespace: openshift-ingress-operator
+  namespaceSelector:
+    matchExpressions:
+    - key: kubernetes.io/metadata.name
+      operator: In
+      values:
+      - openshift-authentication
+      - openshift-console
+      - openshift-ingress-canary
+      - openshift-monitoring
+      - openshift-logging
+      - default
+
