@@ -1,4 +1,10 @@
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: ""
+
 elastic:
+  nodecount: 3
+  storageclass: cinder-csi
   pvc:
     size: 50G
 
@@ -8,10 +14,16 @@ prometheus:
     size: 50G
 
 
-logging_namespace: openshift-logging
+logging:
+  namespace: openshift-logging
 
 retention:
   app: 7d
   infra: 7d
 
 mi: true
+
+# cluster-loggin-instance
+resources:
+  requests:
+    memory: 2Gi
