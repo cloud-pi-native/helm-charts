@@ -1,13 +1,40 @@
 # Default values for velero.
 
-namespace_adp: openshift-adp
+nameOverride: ""
+fullnameOverride: ""
+namespaceOverride: openshift-adp
 
 schedule_cron: "38 12 * * * "
 
-#url must be "https://..."
+#url must be "https://..."https://console-openshift-console.apps.c9.numerique-interieur.com/operatorhub/all-namespaces?keyword=node+health&details-item=node-healthcheck-operator-community-operators-openshift-marketplace
 s3:
   url:
   bucket:
   accessKeyId:
   secretAccessKey:
   prefixvelero: "velero"
+
+servicemonitor:
+  interval: 30s
+  targetPort: 8085
+  scheme: http
+
+# PrometheuRules for alert.yaml template
+prometheusRules: 
+  rules:
+  - alert: VeleroBackupFailed
+    expr: increase(velero_backup_failure_total[1h]) > 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Velero backup failure detected"
+      description: "The Velero backup has failed. Investigate immediately."
+  - alert: VeleroBackupPartialFailed
+    expr: increase(velero_backup_partial_failure_total[1h])> 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Velero backup partial failure detected"
+      description: "The Velero backup has some partial backup failure. Take a look"
