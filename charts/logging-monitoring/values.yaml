@@ -23,7 +23,7 @@ retention:
 
 mi: true
 
-# cluster-loggin-instance
+# cluster-logging-instance
 resources:
   requests:
     memory: 2Gi

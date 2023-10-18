@@ -4,7 +4,7 @@ kind: Role
 metadata:
   name: use-privileged-scc
   namespace: {{ include "etcd-backup.namespace" . }}
+rules:
   {{- with .Values.rules }}
-  rules:
-  {{- toYaml . | nindent 4 }}
-   {{- end }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}

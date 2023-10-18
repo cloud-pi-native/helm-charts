@@ -4,7 +4,6 @@
 nameOverride: ""
 fullnameOverride: ""
 namespaceOverride: etcd-backup
-etcd_backup_ns: etcd-backup
 
 pvc_backup_size: 20Gi
 
