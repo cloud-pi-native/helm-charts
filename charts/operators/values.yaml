@@ -1,7 +1,6 @@
 nameOverride: ""
 fullnameOverride: ""
 namespaceOverride: openshift-adp
-namespace_adp: openshift-adp
 
 logging:
   name: cluster-logging
