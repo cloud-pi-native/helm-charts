@@ -3,7 +3,7 @@
 
 nameOverride: ""
 fullnameOverride: ""
-namespaceOverride: etcd-backup
+namespaceOverride: infra-etcd-backup
 
 pvc_backup_size: 20Gi
 
