@@ -1,22 +1,22 @@
+---
 apiVersion: logging.openshift.io/v1
 kind: ClusterLogging
 metadata:
   name: instance
-  namespace: "{{ .Values.logging_namespace }}"
+  namespace: {{ .Values.logging.namespace }}
 spec:
   collection:
     type: fluentd
   logStore:
     elasticsearch:
-      nodeCount: 3
+      nodeCount: {{ .Values.elastic.nodecount }} 
       redundancyPolicy: MultipleRedundancy
       resources:
-        requests:
-          memory: 2Gi
+        {{- toYaml .Values.resources | nindent 8 }}
       storage:
         size: {{ .Values.elastic.pvc.size }} 
         {{- if .Values.mi }}
-        storageClassName: cinder-csi
+        storageClassName: {{ .Values.elastic.storageclass }}
         {{- end }}
     retentionPolicy:
       application:

@@ -30,6 +30,7 @@ prometheusRules:
     annotations:
       summary: "Velero backup failure detected"
       description: "The Velero backup for the schedule {{ $labels.schedule }} has failed. Investigate immediately."
+      schedule: "{{ $labels.schedule }}"
   - alert: VeleroBackupPartialFailed
     expr: increase(velero_backup_partial_failure_total[1h])> 0
     for: 5m
@@ -38,3 +39,4 @@ prometheusRules:
     annotations:
       summary: "Velero backup partial failure detected"
       description: "The Velero backup for the schedule {{ $labels.schedule }} has some partial backup failure. Take a look"
+      schedule: "{{ $labels.schedule }}"

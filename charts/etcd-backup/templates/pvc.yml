@@ -1,10 +1,9 @@
 ---
-
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: etcd-backup-pvc
-  namespace: "{{ .Values.etcd_backup_ns }}"
+  name: {{ include "etcd-backup.name" . }}-pvc
+  namespace: {{ include "etcd-backup.namespace" . }}
 spec:
   accessModes:
     - ReadWriteOnce

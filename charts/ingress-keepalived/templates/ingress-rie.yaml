@@ -1,14 +1,15 @@
+---
 apiVersion: operator.openshift.io/v1
 kind: IngressController
 metadata:
-  name: internet
-  namespace: openshift-ingress-operator
+  name: {{ .Values.rie.name }}
+  namespace: {{ .Values.IngressController.namespace }}
 spec:
   clientTLS:
     clientCA:
       name: ""
     clientCertificatePolicy: ""
-  domain: interieur.rie.gouv.fr
+  domain: {{ .Values.rie.domain }}
   endpointPublishingStrategy:
     hostNetwork:
       httpPort: 80

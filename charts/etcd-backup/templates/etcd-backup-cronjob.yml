@@ -3,8 +3,8 @@
 kind: CronJob
 apiVersion: batch/v1
 metadata:
-  name: etcd-backup
-  namespace: "{{ .Values.etcd_backup_ns }}"
+  name: {{ include "etcd-backup.name" . }}
+  namespace: {{ include "etcd-backup.namespace" . }}
 spec:
   schedule: "{{ .Values.data_backup_cron }}"
   startingDeadlineSeconds: 600

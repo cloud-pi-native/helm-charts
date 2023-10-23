@@ -1,8 +1,9 @@
+---
 apiVersion: operator.openshift.io/v1
 kind: IngressController
 metadata:
   name: default
-  namespace: openshift-ingress-operator
+  namespace: {{ .Values.IngressController.namespace }}
 spec:
   clientTLS:
     clientCA:
@@ -13,16 +14,10 @@ spec:
   httpErrorCodePages:
     name: ""
   namespaceSelector:
+    {{- with .Values.IngressController.namespaceSelector.matchExpressions }}
     matchExpressions:
-    - key: kubernetes.io/metadata.name
-      operator: In
-      values:
-      - openshift-authentication
-      - openshift-console
-      - openshift-ingress-canary
-      - openshift-monitoring
-      - openshift-logging
-      - default
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   nodePlacement:
     nodeSelector:
       matchLabels:

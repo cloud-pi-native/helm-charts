@@ -3,13 +3,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: use-privileged-scc
-  namespace: "{{ .Values.etcd_backup_ns }}"
+  namespace: {{ include "etcd-backup.namespace" . }}
 rules:
-  - apiGroups:
-      - security.openshift.io
-    resources:
-      - securitycontextconstraints
-    verbs:
-      - use
-    resourceNames:
-      - privileged
+  {{- with .Values.rules }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
