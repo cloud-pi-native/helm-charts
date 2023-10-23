@@ -10,6 +10,6 @@ spec:
     rules:
     - alert: EtcdBackupCronJobStatusFailed
       expr: |
-        kube_job_status_succeeded{namespace="{{ .Values.etcd_backup_ns }}"} == 0
+        kube_job_status_succeeded{namespace="{{ include "etcd-backup.namespace" . }}"} == 0
       labels:
         severity: critical

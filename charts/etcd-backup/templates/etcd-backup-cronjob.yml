@@ -14,7 +14,8 @@ spec:
     metadata:
       creationTimestamp: null
     spec:
-      backoffLimit: 0
+      backoffLimit: 2
+      activeDeadlineSeconds: 600
       template:
         metadata:
           creationTimestamp: null
@@ -69,4 +70,4 @@ spec:
             - key: node-role.kubernetes.io/master
               effect: NoSchedule
   successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
