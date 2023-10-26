@@ -1,0 +1,13 @@
+{{- if .Values.mi }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: kibana
+  namespace: {{ .Values.logging.namespace }}
+spec:
+  host: "logging.apps.{{ .Values.clusterName }}.{{ .Values.domain }}"
+  to:
+      kind: Service
+      name: kibana
+      weight: 100
+{{- end }}

@@ -27,3 +27,6 @@ mi: true
 resources:
   requests:
     memory: 2Gi
+
+clusterName: c7
+domain: numerique-interieur.com
