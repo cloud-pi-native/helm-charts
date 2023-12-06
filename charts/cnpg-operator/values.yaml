@@ -2,17 +2,28 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-config:
-  create: true  # default
-  secret: false # default
-  data:
-    # https://cloudnative-pg.io/documentation/current/operator_conf/#available-options
-    INHERITED_ANNOTATIONS: "categories"
-    INHERITED_LABELS: "app, instance, environment"
-    ENABLE_INSTANCE_MANAGER_INPLACE_UPDATES: "true"    
-
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
 
-containerSecurityContext: null
+
+cloudnative-pg:
+  config:
+    create: true  # default
+    secret: false # default
+    data:
+      # https://cloudnative-pg.io/documentation/current/operator_conf/#available-options
+      INHERITED_ANNOTATIONS: "categories"
+      INHERITED_LABELS: "app, instance, environment"
+      ENABLE_INSTANCE_MANAGER_INPLACE_UPDATES: "true"    
+
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    runAsUser: null
+    runAsGroup: null
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop:
+        - "ALL"
