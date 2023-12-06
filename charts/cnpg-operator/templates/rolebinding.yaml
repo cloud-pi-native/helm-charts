@@ -11,4 +11,4 @@ roleRef:
   name: anyuid
 subjects:
   - kind: ServiceAccount
-    name: {{ include "cnpg-operator.serviceAccountName" . }}
+    name: cnpg-operator-cloudnative-pg
