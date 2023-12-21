@@ -8,6 +8,8 @@ data:
   config.yaml: |
     enableUserWorkload: true
     prometheusK8s:
+      resources:
+      {{- toYaml .Values.prometheus.resources | nindent 8 }}
       volumeClaimTemplate:
         spec:
           resources:
