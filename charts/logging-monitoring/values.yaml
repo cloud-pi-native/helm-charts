@@ -12,7 +12,13 @@ elastic:
 prometheus:
   pvc:
     size: 50G
-
+  resources:
+    requests:
+      cpu: 100m
+      memory: 2Gi
+    limits:
+      cpu: 750m
+      memory: 2Gi
 
 logging:
   namespace: openshift-logging
