@@ -1,7 +1,7 @@
 # Default values for cnpg-operator.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-# Install NAMESPACE = infra-cnpg-system
+# Install NAMESPACE = infra-cnpg-system || it is infra-system-cnpg on C4 
 
 serviceAccount:
   # Specifies whether a service account should be created
