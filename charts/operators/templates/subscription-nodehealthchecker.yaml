@@ -1,0 +1,45 @@
+# node-healthcheck-operator will install self-node-remediation-operator too
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: self-node-remediation-operator
+  namespace: "{{ .Values.sub.namespace }}"
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  channel: "{{ .Values.sub.channel }}"
+  installPlanApproval: "{{ .Values.sub.approval }}"
+  name: self-node-remediation
+  source: "{{ .Values.sub.source }}"
+  sourceNamespace: "{{ .Values.sub.source_ns }}"
+
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: machine-deletion-remediation
+  namespace: "{{ .Values.sub.namespace }}"
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  channel: "{{ .Values.sub.channel }}"
+  installPlanApproval: "{{ .Values.sub.approval }}"
+  name: machine-deletion-remediation
+  source: "{{ .Values.sub.source }}"
+  sourceNamespace: "{{ .Values.sub.source_ns }}"
+
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: node-healthcheck-operator
+  namespace: "{{ .Values.sub.namespace }}"
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  channel: "{{ .Values.sub.channel }}"
+  installPlanApproval: "{{ .Values.sub.approval }}"
+  name: node-healthcheck-operator
+  source: "{{ .Values.sub.source }}"
+  sourceNamespace: "{{ .Values.sub.source_ns }}"

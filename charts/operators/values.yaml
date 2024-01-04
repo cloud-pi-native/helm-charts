@@ -5,3 +5,10 @@ namespaceOverride: openshift-adp
 logging:
   name: cluster-logging
   namespace: openshift-logging
+  
+sub:
+  channel: stable
+  approval: Automatic
+  namespace: openshift-operators
+  source: redhat-operators
+  source_ns: openshift-marketplace
