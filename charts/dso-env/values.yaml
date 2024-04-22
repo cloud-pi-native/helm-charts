@@ -1,0 +1,34 @@
+# -- Labels appliqués sur les différents objets
+commonLabels: {}
+argocd:
+  # -- Préfixe des projets ArgoCD à créer
+  project: project1
+  # -- Namespace de création des objets ArgoCD
+  namespace: argocd
+environment:
+  # -- Revision Git à utiliser lors de la récupération des values
+  valueFileRevision: HEAD
+  # -- Chemin du fichier à utiliser lors de la récupération des values
+  valueFilePath: values.yaml
+  # -- Nom du groupe à autoriser en lecture seule sur les objets applicatifs (-app) déployés par ArgoCD
+  roGroup: /project/environment/RO
+  # -- Nom du groupe à autoriser en lecture/écriture sur les objets applicatifs (-app) déployés par ArgoCD
+  rwGroup: /project/environment/RW
+application:
+  # -- Préfixe des dépôts autorisés
+  sourceReposPrefix: https://gitlab.com/projects/org/demo
+  quota:
+    # -- (int) Quota CPU pour le namespace
+    cpu:
+    # -- Quota mémoire pour le namespace
+    memory:
+  destination:
+    # -- Nom du cluster applicatif cible
+    name: ""
+    # -- Nom du namespace applicatif cible
+    namespace: app1
+  # -- Liste des dépôts à déployer
+  repositories:
+  - repoURL: https://gitlab.com/projects/org/demo/quota-explorer.git
+    targetRevision: main
+    path: '.'

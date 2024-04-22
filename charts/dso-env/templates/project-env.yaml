@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: dso-console
+    {{- .Values.commonLabels | toYaml | nindent 4 }}
+  name: {{ .Values.argocd.project }}-env
+  namespace: {{ .Values.argocd.namespace }}
+spec:
+  destinations:
+  - name: {{ .Values.application.destination.name }}
+    namespace: {{ .Values.application.destination.namespace }}
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  sourceRepos:
+    - https://github.com/cloud-pi-native/console.git
+    - {{ .Values.environment.valueFileRepository }}
+    - {{ .Values.application.sourceReposPrefix }}/*
+
