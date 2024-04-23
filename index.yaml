@@ -3,6 +3,16 @@ entries:
   dso-env:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2024-04-23T14:42:43.779549656Z"
+    description: Creates argocd Project and Applications to deploy DSO project repositories.
+    digest: 440c3afe3bd23478557a55599719aaaad831fc9d2eb5e31c000c6baa04a3b017
+    name: dso-env
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-env-1.0.1/dso-env-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2024-04-22T12:54:18.052513747Z"
     description: Creates argocd Project and Applications to deploy DSO project repositories.
     digest: 8f65c2b04bccd6e44eaf6997acfc180282c485b47f4d518db99f16821a4d92a9
@@ -11,4 +21,15 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-env-1.0.0/dso-env-1.0.0.tgz
     version: 1.0.0
-generated: "2024-04-22T12:54:18.052524908Z"
+  dso-ns:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-04-23T14:42:43.972308605Z"
+    description: A Helm chart to create all the necessary resources for deploying
+      applications by the DSO console (namespace, secrets, quota, ...).
+    digest: de53d68879cb02cfa0d2d4fb99a487236c510c9e336fbcd57541ec240ab9fd9b
+    name: dso-ns
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-ns-1.0.0/dso-ns-1.0.0.tgz
+    version: 1.0.0
+generated: "2024-04-23T14:42:43.972319204Z"
