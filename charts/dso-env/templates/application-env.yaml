@@ -10,9 +10,9 @@ metadata:
 spec:
   project: {{ .Values.argocd.project }}-env
   sources:
-    - repoURL: https://github.com/cloud-pi-native/console.git
-      targetRevision: feat/1003-ajouter-les-fichiers-yaml-pour-application-argo
-      path: helm-charts-internal/dso-ns-resources
+    - repoURL: https://github.com/cloud-pi-native/helm-charts.git
+      targetRevision: "{{ .Values.argocd.nsChartVersion }}"
+      path: charts/dso-ns
       helm:
         valueFiles:
           - $values/{{ .Values.environment.valueFilePath }}
