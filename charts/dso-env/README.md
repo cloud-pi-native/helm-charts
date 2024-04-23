@@ -10,8 +10,6 @@ Creates argocd Project and Applications to deploy DSO project repositories.
 |-----|------|---------|-------------|
 | application.destination.name | string | `""` | Nom du cluster applicatif cible |
 | application.destination.namespace | string | `"app1"` | Nom du namespace applicatif cible |
-| application.quota.cpu | int | `nil` | Quota CPU pour le namespace |
-| application.quota.memory | string | `nil` | Quota mémoire pour le namespace |
 | application.repositories | list | `[{"path":".","repoURL":"https://gitlab.com/projects/org/demo/quota-explorer.git","targetRevision":"main"}]` | Liste des dépôts à déployer |
 | application.sourceReposPrefix | string | `"https://gitlab.com/projects/org/demo"` | Préfixe des dépôts autorisés |
 | argocd.namespace | string | `"argocd"` | Namespace de création des objets ArgoCD |
