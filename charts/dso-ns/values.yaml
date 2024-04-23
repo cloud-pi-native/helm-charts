@@ -1,0 +1,12 @@
+# -- Labels appliqués sur les différents objets
+commonLabels: {}
+application:
+  destination:
+    # -- Nom du namespace applicatif cible
+    namespace: app1
+  quota:
+    # -- (int) Quota CPU pour le namespace
+    cpu:
+    # -- Quota mémoire pour le namespace
+    memory:
+

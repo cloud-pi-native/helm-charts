@@ -17,11 +17,6 @@ environment:
 application:
   # -- Préfixe des dépôts autorisés
   sourceReposPrefix: https://gitlab.com/projects/org/demo
-  quota:
-    # -- (int) Quota CPU pour le namespace
-    cpu:
-    # -- Quota mémoire pour le namespace
-    memory:
   destination:
     # -- Nom du cluster applicatif cible
     name: ""
