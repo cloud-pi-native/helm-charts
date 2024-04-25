@@ -3,6 +3,16 @@ entries:
   dso-env:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2024-04-25T08:26:01.602751271Z"
+    description: Creates argocd Project and Applications to deploy DSO project repositories.
+    digest: 0d9775bc665301957fcaffa44c0d33c3985dede2a54279c6e8f83cd1806d4ff7
+    name: dso-env
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-env-1.1.0/dso-env-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2024-04-23T14:42:43.779549656Z"
     description: Creates argocd Project and Applications to deploy DSO project repositories.
     digest: 440c3afe3bd23478557a55599719aaaad831fc9d2eb5e31c000c6baa04a3b017
@@ -32,4 +42,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-ns-1.0.0/dso-ns-1.0.0.tgz
     version: 1.0.0
-generated: "2024-04-23T14:42:43.972319204Z"
+generated: "2024-04-25T08:26:01.602790986Z"
