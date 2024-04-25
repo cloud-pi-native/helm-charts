@@ -5,6 +5,8 @@ argocd:
   project: project1
   # -- Namespace de création des objets ArgoCD
   namespace: argocd
+  # -- Version du Chart dso-ns à utiliser
+  nsChartVersion: 1.0.0
 environment:
   # -- Revision Git à utiliser lors de la récupération des values
   valueFileRevision: HEAD
