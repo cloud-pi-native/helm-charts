@@ -1,0 +1,138 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cpnConsole.fullname" . }}-client
+  labels:
+    {{- include "cpnConsole.client.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.client.autoscaling.enabled }}
+  replicas: {{ .Values.client.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "cpnConsole.client.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: {{ .Values.client.strategy.type }}
+  template:
+    metadata:
+      annotations:
+        {{- include "checksum" (list $ "/client/configmap.yaml") | nindent 8 }}
+        {{- include "checksum" (list $ "/client/secret.yaml") | nindent 8 }}
+        {{- with .Values.client.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "cpnConsole.client.selectorLabels" . | nindent 8 }}
+        {{- with .Values.client.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if and .Values.imageCredentials.username .Values.imageCredentials.password }}
+      imagePullSecrets:
+      - name: {{ include "cpnConsole.name" . }}-pullsecret
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.client.podSecurityContext | nindent 8 }}
+      {{- if .Values.client.initContainers }}
+      initContainers:
+        {{- toYaml .Values.client.initContainers | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: client
+        securityContext:
+          {{- toYaml .Values.client.container.securityContext | nindent 12 }}
+        image: "{{ .Values.client.image.repository }}:{{ .Values.client.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.client.image.pullPolicy }}
+        {{- if .Values.client.container.command }}
+        command:
+        {{- range .Values.client.container.command }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.client.container.args }}
+        args:
+        {{- range .Values.client.container.args }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        ports:
+          - containerPort: {{ .Values.client.container.port }}
+            protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: {{ include "cpnConsole.fullname" . }}-client
+        {{- if or .Values.global.secrets .Values.client.secrets }}
+        - secretRef:
+            name: {{ include "cpnConsole.fullname" . }}-client
+        {{- end }}
+        {{- if .Values.client.startupProbe.enabled }}
+        startupProbe:
+          httpGet:
+            path: {{ .Values.client.healthcheckPath }}
+            port: {{ .Values.client.container.port }}
+          initialDelaySeconds: {{ .Values.client.startupProbe.initialDelaySeconds }}
+          successThreshold: {{ .Values.client.startupProbe.successThreshold }}
+          failureThreshold: {{ .Values.client.startupProbe.failureThreshold }}
+          periodSeconds: {{ .Values.client.startupProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.client.startupProbe.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.client.readinessProbe.enabled }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.client.healthcheckPath }}
+            port: {{ .Values.client.container.port }}
+          initialDelaySeconds: {{ .Values.client.readinessProbe.initialDelaySeconds }}
+          successThreshold: {{ .Values.client.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.client.readinessProbe.failureThreshold }}
+          periodSeconds: {{ .Values.client.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.client.readinessProbe.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.client.livenessProbe.enabled }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.client.healthcheckPath }}
+            port: {{ .Values.client.container.port }}
+          initialDelaySeconds: {{ .Values.client.livenessProbe.initialDelaySeconds }}
+          successThreshold: {{ .Values.client.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.client.livenessProbe.failureThreshold }}
+          periodSeconds: {{ .Values.client.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.client.livenessProbe.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.client.hostAliases }}  
+        hostAliases:
+          {{- toYaml .Values.client.hostAliases | nindent 8 }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.client.resources | nindent 10 }}
+        volumeMounts:
+        {{- range $volumeMount := .Values.client.extraVolumeMounts }}
+        - name: {{ $volumeMount.name }}
+          mountPath: {{ $volumeMount.mountPath }}
+        {{- end }}
+      {{- if .Values.client.extraContainers }}  
+        {{- toYaml .Values.client.extraContainers | nindent 8 }}  
+      {{- end }}
+      {{- with .Values.client.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.client.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.client.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      {{- range $volume := .Values.client.extraVolumes }}
+      - name: {{ $volume.name }}
+        {{- if eq $volume.type "hostPath" }}
+        hostPath:
+          path: {{ $volume.path }}
+        {{- end }}
+        {{- if eq $volume.type "configMap" }}
+        configMap:
+          name: {{ $volume.name }}
+        {{- end }}
+      {{- end }}

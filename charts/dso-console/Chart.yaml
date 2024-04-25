@@ -1,0 +1,25 @@
+apiVersion: v2
+name: cpn-console
+description: A Helm chart to deploy Cloud Pi Native Console
+type: application
+version: 1.0.0
+appVersion: 8.1.1
+keywords: []
+home: https://cloud-pi-native.fr
+sources:
+  - https://github.com/cloud-pi-native/console
+dependencies:
+- name: postgresql
+  version: 12.7.3
+  repository: https://charts.bitnami.com/bitnami
+  condition: postgresql.enabled
+- name: keycloak
+  version: 19.3.0
+  repository: https://charts.bitnami.com/bitnami
+  condition: keycloak.enabled
+deprecated: false
+annotations: {}
+maintainers:
+  - name: Thibault Colin
+    email: thibault.colin@interieur.gouv.fr
+    url: https://this-is-tobi.com
