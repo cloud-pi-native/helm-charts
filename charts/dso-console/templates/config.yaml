@@ -1,0 +1,11 @@
+{{- if .Values.config.create -}}
+kind: Secret
+apiVersion: v1
+metadata:
+  name: {{ .Values.config.name }}
+data:
+  PROJECTS_ROOT_DIR: {{ .Values.config.projectsRootDir | b64enc | quote }}
+  {{- if .Values.config.secrets -}}
+  {{- include "cpnConsole.secret" .Values.config | indent 2 }}
+  {{- end -}}
+{{- end -}}

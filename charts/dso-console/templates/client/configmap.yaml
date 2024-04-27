@@ -1,0 +1,19 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "cpnConsole.fullname" . }}-client
+  labels: {{- include "cpnConsole.client.labels" . | nindent 4 }}
+data: 
+  SERVER_HOST: {{ include "cpnConsole.fullname" . }}-server
+  SERVER_PORT: {{ .Values.server.service.port | quote }}
+  KEYCLOAK_PROTOCOL: {{ .Values.global.keycloak.protocol }}
+  KEYCLOAK_DOMAIN: {{ .Values.global.keycloak.domain }}
+  KEYCLOAK_REALM: {{ .Values.global.keycloak.realm }}
+  KEYCLOAK_REDIRECT_URI: {{ .Values.global.keycloak.redirectUri }}
+  KEYCLOAK_CLIENT_ID: {{ .Values.global.keycloak.clientIds.frontend }}
+  {{- if .Values.global.env -}}
+  {{- include "cpnConsole.env" .Values.global | indent 2 }}
+  {{- end -}}
+  {{- if .Values.client.env -}}
+  {{- include "cpnConsole.env" .Values.client | indent 2 }}
+  {{- end -}}

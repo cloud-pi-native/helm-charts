@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cpnConsole.fullname" . }}-client
+  labels:
+    {{- include "cpnConsole.client.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.client.service.type }}
+  ports:
+    - port: {{ .Values.client.service.port }}
+      targetPort: {{ .Values.client.container.port }}
+      protocol: TCP
+  selector:
+    {{- include "cpnConsole.client.selectorLabels" . | nindent 4 }}
