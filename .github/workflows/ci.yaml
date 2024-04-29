@@ -6,8 +6,27 @@ on:
       - 'charts/**'
 
 jobs:
-  lint-chart:
+  path-filter:
     runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.draft }}
+    outputs:
+      charts: ${{ steps.filter.outputs.charts }}
+    steps:
+      - name: Checks-out repository
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      - name: Check updated files paths
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            charts:
+              - 'charts/**'
+
+  lint-chart:
+    if: ${{ needs.path-filter.outputs.charts == 'true' }}
+    runs-on: ubuntu-latest
+    needs:
+      - path-filter
     steps:
       - name: Checkout
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
@@ -16,9 +35,13 @@ jobs:
         with:
           command: lint
           config: .github/ct.yaml
+
   lint-docs:
+    if: ${{ needs.path-filter.outputs.charts == 'true' }}
     runs-on: ubuntu-latest
-    needs: lint-chart
+    needs:
+      - path-filter
+      - lint-chart
     steps:
       - name: Checkout
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
