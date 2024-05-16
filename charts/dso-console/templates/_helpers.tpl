@@ -5,12 +5,14 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
+
 {{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "cpnConsole.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
+
 
 {{/*
 Create the name of the service account to use
@@ -23,6 +25,7 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
+
 {{/*
 Create image pull secret
 */}}
@@ -31,6 +34,7 @@ Create image pull secret
 {{- printf "{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\",\"auth\":\"%s\"}}}" .registry .username .password .email (printf "%s:%s" .username .password | b64enc) | b64enc }}
 {{- end }}
 {{- end }}
+
 
 {{/*
 Create container environment variables from configmap
@@ -41,6 +45,7 @@ Create container environment variables from configmap
 {{- end }}
 {{- end }}
 
+
 {{/*
 Create container environment variables from secret
 */}}
@@ -49,6 +54,7 @@ Create container environment variables from secret
 {{ $key }}: {{ $val | b64enc | quote }}
 {{- end }}
 {{- end }}
+
 
 {{/*
 Define a file checksum to trigger rollout on configmap of secret change
@@ -61,6 +67,7 @@ Define a file checksum to trigger rollout on configmap of secret change
 checksum/{{ $resourceType.metadata.name }}: {{ $resourceType.data | toYaml | sha256sum }}
 {{- end -}}
 {{- end -}}
+
 
 {{/*
 Create a default fully qualified app name.
@@ -80,26 +87,28 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 {{- end }}
 
+
 {{/*
 Common labels
 */}}
-{{- define "cpnConsole.client.labels" -}}
+{{- define "cpnConsole.common.labels" -}}
 helm.sh/chart: {{ include "cpnConsole.chart" . }}
-{{ include "cpnConsole.client.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
+{{- define "cpnConsole.client.labels" -}}
+{{ include "cpnConsole.common.labels" . }}
+{{ include "cpnConsole.client.selectorLabels" . }}
+{{- end }}
+
 {{- define "cpnConsole.server.labels" -}}
-helm.sh/chart: {{ include "cpnConsole.chart" . }}
+{{ include "cpnConsole.common.labels" . }}
 {{ include "cpnConsole.server.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
+
 
 {{/*
 Selector labels

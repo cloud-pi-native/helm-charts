@@ -1,0 +1,50 @@
+{{- if .Values.cnpg.enabled }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ include "cpnConsole.fullname" . }}-pg-cluster
+  labels:
+    {{- include "cpnConsole.common.labels" . | nindent 4 }}
+  annotations:
+    {{- with .Values.cnpg.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  instances: {{ .Values.cnpg.instances }}
+  {{- if .Values.cnpg.imageName }}
+  imageName: {{ .Values.cnpg.imageName }}
+  {{- end }}
+  postgresql:
+    {{- if .Values.cnpg.imageName }}
+    image: {{ .Values.cnpg.imageName }}
+    {{- end }}
+    parameters:
+      max_worker_processes: "60"
+    pg_hba:
+      - {{ printf "%s %s %s %s %s" "host" .Values.cnpg.dbName .Values.cnpg.username "all" "md5" }}
+  bootstrap:
+    initdb:
+      database: {{ .Values.cnpg.dbName }}
+      owner: {{ .Values.cnpg.username }}
+  enableSuperuserAccess: {{ .Values.cnpg.enableSuperuserAccess }}
+  primaryUpdateStrategy: {{ .Values.cnpg.primaryUpdateStrategy }}
+  storage:
+    size: {{ .Values.cnpg.pvcSize }}
+{{- if .Values.cnpg.backup.enabled }}
+  backup:
+    barmanObjectStore:
+      destinationPath: {{ .Values.cnpg.backup.destinationPath }}
+      endpointURL: {{ .Values.cnpg.backup.endpointURL }}
+      endpointCA:
+        name: {{ .Values.cnpg.backup.endpointCA.name }}
+        key: {{ .Values.cnpg.backup.endpointCA.key }}
+      s3Credentials:
+        accessKeyId:
+          name: {{.Values.cnpg.backup.s3Credentials.accessKeyId.name }}
+          key: {{ .Values.cnpg.backup.s3Credentials.accessKeyId.key }}
+        secretAccessKey:
+          name: {{ .Values.cnpg.backup.s3Credentials.secretAccessKey.name }}
+          key: {{ .Values.cnpg.backup.s3Credentials.secretAccessKey.key }}
+    retentionPolicy: {{ .Values.cnpg.backup.retentionPolicy }}
+{{- end }}
+{{- end }}
