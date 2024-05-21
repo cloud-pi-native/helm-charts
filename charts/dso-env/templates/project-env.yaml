@@ -17,7 +17,7 @@ spec:
   - group: '*'
     kind: '*'
   sourceRepos:
-    - https://github.com/cloud-pi-native/console.git
+    - https://github.com/cloud-pi-native/helm-charts.git
     - {{ .Values.environment.valueFileRepository }}
     - {{ .Values.application.sourceReposPrefix }}/*
 
