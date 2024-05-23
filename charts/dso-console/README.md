@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.3.0](https://img.shields.io/badge/AppVersion-8.3.0-informational?style=flat-square)
+![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.3.0](https://img.shields.io/badge/AppVersion-8.3.0-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -39,6 +39,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | client.container.port | int | `8080` | Console CPN client container port. |
 | client.container.securityContext | object | `{}` | Toggle and define container-level security context. |
 | client.env | object | `{}` | Console CPN client container env variables, it will be injected into a configmap and loaded into the container. |
+| client.envFrom | list | `[]` | Console CPN client container env variables loaded from configmap or secret reference. |
 | client.extraContainers | list | `[]` | Extra containers to add to the Console CPN client pod as sidecars. |
 | client.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes). |
 | client.extraVolumes | list | `[]` | List of extra volumes to add. |
@@ -176,6 +177,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | server.dbDataCm | string | `""` | Name of the configmap with javascript data that need to be imported by the server at start up. |
 | server.disabledPlugins | string | `""` | CSV list of plugins to disabled. |
 | server.env | object | `{}` | Console CPN server container env variables, it will be injected into a configmap and loaded into the container. |
+| server.envFrom | list | `[]` | Console CPN server container env variables loaded from configmap or secret reference. |
 | server.extraCa.key | string | `""` | The key to lookup. |
 | server.extraCa.mountSubPath | string | `"ca_certs"` | The path inside the container where the certificate file should be mount. This is a native Nodejs environment variable to extends certificates, see: https://nodejs.org/api/cli.html#node_extra_ca_certsfile. This mount path represent the subpath to use under the `/config` config root path. |
 | server.extraCa.name | string | `""` | The name of the configmap in namespace where certificates are stored. |
