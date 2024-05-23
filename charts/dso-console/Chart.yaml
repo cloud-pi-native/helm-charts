@@ -2,11 +2,12 @@ apiVersion: v2
 name: cpn-console
 description: A Helm chart to deploy Cloud Pi Native Console
 type: application
-version: 1.1.4
+version: 1.2.0
 appVersion: 8.3.0
 keywords: []
 home: https://cloud-pi-native.fr
 sources:
+  - https://github.com/cloud-pi-native/helm-charts
   - https://github.com/cloud-pi-native/console
 dependencies:
 - name: postgresql

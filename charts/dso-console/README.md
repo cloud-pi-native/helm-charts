@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 1.1.4](https://img.shields.io/badge/Version-1.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.3.0](https://img.shields.io/badge/AppVersion-8.3.0-informational?style=flat-square)
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.3.0](https://img.shields.io/badge/AppVersion-8.3.0-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -14,6 +14,7 @@ A Helm chart to deploy Cloud Pi Native Console
 
 ## Source Code
 
+* <https://github.com/cloud-pi-native/helm-charts>
 * <https://github.com/cloud-pi-native/console>
 
 ## Requirements
@@ -38,7 +39,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | client.container.port | int | `8080` | Console CPN client container port. |
 | client.container.securityContext | object | `{}` | Toggle and define container-level security context. |
 | client.env | object | `{}` | Console CPN client container env variables, it will be injected into a configmap and loaded into the container. |
-| client.extraContainers | string | `nil` | Extra containers to add to the Console CPN client pod as sidecars. |
+| client.extraContainers | list | `[]` | Extra containers to add to the Console CPN client pod as sidecars. |
 | client.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes). |
 | client.extraVolumes | list | `[]` | List of extra volumes to add. |
 | client.healthcheckPath | string | `"/"` | Console CPN client container healthcheck endpoint. |
@@ -64,7 +65,10 @@ A Helm chart to deploy Cloud Pi Native Console
 | client.readinessProbe.successThreshold | int | `2` | Minimum consecutive successes for the probe to be considered successful after having failed. |
 | client.readinessProbe.timeoutSeconds | int | `5` | Number of seconds after which the probe times out. |
 | client.replicaCount | int | `1` | The number of application controller pods to run. |
-| client.resources | object | `{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"250m","memory":"128Mi"}}` | Resource limits and requests for the Console CPN client. |
+| client.resources.limits.cpu | string | `"500m"` | CPU limit for the Console CPN client. |
+| client.resources.limits.memory | string | `"512Mi"` | Memory limit for the Console CPN client. |
+| client.resources.requests.cpu | string | `"250m"` | CPU request for the Console CPN client. |
+| client.resources.requests.memory | string | `"128Mi"` | Memory request for the Console CPN client. |
 | client.secrets | object | `{}` | Console CPN client container env secrets, it will be injected into a secret and loaded into the container. |
 | client.service.port | int | `80` | Console CPN client service port. |
 | client.service.type | string | `"ClusterIP"` | Console CPN client service type. |
@@ -76,10 +80,29 @@ A Helm chart to deploy Cloud Pi Native Console
 | client.startupProbe.timeoutSeconds | int | `5` | Number of seconds after which the probe times out. |
 | client.strategy.type | string | `"RollingUpdate"` | Strategy type used to replace old Pods by new ones, can be "Recreate" or "RollingUpdate". |
 | client.tolerations | list | `[]` | Default tolerations for Console CPN client. |
+| cnpg.annotations | object | `{}` | Additional cnpg cluster annotations. |
+| cnpg.backup.cron | string | `"0 */6 * * * *"` | The cron rule used for cnpg backups. By default it runs every 6 hours. |
+| cnpg.backup.destinationPath | string | `""` | S3 destination path for cnpg backups (it should be set like `s3://<bucket_name>/<path>`). |
+| cnpg.backup.enabled | bool | `false` | Whether or not cnpg cluster deployment should be enabled. |
+| cnpg.backup.endpointCA.key | string | `""` | The secret key containing S3 CA for cnpg backups. |
+| cnpg.backup.endpointCA.name | string | `""` | The secret name containing S3 CA for cnpg backups. |
+| cnpg.backup.endpointURL | string | `""` | S3 endpoint for cnpg backups. |
+| cnpg.backup.retentionPolicy | string | `"30d"` | Retention policy for cnpg backups recurrences. |
+| cnpg.backup.s3Credentials.accessKeyId.key | string | `""` | S3 accessKeyId kubernetes secret key used for cnpg backups. |
+| cnpg.backup.s3Credentials.accessKeyId.name | string | `""` | S3 accessKeyId kuebernetes secret name used for cnpg backups. |
+| cnpg.backup.s3Credentials.secretAccessKey.key | string | `""` | S3 secretAccessKey kubernetes secret key used for cnpg backups. |
+| cnpg.backup.s3Credentials.secretAccessKey.name | string | `""` | S3 secretAccessKey kuebernetes secret name used for cnpg backups. |
+| cnpg.dbName | string | `"dso-console-db"` | Name of the database. |
+| cnpg.enableSuperuserAccess | bool | `true` | Enable superuser access. |
+| cnpg.enabled | bool | `false` | Whether or not cnpg cluster deployment should be enabled. |
+| cnpg.instances | int | `3` | Number of instances to spawn in the cluster. |
+| cnpg.primaryUpdateStrategy | string | `"unsupervised"` | Rolling update strategy used : unsupervised: automated update of the primary once all replicas have been upgraded (default) supervised: requires manual supervision to perform the switchover of the primary |
+| cnpg.pvcSize | string | `"10Gi"` | Size of the PVC used by each cnpg instance. |
+| cnpg.username | string | `"dso"` | Username of the database user. |
 | config.create | bool | `false` | Whether or not helm should create the console config. |
 | config.name | string | `"dso-config"` | Name of the genrated config. |
 | config.projectsRootDir | string | `"forge"` | Projects root directory to use in other services such as Gitlab, etc. |
-| config.secrets | string | `nil` | Secrets to inject into the configuration. It is needed for server to get services informations such as urls, admin username, admin password or token, etc. |
+| config.secrets | object | `{}` | Secrets to inject into the configuration. It is needed for server to get services informations such as urls, admin username, admin password or token, etc. |
 | fullnameOverride | string | `""` | String to fully override the default application name. |
 | global.env | object | `{"NODE_ENV":"production"}` | Map of environment variables to inject into backend and frontend containers. |
 | global.keycloak.clientIds.backend | string | `"console-backend"` | Keycloak clientId used for Console CPN client. |
@@ -153,11 +176,10 @@ A Helm chart to deploy Cloud Pi Native Console
 | server.dbDataCm | string | `""` | Name of the configmap with javascript data that need to be imported by the server at start up. |
 | server.disabledPlugins | string | `""` | CSV list of plugins to disabled. |
 | server.env | object | `{}` | Console CPN server container env variables, it will be injected into a configmap and loaded into the container. |
-| server.extraCa | object | `{"key":"","mountSubPath":"ca_certs","name":""}` | Extra certificate to add to the container, it should be provide as a configmap. |
 | server.extraCa.key | string | `""` | The key to lookup. |
 | server.extraCa.mountSubPath | string | `"ca_certs"` | The path inside the container where the certificate file should be mount. This is a native Nodejs environment variable to extends certificates, see: https://nodejs.org/api/cli.html#node_extra_ca_certsfile. This mount path represent the subpath to use under the `/config` config root path. |
 | server.extraCa.name | string | `""` | The name of the configmap in namespace where certificates are stored. |
-| server.extraContainers | string | `nil` | Extra containers to add to the Console CPN server pod as sidecars. |
+| server.extraContainers | list | `[]` | Extra containers to add to the Console CPN server pod as sidecars. |
 | server.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | server.extraVolumes | list | `[]` | List of extra volumes to add. |
 | server.healthcheckPath | string | `"/api/v1/healthz"` | Console CPN server container healthcheck endpoint. |
@@ -184,7 +206,10 @@ A Helm chart to deploy Cloud Pi Native Console
 | server.readinessProbe.successThreshold | int | `2` | Minimum consecutive successes for the probe to be considered successful after having failed. |
 | server.readinessProbe.timeoutSeconds | int | `5` | Number of seconds after which the probe times out. |
 | server.replicaCount | int | `1` | The number of application controller pods to run. |
-| server.resources | object | `{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"250m","memory":"128Mi"}}` | Resource limits and requests for the Console CPN server. |
+| server.resources.limits.cpu | string | `"500m"` | CPU limit for the Console CPN server. |
+| server.resources.limits.memory | string | `"512Mi"` | Memory limit for the Console CPN server. |
+| server.resources.requests.cpu | string | `"250m"` | CPU request for the Console CPN server. |
+| server.resources.requests.memory | string | `"128Mi"` | Memory request for the Console CPN server. |
 | server.secrets | object | `{}` | Console CPN server container env secrets, it will be injected into a secret and loaded into the container. |
 | server.service.port | int | `80` | Console CPN server service port. |
 | server.service.type | string | `"ClusterIP"` | Console CPN server service type. |

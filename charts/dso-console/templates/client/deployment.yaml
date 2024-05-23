@@ -35,7 +35,7 @@ spec:
         {{- toYaml .Values.client.podSecurityContext | nindent 8 }}
       {{- if .Values.client.initContainers }}
       initContainers:
-        {{- toYaml .Values.client.initContainers | nindent 8 }}
+        {{- tpl(toYaml .Values.client.initContainers) . | nindent 8 }}
       {{- end }}
       containers:
       - name: client
@@ -110,7 +110,7 @@ spec:
           mountPath: {{ $volumeMount.mountPath }}
         {{- end }}
       {{- if .Values.client.extraContainers }}  
-        {{- toYaml .Values.client.extraContainers | nindent 8 }}  
+        {{- tpl(toYaml .Values.client.extraContainers) . | nindent 8 }}  
       {{- end }}
       {{- with .Values.client.nodeSelector }}
       nodeSelector:

@@ -1,0 +1,13 @@
+{{- if .Values.cnpg.backup.enabled }}
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: {{ include "cpnConsole.fullname" . }}-pg-cluster
+  labels:
+    {{- include "cpnConsole.common.labels" . | nindent 4 }}
+spec:
+  schedule: "{{ dsc.cnpg.backup.cron }}"
+  backupOwnerReference: self
+  cluster:
+    name: {{ include "cpnConsole.fullname" . }}-pg-cluster
+{{- end }}

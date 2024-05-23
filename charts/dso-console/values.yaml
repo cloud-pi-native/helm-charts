@@ -24,7 +24,7 @@ config:
   projectsRootDir: "forge"
   # -- Secrets to inject into the configuration.
   # It is needed for server to get services informations such as urls, admin username, admin password or token, etc.
-  secrets:
+  secrets: {}
     # ARGO_NAMESPACE: "dso-argocd"
     # ARGOCD_URL: "https://argocd.domain.local"
     # GITLAB_TOKEN: ""
@@ -75,6 +75,7 @@ global:
     # -- Postgres database connection string used to override computed db url, usefull if external database.
     ## For postgres it should look like this "postgresql://db_user:db_password@db_service:db_port/db_name?schema=public"
     dbUrl: ""
+
 
 # Ingress configuration
 ingress:
@@ -143,7 +144,7 @@ client:
       # runAsNonRoot: true
       # runAsUser: 1000
   # -- Extra containers to add to the Console CPN client pod as sidecars.
-  extraContainers:
+  extraContainers: []
   # - name: fluentd
   #   image: "fluentd"
   #   volumeMounts:
@@ -229,13 +230,16 @@ client:
     type: "ClusterIP"
     # -- Console CPN client service port.
     port: 80
-  # -- Resource limits and requests for the Console CPN client.
   resources:
     requests:
+      # -- Memory request for the Console CPN client.
       memory: "128Mi"
+      # -- CPU request for the Console CPN client.
       cpu: "250m"
     limits:
+      # -- Memory limit for the Console CPN client.
       memory: "512Mi"
+      # -- CPU limit for the Console CPN client.
       cpu: "500m"
   ## Console CPN client Horizontal Pod Autoscaler
   autoscaling:
@@ -304,7 +308,7 @@ server:
       # runAsNonRoot: true
       # runAsUser: 1000
   # -- Extra containers to add to the Console CPN server pod as sidecars.
-  extraContainers:
+  extraContainers: []
   # - name: fluentd
   #   image: "fluentd"
   #   volumeMounts:
@@ -376,7 +380,7 @@ server:
   #   hostnames:
   #   - "foo.remote"
   #   - "bar.remote"
-  # -- Extra certificate to add to the container, it should be provide as a configmap.
+  ## Extra certificate to add to the container, it should be provide as a configmap.
   extraCa:
     # -- The name of the configmap in namespace where certificates are stored.
     name: ""
@@ -408,15 +412,17 @@ server:
   plugins: []
   # -- CSV list of plugins to disabled.
   disabledPlugins: ""
-  # -- Resource limits and requests for the Console CPN server.
   resources:
     requests:
+      # -- Memory request for the Console CPN server.
       memory: "128Mi"
+      # -- CPU request for the Console CPN server.
       cpu: "250m"
     limits:
+      # -- Memory limit for the Console CPN server.
       memory: "512Mi"
+      # -- CPU limit for the Console CPN server.
       cpu: "500m"
-  ## Console CPN server Horizontal Pod Autoscaler
   autoscaling:
     # -- Enable Horizontal Pod Autoscaler ([HPA]) for the Console CPN server.
     enabled: false
@@ -441,6 +447,54 @@ server:
     annotations: {}
     # -- Service account name.
     name: "cpn-console-server"
+
+# CNPG configuration
+cnpg:
+  # -- Whether or not cnpg cluster deployment should be enabled.
+  enabled: false
+  # -- Number of instances to spawn in the cluster.
+  instances: 3
+  # -- Username of the database user.
+  username: "dso"
+  # -- Name of the database.
+  dbName: "dso-console-db"
+  # -- Enable superuser access.
+  enableSuperuserAccess: true
+  # -- Rolling update strategy used :
+  # unsupervised: automated update of the primary once all replicas have been upgraded (default)
+  # supervised: requires manual supervision to perform the switchover of the primary
+  primaryUpdateStrategy: "unsupervised"
+  # -- Size of the PVC used by each cnpg instance.
+  pvcSize: "10Gi"
+  # -- Additional cnpg cluster annotations.
+  annotations: {}
+  backup:
+    # -- Whether or not cnpg cluster deployment should be enabled.
+    enabled: false
+    # -- S3 destination path for cnpg backups (it should be set like `s3://<bucket_name>/<path>`).
+    destinationPath: ""
+    # -- S3 endpoint for cnpg backups.
+    endpointURL: ""
+    endpointCA:
+      # -- The secret name containing S3 CA for cnpg backups.
+      name: ""
+      # -- The secret key containing S3 CA for cnpg backups.
+      key: ""
+    s3Credentials:
+      accessKeyId:
+        # -- S3 accessKeyId kuebernetes secret name used for cnpg backups.
+        name: ""
+        # -- S3 accessKeyId kubernetes secret key used for cnpg backups.
+        key: ""
+      secretAccessKey:
+        # -- S3 secretAccessKey kuebernetes secret name used for cnpg backups.
+        name: ""
+        # -- S3 secretAccessKey kubernetes secret key used for cnpg backups.
+        key: ""
+    # -- The cron rule used for cnpg backups. By default it runs every 6 hours.
+    cron: "0 */6 * * * *"
+    # -- Retention policy for cnpg backups recurrences.
+    retentionPolicy: "30d"
 
 # Postgresql configuration.
 ## Ref: https://artifacthub.io/packages/helm/bitnami/postgresql
