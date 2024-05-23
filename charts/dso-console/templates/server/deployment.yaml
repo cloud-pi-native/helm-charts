@@ -79,6 +79,9 @@ spec:
             name: {{ include "cpnConsole.fullname" . }}-server
         - secretRef:
             name: {{ include "cpnConsole.fullname" . }}-server
+        {{- if .Values.server.envFrom }}
+          {{- toYaml .Values.server.envFrom | nindent 8 }}
+        {{- end }}
         {{- if .Values.server.startupProbe.enabled }}
         startupProbe:
           httpGet:

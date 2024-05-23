@@ -150,6 +150,12 @@ client:
   #   volumeMounts:
   #     - mountPath: /my-volume/config
   #       name: config
+  # -- Console CPN client container env variables loaded from configmap or secret reference.
+  envFrom: []
+  # - configMapRef:
+  #   name: my-config
+  # - secretRef: 
+  #   name: my-secret
   # -- Console CPN client container env variables, it will be injected into a configmap and loaded into the container.
   env: {}
   # -- Console CPN client container env secrets, it will be injected into a secret and loaded into the container.
@@ -314,6 +320,12 @@ server:
   #   volumeMounts:
   #     - mountPath: /my-volume/config
   #       name: config
+  # -- Console CPN server container env variables loaded from configmap or secret reference.
+  envFrom: []
+  # - configMapRef:
+  #   name: my-config
+  # - secretRef: 
+  #   name: my-secret
   # -- Console CPN server container env variables, it will be injected into a configmap and loaded into the container.
   env: {}
     ## csv list of plugins to disabled
