@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "cpnConsole.common.labels" . | nindent 4 }}
 spec:
-  schedule: "{{ dsc.cnpg.backup.cron }}"
+  schedule: {{ .Values.cnpg.backup.cron }}
   backupOwnerReference: self
   cluster:
     name: {{ include "cpnConsole.fullname" . }}-pg-cluster

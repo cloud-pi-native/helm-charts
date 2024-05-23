@@ -50,7 +50,7 @@ spec:
           mountPath: /plugins
       {{- end }}
       {{- if .Values.server.initContainers }}
-        {{- tpl(toYaml .Values.server.initContainers) . | nindent 8 }}
+        {{- tpl (toYaml .Values.server.initContainers) . | nindent 8 }}
       {{- end }}
       {{- end }}
       containers:
@@ -134,7 +134,7 @@ spec:
           mountPath: {{ $volumeMount.mountPath }}
         {{- end }}
       {{- if .Values.server.extraContainers }}  
-        {{- tpl(toYaml .Values.server.extraContainers) . | nindent 8 }}  
+        {{- tpl (toYaml .Values.server.extraContainers) . | nindent 8 }}  
       {{- end }}
       {{- with .Values.server.nodeSelector }}
       nodeSelector:
