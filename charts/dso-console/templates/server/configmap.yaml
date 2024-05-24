@@ -9,7 +9,7 @@ data:
   KEYCLOAK_DOMAIN: {{ .Values.global.keycloak.domain }}
   KEYCLOAK_REALM: {{ .Values.global.keycloak.realm }}
   KEYCLOAK_REDIRECT_URI: {{ .Values.global.keycloak.redirectUri }}
-  KEYCLOAK_CLIENT_ID: {{ .Values.global.keycloak.clientIdBackend }}
+  KEYCLOAK_CLIENT_ID: {{ .Values.global.keycloak.clientIds.backend }}
   {{- if .Values.server.extraCa.name }}
   NODE_EXTRA_CA_CERTS: {{ printf "%s/%s" "/config" .Values.server.extraCa.mountSubPath }}
   {{- end }}
