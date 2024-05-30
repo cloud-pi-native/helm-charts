@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 1.3.2](https://img.shields.io/badge/Version-1.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.4.0](https://img.shields.io/badge/AppVersion-8.4.0-informational?style=flat-square)
+![Version: 1.4.0](https://img.shields.io/badge/Version-1.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.4.0](https://img.shields.io/badge/AppVersion-8.4.0-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -97,6 +97,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | cnpg.enableSuperuserAccess | bool | `true` | Enable superuser access. |
 | cnpg.enabled | bool | `false` | Whether or not cnpg cluster deployment should be enabled. |
 | cnpg.instances | int | `3` | Number of instances to spawn in the cluster. |
+| cnpg.nameOverride | string | `""` | Provide a name in place of the default cnpg cluster name. |
 | cnpg.primaryUpdateStrategy | string | `"unsupervised"` | Rolling update strategy used : unsupervised: automated update of the primary once all replicas have been upgraded (default) supervised: requires manual supervision to perform the switchover of the primary |
 | cnpg.pvcSize | string | `"10Gi"` | Size of the PVC used by each cnpg instance. |
 | cnpg.username | string | `"dso"` | Username of the database user. |

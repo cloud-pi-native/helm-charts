@@ -2,7 +2,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: {{ include "cpnConsole.fullname" . }}-pg-cluster
+  name: {{ .Values.cnpg.nameOverride | default (printf "%s-%s" (include "cpnConsole.fullname" .) "pg-cluster") }}
   labels:
     {{- include "cpnConsole.common.labels" . | nindent 4 }}
   annotations:
