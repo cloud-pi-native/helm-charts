@@ -40,6 +40,14 @@ spec:
       {{- if and .Values.server.plugins (len .Values.server.plugins) }}
       - image: docker.io/wbitt/network-multitool:alpine-minimal
         name: fetch-plugins
+        envFrom:
+        - configMapRef:
+            name: {{ include "cpnConsole.fullname" . }}-server
+        - secretRef:
+            name: {{ include "cpnConsole.fullname" . }}-server
+        {{- if .Values.server.envFrom }}
+          {{- toYaml .Values.server.envFrom | nindent 8 }}
+        {{- end }}
         command:
         - sh
         - /script/fetch
