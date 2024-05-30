@@ -464,6 +464,8 @@ server:
 cnpg:
   # -- Whether or not cnpg cluster deployment should be enabled.
   enabled: false
+  # -- Provide a name in place of the default cnpg cluster name.
+  nameOverride: ""
   # -- Number of instances to spawn in the cluster.
   instances: 3
   # -- Username of the database user.
