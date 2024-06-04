@@ -1,13 +1,13 @@
-{{- if .Values.cnpg.backup.enabled }}
+{{- if and .Values.cnpg.enabled .Values.cnpg.backup.enabled }}
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: {{ include "cpnConsole.fullname" . }}-pg-cluster
+  name: {{ .Values.cnpg.nameOverride | default (printf "%s-%s" (include "cpnConsole.fullname" .) "pg-cluster") }}
   labels:
     {{- include "cpnConsole.common.labels" . | nindent 4 }}
 spec:
   schedule: {{ .Values.cnpg.backup.cron }}
   backupOwnerReference: self
   cluster:
-    name: {{ include "cpnConsole.fullname" . }}-pg-cluster
+    name: {{ .Values.cnpg.nameOverride | default (printf "%s-%s" (include "cpnConsole.fullname" .) "pg-cluster") }}
 {{- end }}

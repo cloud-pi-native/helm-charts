@@ -465,7 +465,7 @@ cnpg:
   # -- Whether or not cnpg cluster deployment should be enabled.
   enabled: false
   # -- Provide a name in place of the default cnpg cluster name.
-  nameOverride: ""
+  nameOverride: &cnpgNameOverride ""
   # -- Number of instances to spawn in the cluster.
   instances: 3
   # -- Username of the database user.
@@ -495,16 +495,21 @@ cnpg:
       # -- The secret key containing S3 CA for cnpg backups.
       key: ""
     s3Credentials:
+      # -- Whether or not to create kuebernetes secret used for cnpg backups. 
+      # It will use `name`, `accessKeyId.key`, `accessKeyId.value`, `secretAccessKey.key` and `secretAccessKey.value` to create the secret.
+      create: false
+      # -- S3 kuebernetes secret name used for cnpg backups.
+      name: *cnpgNameOverride
       accessKeyId:
-        # -- S3 accessKeyId kuebernetes secret name used for cnpg backups.
-        name: ""
         # -- S3 accessKeyId kubernetes secret key used for cnpg backups.
-        key: ""
+        key: "accessKeyId"
+        # -- S3 accessKeyId value used for cnpg backups.
+        value: ""
       secretAccessKey:
-        # -- S3 secretAccessKey kuebernetes secret name used for cnpg backups.
-        name: ""
         # -- S3 secretAccessKey kubernetes secret key used for cnpg backups.
-        key: ""
+        key: "secretAccessKey"
+        # -- S3 secretAccessKey value used for cnpg backups.
+        value: ""
     # -- The cron rule used for cnpg backups. By default it runs every 6 hours.
     cron: "0 */6 * * * *"
     # -- Retention policy for cnpg backups recurrences.
