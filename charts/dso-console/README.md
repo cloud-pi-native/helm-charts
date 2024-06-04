@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 1.4.2](https://img.shields.io/badge/Version-1.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.4.1](https://img.shields.io/badge/AppVersion-8.4.1-informational?style=flat-square)
+![Version: 1.4.3](https://img.shields.io/badge/Version-1.4.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.4.1](https://img.shields.io/badge/AppVersion-8.4.1-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -89,10 +89,12 @@ A Helm chart to deploy Cloud Pi Native Console
 | cnpg.backup.endpointCA.name | string | `""` | The secret name containing S3 CA for cnpg backups. |
 | cnpg.backup.endpointURL | string | `""` | S3 endpoint for cnpg backups. |
 | cnpg.backup.retentionPolicy | string | `"30d"` | Retention policy for cnpg backups recurrences. |
-| cnpg.backup.s3Credentials.accessKeyId.key | string | `""` | S3 accessKeyId kubernetes secret key used for cnpg backups. |
-| cnpg.backup.s3Credentials.accessKeyId.name | string | `""` | S3 accessKeyId kuebernetes secret name used for cnpg backups. |
-| cnpg.backup.s3Credentials.secretAccessKey.key | string | `""` | S3 secretAccessKey kubernetes secret key used for cnpg backups. |
-| cnpg.backup.s3Credentials.secretAccessKey.name | string | `""` | S3 secretAccessKey kuebernetes secret name used for cnpg backups. |
+| cnpg.backup.s3Credentials.accessKeyId.key | string | `"accessKeyId"` | S3 accessKeyId kubernetes secret key used for cnpg backups. |
+| cnpg.backup.s3Credentials.accessKeyId.value | string | `""` | S3 accessKeyId value used for cnpg backups. |
+| cnpg.backup.s3Credentials.create | bool | `false` | Whether or not to create kuebernetes secret used for cnpg backups.  It will use `name`, `accessKeyId.key`, `accessKeyId.value`, `secretAccessKey.key` and `secretAccessKey.value` to create the secret. |
+| cnpg.backup.s3Credentials.name | string | `""` | S3 kuebernetes secret name used for cnpg backups. |
+| cnpg.backup.s3Credentials.secretAccessKey.key | string | `"secretAccessKey"` | S3 secretAccessKey kubernetes secret key used for cnpg backups. |
+| cnpg.backup.s3Credentials.secretAccessKey.value | string | `""` | S3 secretAccessKey value used for cnpg backups. |
 | cnpg.dbName | string | `"dso-console-db"` | Name of the database. |
 | cnpg.enableSuperuserAccess | bool | `true` | Enable superuser access. |
 | cnpg.enabled | bool | `false` | Whether or not cnpg cluster deployment should be enabled. |

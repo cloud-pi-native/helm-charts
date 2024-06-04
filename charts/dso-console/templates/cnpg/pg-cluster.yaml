@@ -40,10 +40,10 @@ spec:
         key: {{ .Values.cnpg.backup.endpointCA.key }}
       s3Credentials:
         accessKeyId:
-          name: {{.Values.cnpg.backup.s3Credentials.accessKeyId.name }}
+          name: {{ .Values.cnpg.backup.s3Credentials.name | default (printf "%s-%s" (include "cpnConsole.fullname" .) "pg-cluster") }}
           key: {{ .Values.cnpg.backup.s3Credentials.accessKeyId.key }}
         secretAccessKey:
-          name: {{ .Values.cnpg.backup.s3Credentials.secretAccessKey.name }}
+          name: {{ .Values.cnpg.backup.s3Credentials.name | default (printf "%s-%s" (include "cpnConsole.fullname" .) "pg-cluster") }}
           key: {{ .Values.cnpg.backup.s3Credentials.secretAccessKey.key }}
     retentionPolicy: {{ .Values.cnpg.backup.retentionPolicy }}
 {{- end }}
