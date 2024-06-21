@@ -1,0 +1,86 @@
+# -- Nom du cluster où est déployé ArgoCD (utilisé notamment dans l'URL)
+clusterName: cluster0
+# -- Nom de domaine à utiliser dans l'URL d'exposition
+domain: dso.minint.fr
+# -- Namespace d'installation de l'instance ArgoCD
+namespace: dso-argocd
+# -- Nom de l'organisation (utilisé dans les annotations)
+organization: org
+# -- URL du dépôt où les applications à déployer par ArgoCD sont spécifiées
+zoneRepo: https://gitlab.com/infra/zone.git
+# -- Type de cluster où est déployé ArgoCD (valeurs possibles : openshift, kubernetes)
+clusterType: kubernetes
+# See https://artifacthub.io/packages/helm/bitnami/argo-cd?modal=values
+# @ignored
+argo-cd:
+  server:
+    podSecurityContext:
+      fsGroup: null
+    containerSecurityContext:
+      runAsUser: null
+    resources:
+      requests:
+        memory: 75Mi
+      limits:
+        memory: 150Mi
+    metrics:
+      serviceMonitor:
+        enabled: true
+        interval: 60s
+  repoServer:
+    podSecurityContext:
+      fsGroup: null
+    containerSecurityContext:
+      runAsUser: null
+    metrics:
+      serviceMonitor:
+        enabled: true
+        interval: 60s
+    resources:
+      requests:
+        memory: 75Mi
+      limits:
+        memory: 150Mi
+  applicationSet:
+    enabled: true
+    serviceAccount:
+      automountServiceAccountToken: true
+    podSecurityContext: 
+      fsGroup: null
+    containerSecurityContext:
+      enabled: false
+    resources:
+      requests:
+        memory: 500Mi
+      limits:
+        memory: 1Gi
+    metrics:
+      serviceMonitor:
+        enabled: true
+        interval: 60s
+  controller:
+    defaultArgs:
+      selfHealTimeout: 180
+    metrics:
+      serviceMonitor:
+        enabled: true
+        interval: 60s
+    resources:
+      requests:
+        memory: 1Gi
+      limits:
+        memory: 2Gi
+  redisSecretInit:
+    enable: false
+  redis:
+    master:
+      podSecurityContext:
+        enabled: false
+      containerSecurityContext:
+        enabled: false
+    replica:
+      replicaCount: 1
+      podSecurityContext:
+        enabled: false
+      containerSecurityContext:
+        enabled: false

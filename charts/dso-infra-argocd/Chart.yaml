@@ -1,0 +1,10 @@
+---
+apiVersion: v2
+name: dso-argocd
+type: application
+version: 1.0.0
+appVersion: 2.9.0
+dependencies:
+  - name : argo-cd
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: "6.3.3"

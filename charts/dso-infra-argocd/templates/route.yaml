@@ -1,0 +1,18 @@
+{{- if eq .Values.clusterType "openshift" -}}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: "{{ $.Release.Namespace }}-route" 
+  namespace: "{{ .Release.Namespace }}"
+spec:
+  host: "{{ .Release.Namespace }}.{{ .Values.clusterName }}.{{ .Values.domain }}"
+  port:
+    targetPort: http
+  tls:
+    termination: passthrough
+  to:
+    kind: Service
+    name: "{{ .Release.Namespace }}-argo-cd-server"
+    weight: 100
+  wildcardPolicy: None
+{{- end -}}

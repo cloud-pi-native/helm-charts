@@ -1,0 +1,60 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: dso-project # Pour les Applications déployées par la Console DSO
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1" # Evite la suppression avant les Applications
+spec:
+  destinations:
+    - name: "*"
+      namespace: "*"
+      server: "*"
+  sourceRepos:
+    - "https://github.com/cloud-pi-native/helm-charts.git"
+    - "{{ .Values.zoneRepo }}"
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: dso-appset
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Evite la suppression avant l'instance ArgoCD
+spec:
+  goTemplate: true
+  generators:
+    - git:
+        repoURL: {{ .Values.zoneRepo }}
+        revision: HEAD
+        files:
+          - path: "**/values.yaml" # project/cluster/environment/values.yaml
+  template:
+    metadata:
+      name: {{"\"{{ index .path.segments 0 }}-{{ index .path.segments 1 }}-{{ index .path.segments 2 }}-root\"" }}
+      namespace: {{"\"{{ .argocd.namespace }}\""}}
+      labels:
+        app.kubernetes.io/managed-by: dso-console
+        dso/organization: {{ .Values.organization }}
+        dso/projet: {{"\"{{ index .path.segments 0 }}\""}}
+        dso/environment: {{"\"{{ index .path.segments 2 }}\""}}
+    spec:
+      project: dso-project
+      sources:
+        - repoURL: https://github.com/cloud-pi-native/helm-charts.git
+          targetRevision: {{"\"{{ .argocd.envChartVersion }}\""}}
+          path: charts/dso-env
+          helm:
+            valueFiles:
+              - {{"\"$values/{{ .path.path }}/{{ .path.filename }}\""}}
+        - repoURL: "{{ .Values.zoneRepo }}"
+          targetRevision: HEAD
+          ref: values
+      destination:
+        name: in-cluster
+        namespace: {{"\"{{ .argocd.namespace }}\""}}
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
