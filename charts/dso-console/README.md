@@ -109,7 +109,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | config.secrets | object | `{}` | Secrets to inject into the configuration. It is needed for server to get services informations such as urls, admin username, admin password or token, etc. |
 | fullnameOverride | string | `""` | String to fully override the default application name. |
 | global.env | object | `{"NODE_ENV":"production"}` | Map of environment variables to inject into backend and frontend containers. |
-| global.imagePullSecrets | array | Global Docker registry secret names as an array
+| global.imagePullSecrets | list | `[]` |  |
 | global.keycloak.clientIds.backend | string | `"console-backend"` | Keycloak clientId used for Console CPN client. |
 | global.keycloak.clientIds.frontend | string | `"console-frontend"` | Keycloak clientId used for frontend. |
 | global.keycloak.clientSecrets.backend | string | `""` | Keycloak clientSecret used for Console CPN client. |
