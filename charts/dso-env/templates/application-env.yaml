@@ -9,6 +9,8 @@ metadata:
     {{- if $.Values.commonLabels -}}
     {{- $.Values.commonLabels | toYaml | nindent 4 }}
     {{- end }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "4" # Force la suppression avant le AppProject
 spec:
   project: {{ .Values.argocd.project }}-env
   sources:
