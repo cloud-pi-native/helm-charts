@@ -35,6 +35,23 @@ Create image pull secret
 {{- end }}
 {{- end }}
 
+{{/*
+Define image pull secret properties
+*/}}
+{{- define "cpnConsole.renderImagePullSecrets" }}
+{{- $hasImagePullSecrets := (or (not (empty .Values.global.imagePullSecrets)) (and .Values.imageCredentials.username .Values.imageCredentials.password) ) }}
+{{- if $hasImagePullSecrets }}
+imagePullSecrets:
+{{- if (and .Values.imageCredentials.username .Values.imageCredentials.password) }}
+{{- $secretName := printf "%s-pullsecret" (include "cpnConsole.name" .)}}
+- name: {{ $secretName }}
+{{- end }}
+{{- range .Values.global.imagePullSecrets | uniq }}
+- name: {{ . }}
+{{- end -}}
+{{- end }}
+{{- end }}
+
 
 {{/*
 Create container environment variables from configmap

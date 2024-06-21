@@ -49,6 +49,9 @@ global:
   env:
     NODE_ENV: "production"
   # -- Map of environment variables to inject into backend and frontend containers.
+  imagePullSecrets: []
+  # imagePullSecrets:
+  # - name: my-pull-secret
   secrets: {}
   ## Global informations about the Keycloak instance that will be shared to the server and client.
   keycloak:
