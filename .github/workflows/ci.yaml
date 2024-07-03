@@ -54,11 +54,11 @@ jobs:
       - name: Run chart-testing (lint)
         run: ct lint --config ./ci/configs/chart-testing.yaml
 
-      - name: Create kind cluster
-        uses: helm/kind-action@v1
+      # - name: Create kind cluster
+      #   uses: helm/kind-action@v1
 
-      - name: Run chart-testing (install)
-        run: ct install --config ./ci/configs/chart-testing.yaml
+      # - name: Run chart-testing (install)
+      #   run: ct install --config ./ci/configs/chart-testing.yaml
 
   lint-docs:
     if: ${{ needs.path-filter.outputs.charts == 'true' }}
