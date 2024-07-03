@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 1.4.5](https://img.shields.io/badge/Version-1.4.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.6.0](https://img.shields.io/badge/AppVersion-8.6.0-informational?style=flat-square)
+![Version: 1.4.6](https://img.shields.io/badge/Version-1.4.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.7.0](https://img.shields.io/badge/AppVersion-8.7.0-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -10,7 +10,7 @@ A Helm chart to deploy Cloud Pi Native Console
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| Thibault Colin | <thibault.colin@interieur.gouv.fr> | <https://this-is-tobi.com> |
+| this-is-tobi | <thibault.colin@interieur.gouv.fr> | <https://this-is-tobi.com> |
 
 ## Source Code
 
@@ -91,7 +91,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | cnpg.backup.retentionPolicy | string | `"30d"` | Retention policy for cnpg backups recurrences. |
 | cnpg.backup.s3Credentials.accessKeyId.key | string | `"accessKeyId"` | S3 accessKeyId kubernetes secret key used for cnpg backups. |
 | cnpg.backup.s3Credentials.accessKeyId.value | string | `""` | S3 accessKeyId value used for cnpg backups. |
-| cnpg.backup.s3Credentials.create | bool | `false` | Whether or not to create kuebernetes secret used for cnpg backups.  It will use `name`, `accessKeyId.key`, `accessKeyId.value`, `secretAccessKey.key` and `secretAccessKey.value` to create the secret. |
+| cnpg.backup.s3Credentials.create | bool | `false` | Whether or not to create kuebernetes secret used for cnpg backups. It will use `name`, `accessKeyId.key`, `accessKeyId.value`, `secretAccessKey.key` and `secretAccessKey.value` to create the secret. |
 | cnpg.backup.s3Credentials.name | string | `""` | S3 kuebernetes secret name used for cnpg backups. |
 | cnpg.backup.s3Credentials.secretAccessKey.key | string | `"secretAccessKey"` | S3 secretAccessKey kubernetes secret key used for cnpg backups. |
 | cnpg.backup.s3Credentials.secretAccessKey.value | string | `""` | S3 secretAccessKey value used for cnpg backups. |
@@ -153,10 +153,10 @@ A Helm chart to deploy Cloud Pi Native Console
 | keycloak.tls.enabled | bool | `false` |  |
 | nameOverride | string | `""` | Provide a name in place of the default application name. |
 | postgresql.architecture | string | `"standalone"` |  |
-| postgresql.auth.database | string | `""` |  |
-| postgresql.auth.password | string | `""` |  |
-| postgresql.auth.postgresPassword | string | `""` |  |
-| postgresql.auth.username | string | `""` |  |
+| postgresql.auth.database | string | `"default"` |  |
+| postgresql.auth.password | string | `"default"` |  |
+| postgresql.auth.postgresPassword | string | `"default"` |  |
+| postgresql.auth.username | string | `"default"` |  |
 | postgresql.enabled | bool | `true` |  |
 | postgresql.nameOverride | string | `"cpn-console-db"` |  |
 | postgresql.primary.persistence.size | string | `"2Gi"` |  |

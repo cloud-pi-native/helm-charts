@@ -120,10 +120,10 @@ client:
   initContainers: []
   # - name: wait-for-keycloak
   #   image: docker.io/curlimages/curl:latest
-  #   command: 
+  #   command:
   #   - "/bin/sh"
   #   - "-c"
-  #   args: 
+  #   args:
   #   - "while [ $(curl -sw '%{http_code}' http://webserver.svc.cluster.local -o /dev/null) -ne 200 ]; do sleep 5; echo 'Waiting for the webserver...'; done"
   #   volumeMounts:
   #   - mountPath: /custom-volume
@@ -154,7 +154,7 @@ client:
   envFrom: []
   # - configMapRef:
   #     name: my-config
-  # - secretRef: 
+  # - secretRef:
   #     name: my-secret
   # -- Console CPN client container env variables, it will be injected into a configmap and loaded into the container.
   env: {}
@@ -290,10 +290,10 @@ server:
   initContainers: []
   # - name: wait-for-keycloak
   #   image: docker.io/curlimages/curl:latest
-  #   command: 
+  #   command:
   #   - "/bin/sh"
   #   - "-c"
-  #   args: 
+  #   args:
   #   - "while [ $(curl -sw '%{http_code}' http://webserver.svc.cluster.local -o /dev/null) -ne 200 ]; do sleep 5; echo 'Waiting for the webserver...'; done"
   #   volumeMounts:
   #   - mountPath: /custom-volume
@@ -324,7 +324,7 @@ server:
   envFrom: []
   # - configMapRef:
   #     name: my-config
-  # - secretRef: 
+  # - secretRef:
   #     name: my-secret
   # -- Console CPN server container env variables, it will be injected into a configmap and loaded into the container.
   env: {}
@@ -495,7 +495,7 @@ cnpg:
       # -- The secret key containing S3 CA for cnpg backups.
       key: ""
     s3Credentials:
-      # -- Whether or not to create kuebernetes secret used for cnpg backups. 
+      # -- Whether or not to create kuebernetes secret used for cnpg backups.
       # It will use `name`, `accessKeyId.key`, `accessKeyId.value`, `secretAccessKey.key` and `secretAccessKey.value` to create the secret.
       create: false
       # -- S3 kuebernetes secret name used for cnpg backups.
@@ -522,10 +522,10 @@ postgresql:
   nameOverride: "cpn-console-db"
   architecture: "standalone"
   auth:
-    postgresPassword: ""
-    username: ""
-    password: ""
-    database: ""
+    postgresPassword: "default"
+    username: "default"
+    password: "default"
+    database: "default"
   primary:
     service:
       type: "ClusterIP"

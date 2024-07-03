@@ -2,8 +2,8 @@ apiVersion: v2
 name: cpn-console
 description: A Helm chart to deploy Cloud Pi Native Console
 type: application
-version: 1.4.5
-appVersion: 8.6.0
+version: 1.4.6
+appVersion: 8.7.0
 keywords: []
 home: https://cloud-pi-native.fr
 sources:
@@ -21,6 +21,6 @@ dependencies:
 deprecated: false
 annotations: {}
 maintainers:
-  - name: Thibault Colin
+  - name: this-is-tobi
     email: thibault.colin@interieur.gouv.fr
     url: https://this-is-tobi.com
