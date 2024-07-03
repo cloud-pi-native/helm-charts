@@ -21,6 +21,6 @@ dependencies:
 deprecated: false
 annotations: {}
 maintainers:
-  - name: Thibault Colin
+  - name: this-is-tobi
     email: thibault.colin@interieur.gouv.fr
     url: https://this-is-tobi.com
