@@ -9,4 +9,3 @@ application:
     cpu:
     # -- Quota mémoire pour le namespace
     memory:
-

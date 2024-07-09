@@ -6,7 +6,9 @@ metadata:
   namespace: {{ .Values.argocd.namespace }}
   labels:
     app.kubernetes.io/managed-by: dso-console
-    {{- .Values.commonLabels | toYaml | nindent 4 }}
+    {{- if $.Values.commonLabels -}}
+    {{- $.Values.commonLabels | toYaml | nindent 4 }}
+    {{- end }}
 spec:
   project: {{ .Values.argocd.project }}-env
   sources:
