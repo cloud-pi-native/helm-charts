@@ -482,6 +482,17 @@ cnpg:
   pvcSize: "10Gi"
   # -- Additional cnpg cluster annotations.
   annotations: {}
+  # -- Whether or not a NodePort service should be created to exposed the database.
+  exposed: false
+  # -- Port used for NodePort service. Needs `exposed` tu be true.
+  nodePort:
+  # -- Mode used to deploy the cnpg cluster, it should be `primary` or `replica`.
+  mode: "primary"
+  replica:
+    # -- Primary cnpg cluster host used for replica mode.
+    host:
+    # -- Primary cnpg cluster port used for replica mode.
+    port:
   backup:
     # -- Whether or not cnpg cluster deployment should be enabled.
     enabled: false

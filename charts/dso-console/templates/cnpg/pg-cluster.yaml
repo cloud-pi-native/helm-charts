@@ -22,15 +22,55 @@ spec:
       max_worker_processes: "60"
     pg_hba:
       - {{ printf "%s %s %s %s %s" "host" .Values.cnpg.dbName .Values.cnpg.username "all" "md5" }}
+      - {{ printf "%s %s %s %s %s" "host" .Values.cnpg.dbName "streaming_replica" "all" "md5" }}
   bootstrap:
+  {{- if eq .Values.cnpg.mode "primary" }}
     initdb:
       database: {{ .Values.cnpg.dbName }}
       owner: {{ .Values.cnpg.username }}
+  {{- else if eq .Values.cnpg.mode "replica" }}
+    recovery:
+      source: cluster-primary
+  replica:
+    enabled: true
+    source: cluster-primary
+  externalClusters:
+  - name: cluster-primary
+    {{- if .Values.cnpg.backup }}
+    barmanObjectStore:
+      destinationPath: {{ .Values.cnpg.backup.destinationPath }}
+      endpointURL: {{ .Values.cnpg.backup.endpointURL }}
+      endpointCA:
+        name: {{ .Values.cnpg.backup.endpointCA.name }}
+        key: {{ .Values.cnpg.backup.endpointCA.key }}
+      s3Credentials:
+        accessKeyId:
+          name: {{ .Values.cnpg.backup.s3Credentials.name | default (printf "%s-%s" (include "cpnConsole.fullname" .) "pg-cluster") }}
+          key: {{ .Values.cnpg.backup.s3Credentials.accessKeyId.key }}
+        secretAccessKey:
+          name: {{ .Values.cnpg.backup.s3Credentials.name | default (printf "%s-%s" (include "cpnConsole.fullname" .) "pg-cluster") }}
+          key: {{ .Values.cnpg.backup.s3Credentials.secretAccessKey.key }}
+    {{- end }}
+    connectionParameters:
+      host: {{ .Values.cnpg.replica.host }}
+      port: {{ .Values.cnpg.replica.port }}
+      dbname: {{ .Values.cnpg.dbName }}
+      sslmode: prefer
+    sslKey:
+      name: {{ (printf "%s-%s" .Values.cnpg.nameOverride "replication") | default (printf "%s-%s-%s" (include "cpnConsole.fullname" .) "pg-cluster" "replication") }}
+      key: tls.key
+    sslCert:
+      name: {{ (printf "%s-%s" .Values.cnpg.nameOverride "replication") | default (printf "%s-%s-%s" (include "cpnConsole.fullname" .) "pg-cluster" "replication") }}
+      key: tls.crt
+    sslRootCert:
+      name: {{ (printf "%s-%s" .Values.cnpg.nameOverride "ca") | default (printf "%s-%s-%s" (include "cpnConsole.fullname" .) "pg-cluster" "ca") }}
+      key: ca.crt
+  {{- end }}
   enableSuperuserAccess: {{ .Values.cnpg.enableSuperuserAccess }}
   primaryUpdateStrategy: {{ .Values.cnpg.primaryUpdateStrategy }}
   storage:
     size: {{ .Values.cnpg.pvcSize }}
-{{- if .Values.cnpg.backup.enabled }}
+  {{- if .Values.cnpg.backup.enabled }}
   backup:
     barmanObjectStore:
       destinationPath: {{ .Values.cnpg.backup.destinationPath }}
@@ -46,5 +86,5 @@ spec:
           name: {{ .Values.cnpg.backup.s3Credentials.name | default (printf "%s-%s" (include "cpnConsole.fullname" .) "pg-cluster") }}
           key: {{ .Values.cnpg.backup.s3Credentials.secretAccessKey.key }}
     retentionPolicy: {{ .Values.cnpg.backup.retentionPolicy }}
-{{- end }}
+  {{- end }}
 {{- end }}
