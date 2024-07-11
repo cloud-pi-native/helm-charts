@@ -1,20 +1,27 @@
+{{- range .Values.application.repositories }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ .Values.argocd.project }}-app
-  namespace: {{ .Values.argocd.namespace }}
+  name: {{ $.Values.argocd.project }}-app-{{ .name }}
+  namespace: {{ $.Values.argocd.namespace }}
   labels:
     app.kubernetes.io/managed-by: dso-console
-    {{- .Values.commonLabels | toYaml | nindent 4 }}
+    {{- if $.Values.commonLabels -}}
+    {{- $.Values.commonLabels | toYaml | nindent 4 }}
+    {{- end }}
 spec:
-  project: {{ .Values.argocd.project }}-app
-  sources: {{ .Values.application.repositories | toYaml | nindent 4 }}
+  project: {{ $.Values.argocd.project }}-app
+  source: 
+    repoURL: {{ .repoURL }}
+    targetRevision:  {{ .targetRevision }}
+    path:  {{ .path }}
   destination:
-    name: {{ .Values.application.destination.name }}
-    namespace: {{ .Values.application.destination.namespace }}
+    name: {{ $.Values.application.destination.name }}
+    namespace: {{ $.Values.application.destination.namespace }}
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
       allowEmpty: true
+{{- end }}

@@ -3,7 +3,9 @@ kind: AppProject
 metadata:
   labels:
     app.kubernetes.io/managed-by: dso-console
-    {{- .Values.commonLabels | toYaml | nindent 4 }}
+    {{- if $.Values.commonLabels -}}
+    {{- $.Values.commonLabels | toYaml | nindent 4 }}
+    {{- end }}
   name: {{ .Values.argocd.project }}-env
   namespace: {{ .Values.argocd.namespace }}
 spec:

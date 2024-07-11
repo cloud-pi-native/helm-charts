@@ -1,5 +1,5 @@
 # -- Labels appliqués sur les différents objets
-commonLabels: {}
+commonLabels: ""
 argocd:
   # -- Préfixe des projets ArgoCD à créer
   project: project1
@@ -8,6 +8,8 @@ argocd:
   # -- Version du Chart dso-ns à utiliser
   nsChartVersion: 1.0.0
 environment:
+  # -- URL du repo avec le fichier values à utiliser pour cet environnement
+  valueFileRepository: https://gitlab.com/projects/Infra/org/demo/infra.git
   # -- Revision Git à utiliser lors de la récupération des values
   valueFileRevision: HEAD
   # -- Chemin du fichier à utiliser lors de la récupération des values
@@ -21,11 +23,12 @@ application:
   sourceReposPrefix: https://gitlab.com/projects/org/demo
   destination:
     # -- Nom du cluster applicatif cible
-    name: ""
+    name: dest
     # -- Nom du namespace applicatif cible
     namespace: app1
   # -- Liste des dépôts à déployer
   repositories:
-  - repoURL: https://gitlab.com/projects/org/demo/quota-explorer.git
+  - name: quota-explorer
+    repoURL: https://gitlab.com/projects/org/demo/quota-explorer.git
     targetRevision: main
     path: '.'
