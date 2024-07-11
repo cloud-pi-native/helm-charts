@@ -28,7 +28,6 @@ application:
     namespace: app1
   # -- Liste des dépôts à déployer
   repositories:
-  - name: quota-explorer
-    repoURL: https://gitlab.com/projects/org/demo/quota-explorer.git
+  - repoURL: https://gitlab.com/projects/org/demo/quota-explorer.git
     targetRevision: main
     path: '.'
