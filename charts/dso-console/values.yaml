@@ -465,9 +465,13 @@ cnpg:
   # -- Whether or not cnpg cluster deployment should be enabled.
   enabled: false
   # -- Provide a name in place of the default cnpg cluster name.
+  # The cnpg operator adds the cluster name to S3's `destinationPath`, so it is necessary to provide the exact match of the main cluster when using `replica` or `restore` mode.
   nameOverride: &cnpgNameOverride ""
   # -- Number of instances to spawn in the cluster.
   instances: 3
+  # -- Name of the image used for database.
+  # By default (empty string), the operator will install the latest available minor version of the latest major version of PostgreSQL when the operator was released
+  imageName: ""
   # -- Username of the database user.
   username: "dso"
   # -- Name of the database.
@@ -486,13 +490,13 @@ cnpg:
   exposed: false
   # -- Port used for NodePort service. Needs `exposed` tu be true.
   nodePort:
-  # -- Mode used to deploy the cnpg cluster, it should be `primary` or `replica`.
+  # -- Mode used to deploy the cnpg cluster, it should be `primary`, `replica` or `restore`.
   mode: "primary"
   replica:
     # -- Primary cnpg cluster host used for replica mode.
-    host:
+    host: ""
     # -- Primary cnpg cluster port used for replica mode.
-    port:
+    port: 5432
   backup:
     # -- Whether or not cnpg cluster deployment should be enabled.
     enabled: false
@@ -510,16 +514,18 @@ cnpg:
       # It will use `name`, `accessKeyId.key`, `accessKeyId.value`, `secretAccessKey.key` and `secretAccessKey.value` to create the secret.
       create: false
       # -- S3 kuebernetes secret name used for cnpg backups.
-      name: *cnpgNameOverride
+      secretName: *cnpgNameOverride
       accessKeyId:
         # -- S3 accessKeyId kubernetes secret key used for cnpg backups.
         key: "accessKeyId"
         # -- S3 accessKeyId value used for cnpg backups.
+        # Only needed if `backup.s3Credentials.create` is set to `true`.
         value: ""
       secretAccessKey:
         # -- S3 secretAccessKey kubernetes secret key used for cnpg backups.
         key: "secretAccessKey"
         # -- S3 secretAccessKey value used for cnpg backups.
+        # Only needed if `backup.s3Credentials.create` is set to `true`.
         value: ""
     # -- The cron rule used for cnpg backups. By default it runs every 6 hours.
     cron: "0 0 */6 * * *"

@@ -2,12 +2,12 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: {{ .Values.cnpg.nameOverride | default (printf "%s-%s" (include "cpnConsole.fullname" .) "pg-cluster") }}
+  name: {{ .Values.cnpg.nameOverride | default (printf "%s-%s" "pg-cluster" (include "cpnConsole.fullname" .)) }}
   labels:
     {{- include "cpnConsole.common.labels" . | nindent 4 }}
 spec:
   schedule: {{ .Values.cnpg.backup.cron }}
   backupOwnerReference: self
   cluster:
-    name: {{ .Values.cnpg.nameOverride | default (printf "%s-%s" (include "cpnConsole.fullname" .) "pg-cluster") }}
+    name: {{ .Values.cnpg.nameOverride | default (printf "%s-%s" "pg-cluster" (include "cpnConsole.fullname" .)) }}
 {{- end }}

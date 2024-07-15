@@ -2,7 +2,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: {{ .Values.cnpg.nameOverride | default (printf "%s-%s" (include "cpnConsole.fullname" .) "pg-cluster") }}
+  name: {{ .Values.cnpg.nameOverride | default (printf "%s-%s" "pg-cluster" (include "cpnConsole.fullname" .)) }}
   labels:
     {{- include "cpnConsole.common.labels" . | nindent 4 }}
   annotations:
@@ -15,9 +15,6 @@ spec:
   imageName: {{ .Values.cnpg.imageName }}
   {{- end }}
   postgresql:
-    {{- if .Values.cnpg.imageName }}
-    image: {{ .Values.cnpg.imageName }}
-    {{- end }}
     parameters:
       max_worker_processes: "60"
     pg_hba:
@@ -28,29 +25,29 @@ spec:
     initdb:
       database: {{ .Values.cnpg.dbName }}
       owner: {{ .Values.cnpg.username }}
-  {{- else if eq .Values.cnpg.mode "replica" }}
+  {{- else if or (eq .Values.cnpg.mode "replica") (eq .Values.cnpg.mode "restore") }}
     recovery:
-      source: cluster-primary
-  replica:
-    enabled: true
-    source: cluster-primary
+      source: {{ .Values.cnpg.nameOverride | default (printf "%s-%s" "pg-cluster" (include "cpnConsole.fullname" .)) }}
   externalClusters:
-  - name: cluster-primary
-    {{- if .Values.cnpg.backup }}
+  - name: {{ .Values.cnpg.nameOverride | default (printf "%s-%s" "pg-cluster" (include "cpnConsole.fullname" .)) }}
+    {{- if or (.Values.cnpg.backup.enabled) (eq .Values.cnpg.mode "restore") }}
     barmanObjectStore:
       destinationPath: {{ .Values.cnpg.backup.destinationPath }}
       endpointURL: {{ .Values.cnpg.backup.endpointURL }}
+      {{- if .Values.cnpg.backup.endpointCA.name }}
       endpointCA:
         name: {{ .Values.cnpg.backup.endpointCA.name }}
         key: {{ .Values.cnpg.backup.endpointCA.key }}
+      {{- end }}
       s3Credentials:
         accessKeyId:
-          name: {{ .Values.cnpg.backup.s3Credentials.name | default (printf "%s-%s" (include "cpnConsole.fullname" .) "pg-cluster") }}
+          name: {{ .Values.cnpg.backup.s3Credentials.secretName | default (printf "%s-%s" "pg-cluster" (include "cpnConsole.fullname" .)) }}
           key: {{ .Values.cnpg.backup.s3Credentials.accessKeyId.key }}
         secretAccessKey:
-          name: {{ .Values.cnpg.backup.s3Credentials.name | default (printf "%s-%s" (include "cpnConsole.fullname" .) "pg-cluster") }}
+          name: {{ .Values.cnpg.backup.s3Credentials.secretName | default (printf "%s-%s" "pg-cluster" (include "cpnConsole.fullname" .)) }}
           key: {{ .Values.cnpg.backup.s3Credentials.secretAccessKey.key }}
     {{- end }}
+    {{- if eq .Values.cnpg.mode "replica" }}
     connectionParameters:
       host: {{ .Values.cnpg.replica.host }}
       port: {{ .Values.cnpg.replica.port }}
@@ -65,6 +62,12 @@ spec:
     sslRootCert:
       name: {{ (printf "%s-%s" .Values.cnpg.nameOverride "ca") | default (printf "%s-%s-%s" (include "cpnConsole.fullname" .) "pg-cluster" "ca") }}
       key: ca.crt
+    {{- end }}
+  {{- end }}
+  {{- if eq .Values.cnpg.mode "replica" }}
+  replica:
+    enabled: true
+    source: {{ .Values.cnpg.nameOverride | default (printf "%s-%s" "pg-cluster" (include "cpnConsole.fullname" .)) }}
   {{- end }}
   enableSuperuserAccess: {{ .Values.cnpg.enableSuperuserAccess }}
   primaryUpdateStrategy: {{ .Values.cnpg.primaryUpdateStrategy }}
@@ -80,10 +83,10 @@ spec:
         key: {{ .Values.cnpg.backup.endpointCA.key }}
       s3Credentials:
         accessKeyId:
-          name: {{ .Values.cnpg.backup.s3Credentials.name | default (printf "%s-%s" (include "cpnConsole.fullname" .) "pg-cluster") }}
+          name: {{ .Values.cnpg.backup.s3Credentials.secretName | default (printf "%s-%s" "pg-cluster" (include "cpnConsole.fullname" .)) }}
           key: {{ .Values.cnpg.backup.s3Credentials.accessKeyId.key }}
         secretAccessKey:
-          name: {{ .Values.cnpg.backup.s3Credentials.name | default (printf "%s-%s" (include "cpnConsole.fullname" .) "pg-cluster") }}
+          name: {{ .Values.cnpg.backup.s3Credentials.secretName | default (printf "%s-%s" "pg-cluster" (include "cpnConsole.fullname" .)) }}
           key: {{ .Values.cnpg.backup.s3Credentials.secretAccessKey.key }}
     retentionPolicy: {{ .Values.cnpg.backup.retentionPolicy }}
   {{- end }}

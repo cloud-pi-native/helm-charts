@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 1.5.2](https://img.shields.io/badge/Version-1.5.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.8.2](https://img.shields.io/badge/AppVersion-8.8.2-informational?style=flat-square)
+![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.8.2](https://img.shields.io/badge/AppVersion-8.8.2-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -90,23 +90,24 @@ A Helm chart to deploy Cloud Pi Native Console
 | cnpg.backup.endpointURL | string | `""` | S3 endpoint for cnpg backups. |
 | cnpg.backup.retentionPolicy | string | `"30d"` | Retention policy for cnpg backups recurrences. |
 | cnpg.backup.s3Credentials.accessKeyId.key | string | `"accessKeyId"` | S3 accessKeyId kubernetes secret key used for cnpg backups. |
-| cnpg.backup.s3Credentials.accessKeyId.value | string | `""` | S3 accessKeyId value used for cnpg backups. |
+| cnpg.backup.s3Credentials.accessKeyId.value | string | `""` | S3 accessKeyId value used for cnpg backups. Only needed if `backup.s3Credentials.create` is set to `true`. |
 | cnpg.backup.s3Credentials.create | bool | `false` | Whether or not to create kuebernetes secret used for cnpg backups. It will use `name`, `accessKeyId.key`, `accessKeyId.value`, `secretAccessKey.key` and `secretAccessKey.value` to create the secret. |
-| cnpg.backup.s3Credentials.name | string | `""` | S3 kuebernetes secret name used for cnpg backups. |
 | cnpg.backup.s3Credentials.secretAccessKey.key | string | `"secretAccessKey"` | S3 secretAccessKey kubernetes secret key used for cnpg backups. |
-| cnpg.backup.s3Credentials.secretAccessKey.value | string | `""` | S3 secretAccessKey value used for cnpg backups. |
+| cnpg.backup.s3Credentials.secretAccessKey.value | string | `""` | S3 secretAccessKey value used for cnpg backups. Only needed if `backup.s3Credentials.create` is set to `true`. |
+| cnpg.backup.s3Credentials.secretName | string | `""` | S3 kuebernetes secret name used for cnpg backups. |
 | cnpg.dbName | string | `"dso-console-db"` | Name of the database. |
 | cnpg.enableSuperuserAccess | bool | `true` | Enable superuser access. |
 | cnpg.enabled | bool | `false` | Whether or not cnpg cluster deployment should be enabled. |
 | cnpg.exposed | bool | `false` | Whether or not a NodePort service should be created to exposed the database. |
+| cnpg.imageName | string | `""` | Name of the image used for database. By default (empty string), the operator will install the latest available minor version of the latest major version of PostgreSQL when the operator was released |
 | cnpg.instances | int | `3` | Number of instances to spawn in the cluster. |
-| cnpg.mode | string | `"primary"` | Mode used to deploy the cnpg cluster, it should be `primary` or `replica`. |
-| cnpg.nameOverride | string | `""` | Provide a name in place of the default cnpg cluster name. |
+| cnpg.mode | string | `"primary"` | Mode used to deploy the cnpg cluster, it should be `primary`, `replica` or `restore`. |
+| cnpg.nameOverride | string | `""` | Provide a name in place of the default cnpg cluster name. The cnpg operator adds the cluster name to S3's `destinationPath`, so it is necessary to provide the exact match of the main cluster when using `replica` or `restore` mode. |
 | cnpg.nodePort | string | `nil` | Port used for NodePort service. Needs `exposed` tu be true. |
 | cnpg.primaryUpdateStrategy | string | `"unsupervised"` | Rolling update strategy used : unsupervised: automated update of the primary once all replicas have been upgraded (default) supervised: requires manual supervision to perform the switchover of the primary |
 | cnpg.pvcSize | string | `"10Gi"` | Size of the PVC used by each cnpg instance. |
-| cnpg.replica.host | string | `nil` | Primary cnpg cluster host used for replica mode. |
-| cnpg.replica.port | string | `nil` | Primary cnpg cluster port used for replica mode. |
+| cnpg.replica.host | string | `""` | Primary cnpg cluster host used for replica mode. |
+| cnpg.replica.port | int | `5432` | Primary cnpg cluster port used for replica mode. |
 | cnpg.username | string | `"dso"` | Username of the database user. |
 | config.create | bool | `false` | Whether or not helm should create the console config. |
 | config.name | string | `"dso-config"` | Name of the genrated config. |
