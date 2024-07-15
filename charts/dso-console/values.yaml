@@ -522,7 +522,7 @@ cnpg:
         # -- S3 secretAccessKey value used for cnpg backups.
         value: ""
     # -- The cron rule used for cnpg backups. By default it runs every 6 hours.
-    cron: "0 */6 * * * *"
+    cron: "0 0 */6 * * *"
     # -- Retention policy for cnpg backups recurrences.
     retentionPolicy: "30d"
 

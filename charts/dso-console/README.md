@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 1.5.0](https://img.shields.io/badge/Version-1.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.8.1](https://img.shields.io/badge/AppVersion-8.8.1-informational?style=flat-square)
+![Version: 1.5.1](https://img.shields.io/badge/Version-1.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.8.1](https://img.shields.io/badge/AppVersion-8.8.1-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -82,7 +82,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | client.strategy.type | string | `"RollingUpdate"` | Strategy type used to replace old Pods by new ones, can be "Recreate" or "RollingUpdate". |
 | client.tolerations | list | `[]` | Default tolerations for Console CPN client. |
 | cnpg.annotations | object | `{}` | Additional cnpg cluster annotations. |
-| cnpg.backup.cron | string | `"0 */6 * * * *"` | The cron rule used for cnpg backups. By default it runs every 6 hours. |
+| cnpg.backup.cron | string | `"0 0 */6 * * *"` | The cron rule used for cnpg backups. By default it runs every 6 hours. |
 | cnpg.backup.destinationPath | string | `""` | S3 destination path for cnpg backups (it should be set like `s3://<bucket_name>/<path>`). |
 | cnpg.backup.enabled | bool | `false` | Whether or not cnpg cluster deployment should be enabled. |
 | cnpg.backup.endpointCA.key | string | `""` | The secret key containing S3 CA for cnpg backups. |
