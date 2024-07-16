@@ -1,5 +1,23 @@
 apiVersion: v1
 entries:
+  cpn-cnpg:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-07-16T20:58:36.461302409Z"
+    description: A Helm Chart to deploy easily a CNPG cluster
+    digest: ef70a07fb931071327f3d58e5087e3dbf7f88b06e2b8f45650bf03caef3f30d9
+    home: https://cloud-pi-native.fr
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: cpn-cnpg
+    sources:
+    - https://github.com/cloud-pi-native/helm-charts
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-cnpg-1.0.0/cpn-cnpg-1.0.0.tgz
+    version: 1.0.0
   cpn-console:
   - apiVersion: v2
     appVersion: 8.8.2
@@ -737,4 +755,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-ns-1.0.0/dso-ns-1.0.0.tgz
     version: 1.0.0
-generated: "2024-07-15T14:13:36.796861101Z"
+generated: "2024-07-16T20:58:36.461409699Z"
