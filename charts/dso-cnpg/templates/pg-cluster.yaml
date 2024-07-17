@@ -27,6 +27,8 @@ spec:
   {{- else if or (eq .Values.mode "replica") (eq .Values.mode "restore") }}
     recovery:
       source: {{ .Values.nameOverride | default (printf "%s-%s" "pg-cluster" (include "cpnCnpg.fullname" .)) }}
+      database: {{ .Values.dbName }}
+      owner: {{ .Values.username }}
   externalClusters:
   - name: {{ .Values.nameOverride | default (printf "%s-%s" "pg-cluster" (include "cpnCnpg.fullname" .)) }}
     {{- if or (.Values.backup.enabled) (eq .Values.mode "restore") }}

@@ -28,6 +28,8 @@ spec:
   {{- else if or (eq .Values.cnpg.mode "replica") (eq .Values.cnpg.mode "restore") }}
     recovery:
       source: {{ .Values.cnpg.nameOverride | default (printf "%s-%s" "pg-cluster" (include "cpnConsole.fullname" .)) }}
+      database: {{ .Values.cnpg.dbName }}
+      owner: {{ .Values.cnpg.username }}
   externalClusters:
   - name: {{ .Values.cnpg.nameOverride | default (printf "%s-%s" "pg-cluster" (include "cpnConsole.fullname" .)) }}
     {{- if or (.Values.cnpg.backup.enabled) (eq .Values.cnpg.mode "restore") }}
