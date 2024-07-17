@@ -3,6 +3,23 @@ entries:
   cpn-cnpg:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2024-07-17T12:19:27.108149871Z"
+    description: A Helm Chart to deploy easily a CNPG cluster
+    digest: 00fcbf57b6ecd5873dfa062b81f94555a54e547e86c7b9f4c0b736c9c4c18be0
+    home: https://cloud-pi-native.fr
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: cpn-cnpg
+    sources:
+    - https://github.com/cloud-pi-native/helm-charts
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-cnpg-1.0.1/cpn-cnpg-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2024-07-16T20:58:36.461302409Z"
     description: A Helm Chart to deploy easily a CNPG cluster
     digest: ef70a07fb931071327f3d58e5087e3dbf7f88b06e2b8f45650bf03caef3f30d9
@@ -19,6 +36,33 @@ entries:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-cnpg-1.0.0/cpn-cnpg-1.0.0.tgz
     version: 1.0.0
   cpn-console:
+  - apiVersion: v2
+    appVersion: 8.8.2
+    created: "2024-07-17T12:19:27.284413473Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.7.3
+    - condition: keycloak.enabled
+      name: keycloak
+      repository: https://charts.bitnami.com/bitnami
+      version: 19.3.0
+    description: A Helm chart to deploy Cloud Pi Native Console
+    digest: f9760d23730b09239f6b22e5edb53627aba3894038b7d0d09959cc5d7fcbdc29
+    home: https://cloud-pi-native.fr
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: cpn-console
+    sources:
+    - https://github.com/cloud-pi-native/helm-charts
+    - https://github.com/cloud-pi-native/console
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-console-1.6.1/cpn-console-1.6.1.tgz
+    version: 1.6.1
   - apiVersion: v2
     appVersion: 8.8.2
     created: "2024-07-17T10:05:51.895782776Z"
@@ -782,4 +826,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-ns-1.0.0/dso-ns-1.0.0.tgz
     version: 1.0.0
-generated: "2024-07-17T10:05:51.895983052Z"
+generated: "2024-07-17T12:19:27.284645226Z"
