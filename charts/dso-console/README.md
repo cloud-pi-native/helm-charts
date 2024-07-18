@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 1.7.0](https://img.shields.io/badge/Version-1.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.9.1](https://img.shields.io/badge/AppVersion-8.9.1-informational?style=flat-square)
+![Version: 1.8.0](https://img.shields.io/badge/Version-1.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.9.1](https://img.shields.io/badge/AppVersion-8.9.1-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -101,6 +101,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | cnpg.exposed | bool | `false` | Whether or not a NodePort service should be created to exposed the database. |
 | cnpg.imageName | string | `""` | Name of the image used for database. By default (empty string), the operator will install the latest available minor version of the latest major version of PostgreSQL when the operator was released |
 | cnpg.instances | int | `3` | Number of instances to spawn in the cluster. |
+| cnpg.labels | object | `{}` | Additional cnpg cluster labels. |
 | cnpg.mode | string | `"primary"` | Mode used to deploy the cnpg cluster, it should be `primary`, `replica` or `restore`. |
 | cnpg.nameOverride | string | `""` | Provide a name in place of the default cnpg cluster name. The cnpg operator adds the cluster name to S3's `destinationPath`, so it is necessary to provide the exact match of the main cluster when using `replica` or `restore` mode. |
 | cnpg.nodePort | string | `nil` | Port used for NodePort service. Needs `exposed` tu be true. |
