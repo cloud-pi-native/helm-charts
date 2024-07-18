@@ -460,6 +460,11 @@ server:
     # -- Service account name.
     name: "cpn-console-server"
 
+# CNPG operator configuration
+cnpg-operator:
+  # -- Whether or not cnpg operator should be deployed.
+  enabled: false
+
 # CNPG configuration
 cnpg:
   # -- Whether or not cnpg cluster deployment should be enabled.

@@ -16,6 +16,12 @@ A Helm Chart to deploy easily a CNPG cluster
 
 * <https://github.com/cloud-pi-native/helm-charts>
 
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://cloudnative-pg.github.io/charts | cnpg-operator(cloudnative-pg) | 0.21.5 |
+
 ## Values
 
 | Key | Type | Default | Description |
@@ -34,6 +40,7 @@ A Helm Chart to deploy easily a CNPG cluster
 | backup.s3Credentials.secretAccessKey.key | string | `"secretAccessKey"` | S3 secretAccessKey kubernetes secret key used for cnpg backups. |
 | backup.s3Credentials.secretAccessKey.value | string | `""` | S3 secretAccessKey value used for cnpg backups. Only needed if `backup.s3Credentials.create` is set to `true`. |
 | backup.s3Credentials.secretName | string | `""` | S3 kuebernetes secret name used for cnpg backups. |
+| cnpg-operator.enabled | bool | `false` | Whether or not cnpg operator should be deployed. |
 | dbName | string | `"dbname"` | Name of the database. |
 | enableSuperuserAccess | bool | `true` | Enable superuser access. |
 | exposed | bool | `false` | Whether or not a NodePort service should be created to exposed the database. |

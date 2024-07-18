@@ -18,6 +18,11 @@ dependencies:
   version: 19.3.0
   repository: https://charts.bitnami.com/bitnami
   condition: keycloak.enabled
+- name: cloudnative-pg
+  alias: cnpg-operator
+  version: 0.21.5
+  repository: https://cloudnative-pg.github.io/charts
+  condition: cnpg-operator.enabled
 deprecated: false
 annotations: {}
 maintainers:

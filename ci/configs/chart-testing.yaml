@@ -1,7 +1,7 @@
 remote: origin
 target-branch: main
 chart-dirs:
-  - charts
+- charts
 helm-extra-args: ''
 validate-chart-schema: true
 validate-chart-values: true

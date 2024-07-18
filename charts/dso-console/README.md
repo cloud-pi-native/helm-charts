@@ -23,6 +23,7 @@ A Helm chart to deploy Cloud Pi Native Console
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | keycloak | 19.3.0 |
 | https://charts.bitnami.com/bitnami | postgresql | 12.7.3 |
+| https://cloudnative-pg.github.io/charts | cnpg-operator(cloudnative-pg) | 0.21.5 |
 
 ## Values
 
@@ -81,6 +82,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | client.startupProbe.timeoutSeconds | int | `5` | Number of seconds after which the probe times out. |
 | client.strategy.type | string | `"RollingUpdate"` | Strategy type used to replace old Pods by new ones, can be "Recreate" or "RollingUpdate". |
 | client.tolerations | list | `[]` | Default tolerations for Console CPN client. |
+| cnpg-operator.enabled | bool | `false` | Whether or not cnpg operator should be deployed. |
 | cnpg.annotations | object | `{}` | Additional cnpg cluster annotations. |
 | cnpg.backup.cron | string | `"0 0 */6 * * *"` | The cron rule used for cnpg backups. By default it runs every 6 hours. |
 | cnpg.backup.destinationPath | string | `""` | S3 destination path for cnpg backups (it should be set like `s3://<bucket_name>/<path>`). |

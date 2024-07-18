@@ -5,5 +5,8 @@ dependencies:
 - name: keycloak
   repository: https://charts.bitnami.com/bitnami
   version: 19.3.0
-digest: sha256:e4c52d75d9aad57182d8876c545a179fd8c34a6bbcb11307473720517d7e22cf
-generated: "2024-04-09T02:31:51.291603+02:00"
+- name: cloudnative-pg
+  repository: https://cloudnative-pg.github.io/charts
+  version: 0.21.5
+digest: sha256:b72044b16dd2810fe77c977e05ad5d1b32f262cb6f562625e8e65db10d6043b3
+generated: "2024-07-19T00:05:24.801042+02:00"
