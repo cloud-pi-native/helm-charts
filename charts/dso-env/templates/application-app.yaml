@@ -10,12 +10,19 @@ metadata:
     {{- if $.Values.commonLabels -}}
     {{- $.Values.commonLabels | toYaml | nindent 4 }}
     {{- end }}
+  finalizers:
+    # foreground cascading deletion
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: {{ $.Values.argocd.project }}-app
   source: 
     repoURL: {{ .repoURL }}
     targetRevision:  {{ .targetRevision }}
-    path:  {{ .path }}
+    path: {{ .path }}
+    {{- if len .valueFiles }}
+    helm:
+      valueFiles: {{ .valueFiles | toJson }}
+    {{- end }}
   destination:
     name: {{ $.Values.application.destination.name }}
     namespace: {{ $.Values.application.destination.namespace }}

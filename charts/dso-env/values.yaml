@@ -31,3 +31,10 @@ application:
   - repoURL: https://gitlab.com/projects/org/demo/quota-explorer.git
     targetRevision: main
     path: '.'
+    valueFiles: []
+  - repoURL: https://gitlab.com/projects/org/demo/tuto-java-infra-helm.git
+    targetRevision: HEAD
+    path: .
+    valueFiles:
+      - values.yaml
+      - values-integ.yaml

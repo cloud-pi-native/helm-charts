@@ -1,6 +1,6 @@
 # dso-env
 
-![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Creates argocd Project and Applications to deploy DSO project repositories.
 
@@ -16,7 +16,7 @@ Creates argocd Project and Applications to deploy DSO project repositories.
 |-----|------|---------|-------------|
 | application.destination.name | string | `"dest"` | Nom du cluster applicatif cible |
 | application.destination.namespace | string | `"app1"` | Nom du namespace applicatif cible |
-| application.repositories | list | `[{"path":".","repoURL":"https://gitlab.com/projects/org/demo/quota-explorer.git","targetRevision":"main"}]` | Liste des dépôts à déployer |
+| application.repositories | list | `[{"path":".","repoURL":"https://gitlab.com/projects/org/demo/quota-explorer.git","targetRevision":"main","valueFiles":[]},{"path":".","repoURL":"https://gitlab.com/projects/org/demo/tuto-java-infra-helm.git","targetRevision":"HEAD","valueFiles":["values.yaml","values-integ.yaml"]}]` | Liste des dépôts à déployer |
 | application.sourceReposPrefix | string | `"https://gitlab.com/projects/org/demo"` | Préfixe des dépôts autorisés |
 | argocd.namespace | string | `"argocd"` | Namespace de création des objets ArgoCD |
 | argocd.nsChartVersion | string | `"1.0.0"` | Version du Chart dso-ns à utiliser |
