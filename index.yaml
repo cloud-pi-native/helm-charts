@@ -3,6 +3,29 @@ entries:
   cpn-cnpg:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2024-07-19T09:38:11.223315421Z"
+    dependencies:
+    - alias: cnpg-operator
+      condition: cnpg-operator.enabled
+      name: cloudnative-pg
+      repository: https://cloudnative-pg.github.io/charts
+      version: 0.21.5
+    description: A Helm Chart to deploy easily a CNPG cluster
+    digest: 67f13dfe84b1bd9a7722077c47d6d579230d29b7ed825241616652843b4741fc
+    home: https://cloud-pi-native.fr
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: cpn-cnpg
+    sources:
+    - https://github.com/cloud-pi-native/helm-charts
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-cnpg-1.1.0/cpn-cnpg-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2024-07-17T12:19:27.108149871Z"
     description: A Helm Chart to deploy easily a CNPG cluster
     digest: 00fcbf57b6ecd5873dfa062b81f94555a54e547e86c7b9f4c0b736c9c4c18be0
@@ -36,6 +59,38 @@ entries:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-cnpg-1.0.0/cpn-cnpg-1.0.0.tgz
     version: 1.0.0
   cpn-console:
+  - apiVersion: v2
+    appVersion: 8.9.1
+    created: "2024-07-19T09:38:11.452172041Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.7.3
+    - condition: keycloak.enabled
+      name: keycloak
+      repository: https://charts.bitnami.com/bitnami
+      version: 19.3.0
+    - alias: cnpg-operator
+      condition: cnpg-operator.enabled
+      name: cloudnative-pg
+      repository: https://cloudnative-pg.github.io/charts
+      version: 0.21.5
+    description: A Helm chart to deploy Cloud Pi Native Console
+    digest: 1dc0017adc64aea13256c30a0cc7fd54c8823b9fb716cfdc57faf3708787354d
+    home: https://cloud-pi-native.fr
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: cpn-console
+    sources:
+    - https://github.com/cloud-pi-native/helm-charts
+    - https://github.com/cloud-pi-native/console
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-console-1.8.0/cpn-console-1.8.0.tgz
+    version: 1.8.0
   - apiVersion: v2
     appVersion: 8.9.1
     created: "2024-07-18T14:18:42.945388799Z"
@@ -894,4 +949,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-ns-1.0.0/dso-ns-1.0.0.tgz
     version: 1.0.0
-generated: "2024-07-18T14:18:42.945567156Z"
+generated: "2024-07-19T09:38:11.452442276Z"
