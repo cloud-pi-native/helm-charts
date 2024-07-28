@@ -92,7 +92,7 @@ data:
           "groups": [
             "admin"
           ]
-        },
+        }
       ],
       "roles": {
         "realm": [
