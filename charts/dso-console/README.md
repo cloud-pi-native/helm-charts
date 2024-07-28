@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 1.8.2](https://img.shields.io/badge/Version-1.8.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.9.2](https://img.shields.io/badge/AppVersion-8.9.2-informational?style=flat-square)
+![Version: 1.8.3](https://img.shields.io/badge/Version-1.8.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.9.2](https://img.shields.io/badge/AppVersion-8.9.2-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -121,6 +121,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | global.keycloak.clientIds.backend | string | `"console-backend"` | Keycloak clientId used for Console CPN client. |
 | global.keycloak.clientIds.frontend | string | `"console-frontend"` | Keycloak clientId used for frontend. |
 | global.keycloak.clientSecrets.backend | string | `""` | Keycloak clientSecret used for Console CPN client. |
+| global.keycloak.devRealm | bool | `false` | Whether or not to deploy the keycloak dev realm into a configmap named `keycloak-realm-dev`. |
 | global.keycloak.domain | string | `"keycloak.domain.com"` | Keycloak domain used for authentication. |
 | global.keycloak.protocol | string | `"https"` | Protocol used to communicate with keycloak for authentication. |
 | global.keycloak.realm | string | `"cloud-pi-native"` | Name of the keycloak realm used for authentication. |

@@ -71,6 +71,8 @@ global:
     redirectUri: "https://console.dso.local"
     # -- Session secret used to store keycloak session for Console CPN client.
     sessionSecret: "a-very-strong-secret-with-more-than-32-char"
+    # -- Whether or not to deploy the keycloak dev realm into a configmap named `keycloak-realm-dev`.
+    devRealm: false
   postgresql:
     # -- Postgres database connection string used to override computed db url, usefull if external database.
     ## For postgres it should look like this "postgresql://db_user:db_password@db_service:db_port/db_name?schema=public"
