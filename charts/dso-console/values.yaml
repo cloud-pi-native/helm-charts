@@ -556,7 +556,7 @@ postgresql:
       ports:
         postgresql: 5432
     persistence:
-      size: "2Gi"
+      size: "1Gi"
     resources:
       requests:
         memory: "128Mi"
@@ -566,7 +566,7 @@ postgresql:
         cpu: "500m"
   readReplicas:
     persistence:
-      size: "2Gi"
+      size: "1Gi"
 
 # Keycloak configuration.
 ## Ref: https://artifacthub.io/packages/helm/bitnami/keycloak
@@ -574,8 +574,8 @@ keycloak:
   enabled: false
   nameOverride: "cpn-keycloak"
   auth:
-    adminUser: ""
-    adminPassword: ""
+    adminUser: "default"
+    adminPassword: "default"
   ingress:
     enabled: true
     ingressClassName: ""
@@ -593,8 +593,25 @@ keycloak:
     nameOverride: "cpn-keycloak-db"
     enabled: true
     auth:
-      postgresPassword: ""
-      username: ""
-      password: ""
-      database: "keycloak"
+      postgresPassword: "default"
+      username: "default"
+      password: "default"
+      database: "default"
       architecture: "standalone"
+    primary:
+      service:
+        type: "ClusterIP"
+        ports:
+          postgresql: 5432
+      persistence:
+        size: "1Gi"
+      resources:
+        requests:
+          memory: "128Mi"
+          cpu: "250m"
+        limits:
+          memory: "512Mi"
+          cpu: "500m"
+    readReplicas:
+      persistence:
+        size: "1Gi"
