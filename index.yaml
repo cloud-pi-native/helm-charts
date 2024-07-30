@@ -969,7 +969,39 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-console-1.0.0/cpn-console-1.0.0.tgz
     version: 1.0.0
+  dso-argocd:
+  - apiVersion: v2
+    appVersion: 2.9.0
+    created: "2024-07-30T08:47:26.333738706Z"
+    dependencies:
+    - name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 7.3.11
+    digest: 83b49d7a30fe6408e842bd93a4ad4d30501525c384452418641298b4787c2e30
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: dso-argocd
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-argocd-1.0.0/dso-argocd-1.0.0.tgz
+    version: 1.0.0
   dso-env:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-07-30T08:47:26.448443657Z"
+    description: Creates argocd Project and Applications to deploy DSO project repositories.
+    digest: 5cc18f97c53778f14aba741e010ab3db194591925854178d2f92db126eb214e7
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: dso-env
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-env-1.3.1/dso-env-1.3.1.tgz
+    version: 1.3.1
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2024-07-18T08:46:14.31275642Z"
@@ -1077,4 +1109,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-ns-1.0.0/dso-ns-1.0.0.tgz
     version: 1.0.0
-generated: "2024-07-28T17:10:47.462473408Z"
+generated: "2024-07-30T08:47:26.448571816Z"
