@@ -1,0 +1,14 @@
+---
+apiVersion: v2
+name: dso-argocd
+type: application
+version: 1.0.0
+appVersion: 2.9.0
+dependencies:
+  - name: argo-cd
+    repository: https://argoproj.github.io/argo-helm
+    version: 7.3.11
+maintainers:
+  - name: this-is-tobi
+    email: thibault.colin@interieur.gouv.fr
+    url: https://this-is-tobi.com
