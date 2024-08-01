@@ -1,0 +1,17 @@
+apiVersion: v2
+name: cpn-backup-utils
+type: application
+version: 1.0.0
+appVersion: "0.1.0"
+description: A Helm chart for effortless deployment of backup utilities.
+deprecated: false
+annotations: {}
+keywords: []
+dependencies: []
+sources:
+- https://github.com/cloud-pi-native/helm-charts
+- https://github.com/this-is-tobi/tools
+maintainers:
+- name: this-is-tobi
+  email: thibault.colin@interieur.gouv.fr
+  url: https://this-is-tobi.com
