@@ -1,5 +1,8 @@
-# -- Labels appliqués sur les différents objets
-commonLabels: {}
+# -- Informations communes, notamment appliquées en label sur les différents objets
+common:
+  dso/organization: org
+  dso/project: project
+  dso/environment: env
 application:
   destination:
     # -- Nom du namespace applicatif cible
@@ -9,3 +12,14 @@ application:
     cpu:
     # -- Quota mémoire pour le namespace
     memory:
+  vault:
+    # -- URL du Vault à utiliser par Vault Secret Operator
+    url:
+    # -- Nom du Key Value store dans Vault
+    kvName: forge-dso
+    # -- ID du rôle à utiliser (méthode AppRole)
+    roleId:
+    # -- Secret de connexion avec ce rôle
+    secretId:
+    # -- Répertoire racine des projets à utiliser dans Vault
+    projectsRootDir: forge-mi/projects

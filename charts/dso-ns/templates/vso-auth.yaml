@@ -1,0 +1,42 @@
+{{ if .Capabilities.APIVersions.Has "secrets.hashicorp.com/v1beta1" -}}
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultConnection
+metadata:
+  name: default
+  namespace: {{ .Values.application.destination.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: dso-console
+    {{- .Values.common | toYaml | nindent 4 }}
+spec:
+  address: {{ .Values.application.vault.url }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vso-approle
+  namespace: {{ .Values.application.destination.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: dso-console
+    {{- .Values.common | toYaml | nindent 4 }}
+stringData:
+  id: {{ .Values.application.vault.secretId }}
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultAuth
+metadata:
+  name: vault-auth
+  namespace: {{ .Values.application.destination.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: dso-console
+    {{- .Values.common | toYaml | nindent 4 }}
+spec:
+  vaultConnectionRef: default
+  method: appRole
+  mount: approle
+  appRole:
+    roleId: {{ .Values.application.vault.roleId }}
+    secretRef: vso-approle
+  allowedNamespaces: 
+    - {{ .Values.application.destination.namespace }}
+{{ end -}}
