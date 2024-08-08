@@ -5,9 +5,7 @@ metadata:
   namespace: {{ .Values.application.destination.namespace }}
   labels:
     app.kubernetes.io/managed-by: dso-console
-    {{- if .Values.commonLabels }}
-    {{- .Values.commonLabels | toYaml | nindent 4 }}
-    {{- end }}
+    {{- .Values.common | toYaml | nindent 4 }}
 spec:
   hard:
     limits.cpu: {{ .Values.application.quota.cpu | quote }}
