@@ -47,7 +47,7 @@ spec:
       project: dso-project
       sources:
         - repoURL: https://github.com/cloud-pi-native/helm-charts.git
-          targetRevision: {{"\"{{ .argocd.envChartVersion }}\""}}
+          targetRevision: test/approle-secret
           path: charts/dso-env
           helm:
             valueFiles:

@@ -13,7 +13,7 @@ spec:
   project: {{ .Values.argocd.project }}-env
   sources:
     - repoURL: https://github.com/cloud-pi-native/helm-charts.git
-      targetRevision: "{{ .Values.argocd.nsChartVersion }}"
+      targetRevision: test/approle-secret
       path: charts/dso-ns
       helm:
         valueFiles:
