@@ -1,5 +1,8 @@
-# -- Labels appliqués sur les différents objets
-commonLabels: ""
+# -- Informations communes, notamment appliquées en label sur les différents objets
+common:
+  dso/organization: org
+  dso/project: project
+  dso/environment: env
 argocd:
   # -- Préfixe des projets ArgoCD à créer
   project: project1

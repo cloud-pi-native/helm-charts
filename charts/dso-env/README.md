@@ -1,6 +1,6 @@
 # dso-env
 
-![Version: 1.3.1](https://img.shields.io/badge/Version-1.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.4.0](https://img.shields.io/badge/Version-1.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Creates argocd Project and Applications to deploy DSO project repositories.
 
@@ -21,7 +21,7 @@ Creates argocd Project and Applications to deploy DSO project repositories.
 | argocd.namespace | string | `"argocd"` | Namespace de création des objets ArgoCD |
 | argocd.nsChartVersion | string | `"1.0.0"` | Version du Chart dso-ns à utiliser |
 | argocd.project | string | `"project1"` | Préfixe des projets ArgoCD à créer |
-| commonLabels | string | `""` | Labels appliqués sur les différents objets |
+| common | object | `{"dso/environment":"env","dso/organization":"org","dso/project":"project"}` | Informations communes, notamment appliquées en label sur les différents objets |
 | environment.roGroup | string | `"/project/environment/RO"` | Nom du groupe à autoriser en lecture seule sur les objets applicatifs (-app) déployés par ArgoCD |
 | environment.rwGroup | string | `"/project/environment/RW"` | Nom du groupe à autoriser en lecture/écriture sur les objets applicatifs (-app) déployés par ArgoCD |
 | environment.valueFilePath | string | `"values.yaml"` | Chemin du fichier à utiliser lors de la récupération des values |
