@@ -3,9 +3,7 @@ kind: AppProject
 metadata:
   labels:
     app.kubernetes.io/managed-by: dso-console
-    {{- if $.Values.commonLabels -}}
-    {{- $.Values.commonLabels | toYaml | nindent 4 }}
-    {{- end }}
+    {{- $.Values.common | toYaml | nindent 4 }}
   annotations:
     argocd.argoproj.io/sync-wave: "3" # Evite la suppression avant les Applications
   name: {{ .Values.argocd.project }}-app

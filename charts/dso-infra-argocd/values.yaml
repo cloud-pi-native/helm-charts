@@ -15,9 +15,13 @@ gitlab:
   token: secret-token
   # -- URL du dépôt où les applications à déployer par ArgoCD sont spécifiées
   zoneRepo: https://gitlab.com/infra/zone.git
-# See https://artifacthub.io/packages/helm/bitnami/argo-cd?modal=values
+# See https://artifacthub.io/packages/helm/argo/argo-cd?modal=values
 # @ignored
 argo-cd:
+  dex:
+    enabled: false
+  notifications:
+    enabled: false
   server:
     podSecurityContext:
       fsGroup: null
@@ -53,7 +57,7 @@ argo-cd:
     podSecurityContext:
       fsGroup: null
     containerSecurityContext:
-      enabled: false
+      runAsUser: null
     resources:
       requests:
         memory: 500Mi
@@ -80,9 +84,9 @@ argo-cd:
   redis:
     master:
       podSecurityContext:
-        enabled: false
+        fsGroup: null
       containerSecurityContext:
-        enabled: false
+        runAsUser: null
     replica:
       replicaCount: 1
       podSecurityContext:

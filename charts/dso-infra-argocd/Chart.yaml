@@ -2,7 +2,7 @@
 apiVersion: v2
 name: dso-argocd
 type: application
-version: 1.0.0
+version: 1.1.0
 appVersion: 2.9.0
 dependencies:
   - name: argo-cd
