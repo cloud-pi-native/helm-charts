@@ -1054,6 +1054,23 @@ entries:
   dso-argocd:
   - apiVersion: v2
     appVersion: 2.9.0
+    created: "2024-08-13T10:16:24.928205477Z"
+    dependencies:
+    - name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 7.3.11
+    digest: b80e27f3815b269da60645166802469dc13652d897fd593f2cf834be223630f5
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: dso-argocd
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-argocd-1.1.0/dso-argocd-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
+    appVersion: 2.9.0
     created: "2024-07-30T08:47:26.333738706Z"
     dependencies:
     - name: argo-cd
@@ -1070,6 +1087,20 @@ entries:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-argocd-1.0.0/dso-argocd-1.0.0.tgz
     version: 1.0.0
   dso-env:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-08-13T10:16:25.083700998Z"
+    description: Creates argocd Project and Applications to deploy DSO project repositories.
+    digest: 625ab6a1cb54b9716a75ba4524b48bdec23a4d150516778d055483ca17d10f01
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: dso-env
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-env-1.4.0/dso-env-1.4.0.tgz
+    version: 1.4.0
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2024-07-30T08:47:26.448443657Z"
@@ -1169,6 +1200,20 @@ entries:
   dso-ns:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2024-08-13T10:16:25.2027711Z"
+    description: A Helm chart to create all the necessary resources for deploying
+      applications by the DSO console (namespace, secrets, quota, ...).
+    digest: 6d3dc07ef8d0415c14b393386a770c9c6225d66dd47fbda826fb895eefa68273
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: dso-ns
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-ns-1.1.0/dso-ns-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2024-07-11T07:31:40.945751663Z"
     description: A Helm chart to create all the necessary resources for deploying
       applications by the DSO console (namespace, secrets, quota, ...).
@@ -1191,4 +1236,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-ns-1.0.0/dso-ns-1.0.0.tgz
     version: 1.0.0
-generated: "2024-08-09T14:09:32.572762691Z"
+generated: "2024-08-13T10:16:25.20290549Z"
