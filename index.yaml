@@ -1182,6 +1182,27 @@ entries:
   dso-argocd:
   - apiVersion: v2
     appVersion: 2.9.0
+    created: "2024-09-05T09:12:14.466861713Z"
+    dependencies:
+    - name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 7.3.11
+    - condition: vso.install
+      name: vault-secrets-operator
+      repository: https://helm.releases.hashicorp.com
+      version: 0.8.1
+    digest: 407c6474e8c339e08b918f71c50c3538e4fd473f992bbd3b8162a5adc16ecfec
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: dso-argocd
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-argocd-1.2.0/dso-argocd-1.2.0.tgz
+    version: 1.2.0
+  - apiVersion: v2
+    appVersion: 2.9.0
     created: "2024-08-13T10:16:24.928205477Z"
     dependencies:
     - name: argo-cd
@@ -1328,6 +1349,20 @@ entries:
   dso-ns:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2024-09-05T09:12:14.586224801Z"
+    description: A Helm chart to create all the necessary resources for deploying
+      applications by the DSO console (namespace, secrets, quota, ...).
+    digest: aad00a52a3ded6f12dce063f103f1bfd209e0c9921a07eeac924c0ced4b4cc5a
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: dso-ns
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-ns-1.1.1/dso-ns-1.1.1.tgz
+    version: 1.1.1
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2024-08-13T10:16:25.2027711Z"
     description: A Helm chart to create all the necessary resources for deploying
       applications by the DSO console (namespace, secrets, quota, ...).
@@ -1364,4 +1399,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-ns-1.0.0/dso-ns-1.0.0.tgz
     version: 1.0.0
-generated: "2024-09-02T21:17:23.557132713Z"
+generated: "2024-09-05T09:12:14.586370556Z"
