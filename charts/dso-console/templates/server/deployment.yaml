@@ -48,14 +48,6 @@ spec:
         {{- if .Values.server.envFrom }}
           {{- toYaml .Values.server.envFrom | nindent 8 }}
         {{- end }}
-        {{- if .Values.cnpg.enabled }}
-        env:
-        - name: DB_URL
-          valueFrom:
-            secretKeyRef:
-              name: pg-cluster-console-app
-              key: uri
-        {{- end }}
         command:
         - sh
         - /script/fetch
@@ -99,6 +91,14 @@ spec:
           {{- toYaml .Values.server.envFrom | nindent 8 }}
         {{- end }}
         {{- if .Values.server.startupProbe.enabled }}
+        {{- if .Values.cnpg.enabled }}
+        env:
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              name: pg-cluster-console-app
+              key: uri
+        {{- end }}
         startupProbe:
           httpGet:
             path: {{ .Values.server.healthcheckPath }}
@@ -131,7 +131,7 @@ spec:
           periodSeconds: {{ .Values.server.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.server.livenessProbe.timeoutSeconds }}
         {{- end }}
-        {{- if .Values.server.hostAliases }}  
+        {{- if .Values.server.hostAliases }}
         hostAliases:
           {{- toYaml .Values.server.hostAliases | nindent 8 }}
         {{- end }}
@@ -152,8 +152,8 @@ spec:
         - name: {{ $volumeMount.name }}
           mountPath: {{ $volumeMount.mountPath }}
         {{- end }}
-      {{- if .Values.server.extraContainers }}  
-        {{- tpl (toYaml .Values.server.extraContainers) . | nindent 8 }}  
+      {{- if .Values.server.extraContainers }}
+        {{- tpl (toYaml .Values.server.extraContainers) . | nindent 8 }}
       {{- end }}
       {{- with .Values.server.nodeSelector }}
       nodeSelector:
@@ -180,7 +180,7 @@ spec:
           {{- end }}
       {{- if .Values.server.dbDataCm }}
       - name: imports
-        configMap: 
+        configMap:
           name: {{ .Values.server.dbDataCm }}
       {{- end }}
       {{- if and .Values.server.plugins (len .Values.server.plugins) }}
