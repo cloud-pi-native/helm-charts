@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: {{ include "cpnConsole.fullname" . }}-server
   labels: {{- include "cpnConsole.server.labels" . | nindent 4 }}
-data: 
+data:
   SERVER_PORT: {{ .Values.server.container.port | quote }}
   KEYCLOAK_PROTOCOL: {{ .Values.global.keycloak.protocol }}
   KEYCLOAK_DOMAIN: {{ .Values.global.keycloak.domain }}
