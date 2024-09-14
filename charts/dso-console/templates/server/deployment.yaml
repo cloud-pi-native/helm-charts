@@ -48,6 +48,14 @@ spec:
         {{- if .Values.server.envFrom }}
           {{- toYaml .Values.server.envFrom | nindent 8 }}
         {{- end }}
+        {{- if .Values.cnpg.enabled }}
+        env:
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              name: pg-cluster-console-app
+              key: uri
+        {{- end }}
         command:
         - sh
         - /script/fetch
