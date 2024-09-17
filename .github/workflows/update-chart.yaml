@@ -1,0 +1,79 @@
+name: Update chart
+
+on:
+  workflow_call:
+    inputs:
+      CHART_NAME:
+        description: Name of the folder chart (in /charts)
+        required: true
+        type: string
+      APP_VERSION:
+        description: The app version to inject in Chart.yaml
+        required: true
+        type: string
+      UPGRADE_TYPE:
+        description: Should update 'major', 'minor' or 'patch'
+        required: false
+        type: string
+        default: patch
+
+  workflow_dispatch:
+    inputs:
+      CHART_NAME:
+        description: Name of the folder chart (in /charts)
+        required: true
+        type: choice
+        options:
+          - dso-backup-utils
+          - dso-cnpg
+          - dso-console
+          - dso-env
+          - dso-infra-argocd
+          - dso-ns
+      APP_VERSION:
+        description: The app version to inject in Chart.yaml
+        required: true
+        type: string
+      UPGRADE_TYPE:
+        description: Should update 'major', 'minor' or 'patch'
+        required: false
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+        default: patch
+
+jobs:
+  update:
+    name: Update a chart version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checks-out repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+
+      - name: update chart version
+        id: update-chart
+        run: |
+          npm i -g semver
+          CHART_VERSION=$(yq .version charts/${{ inputs.CHART_NAME }}/Chart.yaml)
+          NEXT_VERSION=$(semver -i ${{ inputs.UPGRADE_TYPE }} $CHART_VERSION)
+          sed -i "s/appVersion: .*/appVersion: ${{ inputs.APP_VERSION }}/" charts/${{ inputs.CHART_NAME }}/Chart.yaml
+          sed -i "s/version: .*/version: $NEXT_VERSION/" charts/${{ inputs.CHART_NAME }}/Chart.yaml
+
+          docker run --rm --volume "$(pwd)/charts/${{ inputs.CHART_NAME }}:/helm-docs" -u $(id -u) jnorwood/helm-docs:latest
+          git co -b ${{ inputs.CHART_NAME }}-$NEXT_VERSION
+          git commit -m "chore: :arrow_up: upgrade ${{ inputs.CHART_NAME }} to ${{ inputs.APP_VERSION }}" -a
+          git push --set-upstream origin ${{ inputs.CHART_NAME }}-$NEXT_VERSION
+          echo "BRANCH_PR=${{ inputs.CHART_NAME }}-$NEXT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7.0.3
+        with:
+          branch: ${{ steps.update-chart.outputs.BRANCH_PR }}
+          base: main
