@@ -67,7 +67,7 @@ jobs:
           sed -i "s/version: .*/version: $NEXT_VERSION/" charts/${{ inputs.CHART_NAME }}/Chart.yaml
 
           docker run --rm --volume "$(pwd)/charts/${{ inputs.CHART_NAME }}:/helm-docs" -u $(id -u) jnorwood/helm-docs:latest
-          git co -b ${{ inputs.CHART_NAME }}-$NEXT_VERSION
+          git checkout -b ${{ inputs.CHART_NAME }}-$NEXT_VERSION
           git commit -m "chore: :arrow_up: upgrade ${{ inputs.CHART_NAME }} to ${{ inputs.APP_VERSION }}" -a
           git push --set-upstream origin ${{ inputs.CHART_NAME }}-$NEXT_VERSION
           echo "BRANCH_PR=${{ inputs.CHART_NAME }}-$NEXT_VERSION" >> $GITHUB_OUTPUT
