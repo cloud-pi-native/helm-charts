@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 1.8.13](https://img.shields.io/badge/Version-1.8.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.12.0](https://img.shields.io/badge/AppVersion-8.12.0-informational?style=flat-square)
+![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 10.0.0](https://img.shields.io/badge/AppVersion-10.0.0-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -21,9 +21,9 @@ A Helm chart to deploy Cloud Pi Native Console
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | keycloak | 19.3.0 |
-| https://charts.bitnami.com/bitnami | postgresql | 12.7.3 |
-| https://cloudnative-pg.github.io/charts | cnpg-operator(cloudnative-pg) | 0.21.5 |
+| https://charts.bitnami.com/bitnami | keycloak | 2.0.0 |
+| https://charts.bitnami.com/bitnami | postgresql | 2.0.0 |
+| https://cloudnative-pg.github.io/charts | cnpg-operator(cloudnative-pg) | 2.0.0 |
 
 ## Values
 
