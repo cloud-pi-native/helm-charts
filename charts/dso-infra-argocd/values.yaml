@@ -1,13 +1,9 @@
-# -- Nom du cluster où est déployé ArgoCD (utilisé notamment dans l'URL)
-clusterName: cluster0
-# -- Nom de domaine à utiliser dans l'URL d'exposition
-domain: dso.local.fr
+# -- URL argocd pour configurer argocd et le SSO Keycloak
+argocdUrl: &argocdUrl argocd.local.fr
 # -- Namespace d'installation de l'instance ArgoCD
 namespace: dso-argocd
 # -- Nom de l'organisation (utilisé dans les annotations)
 organization: org
-# -- Type de cluster où est déployé ArgoCD (valeurs possibles : openshift, kubernetes)
-clusterType: kubernetes
 gitlab:
   # -- Url du Gitlab hébergeant le dépôt de code pour cette zone
   url: https://gitlab.com/
@@ -25,7 +21,28 @@ argo-cd:
     enabled: false
   notifications:
     enabled: false
+  global:
+    domain: *argocdUrl
+  configs:
+    cm:
+      oidc.config: |
+        name: Keycloak
+        issuer: https://keycloak.local.fr/realms/dso
+        clientID: argocd-name-zone
+        clientSecret: tobedefined
+        requestedScopes: ["openid", "groups"]
   server:
+    ingress:
+      enabled: true
+      https: false
+      annotations:
+        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      hosts:
+        - *argocdUrl
+    configEnabled: true
+    config:
+      url: *argocdUrl
     podSecurityContext:
       fsGroup: null
     containerSecurityContext:
