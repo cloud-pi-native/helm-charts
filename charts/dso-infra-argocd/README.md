@@ -1,6 +1,6 @@
 # dso-argocd
 
-![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.9.0](https://img.shields.io/badge/AppVersion-2.9.0-informational?style=flat-square)
+![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.12.3](https://img.shields.io/badge/AppVersion-2.12.3-informational?style=flat-square)
 
 ## Maintainers
 
@@ -12,16 +12,14 @@
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://argoproj.github.io/argo-helm | argo-cd | 7.3.11 |
+| https://argoproj.github.io/argo-helm | argo-cd | 7.5.2 |
 | https://helm.releases.hashicorp.com | vault-secrets-operator | 0.8.1 |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| clusterName | string | `"cluster0"` | Nom du cluster où est déployé ArgoCD (utilisé notamment dans l'URL) |
-| clusterType | string | `"kubernetes"` | Type de cluster où est déployé ArgoCD (valeurs possibles : openshift, kubernetes) |
-| domain | string | `"dso.local.fr"` | Nom de domaine à utiliser dans l'URL d'exposition |
+| argocdUrl | string | `"argocd.local.fr"` | URL argocd pour configurer argocd et le SSO Keycloak |
 | gitlab.token | string | `"secret-token"` | Token d'accès au dépôt Gitlab |
 | gitlab.url | string | `"https://gitlab.com/"` | Url du Gitlab hébergeant le dépôt de code pour cette zone |
 | gitlab.zoneRepo | string | `"https://gitlab.com/infra/zone.git"` | URL du dépôt où les applications à déployer par ArgoCD sont spécifiées |
