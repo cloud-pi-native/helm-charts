@@ -93,6 +93,12 @@ spec:
         secretAccessKey:
           name: {{ .Values.cnpg.backup.s3Credentials.secretName | default (printf "%s-%s" "pg-cluster" (include "cpnConsole.fullname" .)) }}
           key: {{ .Values.cnpg.backup.s3Credentials.secretAccessKey.key }}
+      {{- if .Values.cnpg.backup.compression }}
+      data:
+        compression: {{ .Values.cnpg.backup.compression }}
+      wal:
+        compression: {{ .Values.cnpg.backup.compression }}
+      {{- end }}
     retentionPolicy: {{ .Values.cnpg.backup.retentionPolicy }}
   {{- end }}
 {{- end }}
