@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 1.9.1](https://img.shields.io/badge/Version-1.9.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.13.0](https://img.shields.io/badge/AppVersion-8.13.0-informational?style=flat-square)
+![Version: 1.10.0](https://img.shields.io/badge/Version-1.10.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.13.0](https://img.shields.io/badge/AppVersion-8.13.0-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -109,10 +109,11 @@ A Helm chart to deploy Cloud Pi Native Console
 | cnpg.nameOverride | string | `""` | Provide a name in place of the default cnpg cluster name. The cnpg operator adds the cluster name to S3's `destinationPath`, so it is necessary to provide the exact match of the main cluster when using `replica` or `restore` mode. |
 | cnpg.nodePort | string | `nil` | Port used for NodePort service. Needs `exposed` tu be true. |
 | cnpg.primaryUpdateStrategy | string | `"unsupervised"` | Rolling update strategy used : unsupervised: automated update of the primary once all replicas have been upgraded (default) supervised: requires manual supervision to perform the switchover of the primary |
-| cnpg.pvcSize | string | `"10Gi"` | Size of the PVC used by each cnpg instance. |
+| cnpg.pvcSize | string | `"10Gi"` | Size of the data PVC used by each cnpg instance. |
 | cnpg.replica.host | string | `""` | Primary cnpg cluster host used for replica mode. |
 | cnpg.replica.port | int | `5432` | Primary cnpg cluster port used for replica mode. |
 | cnpg.username | string | `"dso"` | Username of the database user. |
+| cnpg.walPvcSize | string | `nil` | Size of the WAL PVC used by each cnpg instance (if value is `null` then WAL files are stored within the data PVC). |
 | config.create | bool | `false` | Whether or not helm should create the console config. |
 | config.name | string | `"dso-config"` | Name of the genrated config. |
 | config.projectsRootDir | string | `"forge"` | Projects root directory to use in other services such as Gitlab, etc. |

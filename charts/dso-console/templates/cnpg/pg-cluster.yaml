@@ -78,6 +78,10 @@ spec:
   primaryUpdateStrategy: {{ .Values.cnpg.primaryUpdateStrategy }}
   storage:
     size: {{ .Values.cnpg.pvcSize }}
+  {{- if .Values.cnpg.walPvcSize }}
+  walStorage:
+    size: {{ .Values.cnpg.walPvcSize }}
+  {{- end }}
   {{- if .Values.cnpg.backup.enabled }}
   backup:
     barmanObjectStore:
