@@ -1533,6 +1533,27 @@ entries:
     version: 1.0.0
   dso-argocd:
   - apiVersion: v2
+    appVersion: 2.12.3
+    created: "2024-10-14T08:52:28.401581886Z"
+    dependencies:
+    - name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 7.5.2
+    - condition: vso.install
+      name: vault-secrets-operator
+      repository: https://helm.releases.hashicorp.com
+      version: 0.8.1
+    digest: 1b2d951d4420c22b753b7a6735dca883e24f67982f545e62d74146bdfd916514
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: dso-argocd
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-argocd-1.2.1/dso-argocd-1.2.1.tgz
+    version: 1.2.1
+  - apiVersion: v2
     appVersion: 2.9.0
     created: "2024-09-05T09:12:14.466861713Z"
     dependencies:
@@ -1751,4 +1772,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-ns-1.0.0/dso-ns-1.0.0.tgz
     version: 1.0.0
-generated: "2024-10-02T18:54:00.031646495Z"
+generated: "2024-10-14T08:52:28.401718219Z"
