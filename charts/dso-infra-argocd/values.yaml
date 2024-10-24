@@ -11,9 +11,12 @@ gitlab:
   token: secret-token
   # -- URL du dépôt où les applications à déployer par ArgoCD sont spécifiées
   zoneRepo: https://gitlab.com/infra/zone.git
+# -- Indique s'il faut installer Vault Secrets Operator (à désactiver si l'opérateur est préinstallé sur le cluster)
 vso:
-  # -- Indique s'il faut installer Vault Secrets Operator (à désactiver si l'opérateur est préinstallé sur le cluster)
-  install: true
+  enabled: true
+# -- Indique s'il faut installer ArgoCD (à désactiver si ArgoCD est préinstallé sur le cluster)
+argocd:
+  enabled: true
 # See https://artifacthub.io/packages/helm/argo/argo-cd?modal=values
 # @ignored
 argo-cd:
