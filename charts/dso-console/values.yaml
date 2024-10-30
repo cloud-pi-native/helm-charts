@@ -422,6 +422,9 @@ server:
     type: "ClusterIP"
     # -- Console CPN server service port.
     port: 80
+  fetchContainer:
+    # -- Image used to fetch plugins inside the initContainer.
+    image: docker.io/wbitt/network-multitool:alpine-minimal
   # -- List of zips to download; basically curl url, unzip and stores it in plugins/external/<dir_name>.
   plugins: []
   # -- CSV list of plugins to disabled.

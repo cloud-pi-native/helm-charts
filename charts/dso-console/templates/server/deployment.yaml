@@ -38,7 +38,7 @@ spec:
       {{- if or .Values.server.plugins .Values.server.initContainers }}
       initContainers:
       {{- if and .Values.server.plugins (len .Values.server.plugins) }}
-      - image: docker.io/wbitt/network-multitool:alpine-minimal
+      - image: {{ .Values.server.fetchContainer.image }}
         name: fetch-plugins
         envFrom:
         - configMapRef:
