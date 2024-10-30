@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 1.11.0](https://img.shields.io/badge/Version-1.11.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.15.1](https://img.shields.io/badge/AppVersion-8.15.1-informational?style=flat-square)
+![Version: 1.11.1](https://img.shields.io/badge/Version-1.11.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.15.1](https://img.shields.io/badge/AppVersion-8.15.1-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -208,6 +208,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | server.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
 | server.extraVolumes | list | `[]` | List of extra volumes to add. |
 | server.fetchContainer.image | string | `"docker.io/wbitt/network-multitool:alpine-minimal"` | Image used to fetch plugins inside the initContainer. |
+| server.fetchContainer.pullPolicy | string | `"IfNotPresent"` | Image pull policy to fetch plugins inside the initContainer. |
 | server.healthcheckPath | string | `"/api/v1/healthz"` | Console CPN server container healthcheck endpoint. |
 | server.hostAliases | list | `[]` | Host aliases that will be injected at pod-level into /etc/hosts. |
 | server.image.pullPolicy | string | `"Always"` | Image pull policy for the Console CPN server. |
