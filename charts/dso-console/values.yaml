@@ -425,6 +425,8 @@ server:
   fetchContainer:
     # -- Image used to fetch plugins inside the initContainer.
     image: docker.io/wbitt/network-multitool:alpine-minimal
+    # -- Image pull policy to fetch plugins inside the initContainer.
+    pullPolicy: "IfNotPresent"
   # -- List of zips to download; basically curl url, unzip and stores it in plugins/external/<dir_name>.
   plugins: []
   # -- CSV list of plugins to disabled.

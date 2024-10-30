@@ -40,6 +40,7 @@ spec:
       {{- if and .Values.server.plugins (len .Values.server.plugins) }}
       - image: {{ .Values.server.fetchContainer.image }}
         name: fetch-plugins
+        imagePullPolicy: {{ .Values.server.fetchContainer.pullPolicy }}
         envFrom:
         - configMapRef:
             name: {{ include "cpnConsole.fullname" . }}-server
