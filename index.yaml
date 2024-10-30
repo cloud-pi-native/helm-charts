@@ -79,6 +79,38 @@ entries:
   cpn-console:
   - apiVersion: v2
     appVersion: 8.15.1
+    created: "2024-10-30T14:45:27.944839813Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.7.3
+    - condition: keycloak.enabled
+      name: keycloak
+      repository: https://charts.bitnami.com/bitnami
+      version: 19.3.0
+    - alias: cnpg-operator
+      condition: cnpg-operator.enabled
+      name: cloudnative-pg
+      repository: https://cloudnative-pg.github.io/charts
+      version: 0.21.5
+    description: A Helm chart to deploy Cloud Pi Native Console
+    digest: eb2058503f2080cede9b9f2fc4e06152c59a8cc6cca03d9b458d83732b8ac9e3
+    home: https://cloud-pi-native.fr
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: cpn-console
+    sources:
+    - https://github.com/cloud-pi-native/helm-charts
+    - https://github.com/cloud-pi-native/console
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-console-1.11.1/cpn-console-1.11.1.tgz
+    version: 1.11.1
+  - apiVersion: v2
+    appVersion: 8.15.1
     created: "2024-10-30T14:15:12.83080408Z"
     dependencies:
     - condition: postgresql.enabled
@@ -1900,4 +1932,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-ns-1.0.0/dso-ns-1.0.0.tgz
     version: 1.0.0
-generated: "2024-10-30T14:15:12.831003923Z"
+generated: "2024-10-30T14:45:27.945017116Z"
