@@ -9,6 +9,9 @@ rules:
   - user.openshift.io
   - rbac.authorization.k8s.io
   - argoproj.io
+  {{- if .Values.features.vaultSecrets.enabled }}
+  - secrets.hashicorp.com
+  {{- end }}
   resources:
   - '*'
   verbs:

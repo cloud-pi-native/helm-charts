@@ -550,6 +550,13 @@ cnpg:
     # -- Retention policy for cnpg backups recurrences.
     retentionPolicy: "30d"
 
+# -- Set of feature settings - experimental
+features:
+  # -- vault secrets support
+  vaultSecrets:
+    # -- enabling vault secret
+    enabled: true
+
 # Postgresql configuration.
 ## Ref: https://artifacthub.io/packages/helm/bitnami/postgresql
 postgresql:
