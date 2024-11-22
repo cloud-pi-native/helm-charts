@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 1.11.8](https://img.shields.io/badge/Version-1.11.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.18.2](https://img.shields.io/badge/AppVersion-8.18.2-informational?style=flat-square)
+![Version: 1.11.9](https://img.shields.io/badge/Version-1.11.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.19.0](https://img.shields.io/badge/AppVersion-8.19.0-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -118,6 +118,9 @@ A Helm chart to deploy Cloud Pi Native Console
 | config.name | string | `"dso-config"` | Name of the genrated config. |
 | config.projectsRootDir | string | `"forge"` | Projects root directory to use in other services such as Gitlab, etc. |
 | config.secrets | object | `{}` | Secrets to inject into the configuration. It is needed for server to get services informations such as urls, admin username, admin password or token, etc. |
+| features | object | `{"vaultSecrets":{"enabled":true}}` | Set of feature settings - experimental |
+| features.vaultSecrets | object | `{"enabled":true}` | vault secrets support |
+| features.vaultSecrets.enabled | bool | `true` | enabling vault secret |
 | fullnameOverride | string | `""` | String to fully override the default application name. |
 | global.env | object | `{"NODE_ENV":"production"}` | Map of environment variables to inject into backend and frontend containers. |
 | global.keycloak.clientIds.backend | string | `"console-backend"` | Keycloak clientId used for Console CPN client. |
