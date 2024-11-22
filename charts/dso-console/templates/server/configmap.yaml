@@ -22,3 +22,6 @@ data:
   {{- if .Values.server.env -}}
   {{- include "cpnConsole.env" .Values.server | indent 2 }}
   {{- end -}}
+  {{- if not .Values.features.vaultSecrets.enabled }}
+  VAULT__DISABLE_VAULT_SECRETS: "true"
+  {{- end }}
