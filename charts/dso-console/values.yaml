@@ -498,6 +498,10 @@ cnpg:
   pvcSize: "10Gi"
   # -- Size of the WAL PVC used by each cnpg instance (if value is `null` then WAL files are stored within the data PVC).
   walPvcSize: null
+  # -- Maximum size of WAL files that replication slots are allowed to retain in the pg_wal directory at checkpoint time.
+  # Default retains an unlimited amount of WAL files.
+  # See: https://cloudnative-pg.io/documentation/current/replication/#capping-the-wal-size-retained-for-replication-slots (Refer to postgresql.conf for memory units).
+  postgresWalMaxSlotKeepSize: ""
   # -- Additional cnpg cluster annotations.
   annotations: {}
   # -- Additional cnpg cluster labels.

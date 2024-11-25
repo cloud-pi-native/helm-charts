@@ -20,6 +20,9 @@ spec:
   postgresql:
     parameters:
       max_worker_processes: "60"
+  {{- if .Values.cnpg.postgresWalMaxSlotKeepSize }}
+      max_slot_wal_keep_size: {{ .Values.cnpg.postgresWalMaxSlotKeepSize }}
+  {{- end }}
     pg_hba:
       - {{ printf "%s %s %s %s %s" "host" .Values.cnpg.dbName .Values.cnpg.username "all" "md5" }}
       - {{ printf "%s %s %s %s %s" "host" .Values.cnpg.dbName "streaming_replica" "all" "md5" }}
