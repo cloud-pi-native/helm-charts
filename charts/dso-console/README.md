@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 1.11.11](https://img.shields.io/badge/Version-1.11.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.20.0](https://img.shields.io/badge/AppVersion-8.20.0-informational?style=flat-square)
+![Version: 1.12.0](https://img.shields.io/badge/Version-1.12.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.20.0](https://img.shields.io/badge/AppVersion-8.20.0-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -108,6 +108,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | cnpg.mode | string | `"primary"` | Mode used to deploy the cnpg cluster, it should be `primary`, `replica` or `restore`. |
 | cnpg.nameOverride | string | `""` | Provide a name in place of the default cnpg cluster name. The cnpg operator adds the cluster name to S3's `destinationPath`, so it is necessary to provide the exact match of the main cluster when using `replica` or `restore` mode. |
 | cnpg.nodePort | string | `nil` | Port used for NodePort service. Needs `exposed` tu be true. |
+| cnpg.postgresWalMaxSlotKeepSize | string | `""` | Maximum size of WAL files that replication slots are allowed to retain in the pg_wal directory at checkpoint time. Default retains an unlimited amount of WAL files. See: https://cloudnative-pg.io/documentation/current/replication/#capping-the-wal-size-retained-for-replication-slots (Refer to postgresql.conf for memory units). |
 | cnpg.primaryUpdateStrategy | string | `"unsupervised"` | Rolling update strategy used : unsupervised: automated update of the primary once all replicas have been upgraded (default) supervised: requires manual supervision to perform the switchover of the primary |
 | cnpg.pvcSize | string | `"10Gi"` | Size of the data PVC used by each cnpg instance. |
 | cnpg.replica.host | string | `""` | Primary cnpg cluster host used for replica mode. |
