@@ -27,10 +27,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      {{- if and .Values.imageCredentials.username .Values.imageCredentials.password }}
-      imagePullSecrets:
-      - name: {{ include "cpnConsole.name" . }}-pullsecret
-      {{- end }}
+      {{ include "cpnConsole.renderImagePullSecrets" . | nindent 6 }}
       securityContext:
         {{- toYaml .Values.client.podSecurityContext | nindent 8 }}
       {{- if .Values.client.initContainers }}

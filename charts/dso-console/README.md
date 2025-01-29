@@ -124,6 +124,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | features.vaultSecrets.enabled | bool | `true` | enabling vault secret |
 | fullnameOverride | string | `""` | String to fully override the default application name. |
 | global.env | object | `{"NODE_ENV":"production"}` | Map of environment variables to inject into backend and frontend containers. |
+| global.imagePullSecrets | list | `[]` |  |
 | global.keycloak.clientIds.backend | string | `"console-backend"` | Keycloak clientId used for Console CPN client. |
 | global.keycloak.clientIds.frontend | string | `"console-frontend"` | Keycloak clientId used for frontend. |
 | global.keycloak.clientSecrets.backend | string | `""` | Keycloak clientSecret used for Console CPN client. |
