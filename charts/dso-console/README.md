@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.0.0](https://img.shields.io/badge/AppVersion-9.0.0-informational?style=flat-square)
+![Version: 2.1.0](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.0.0](https://img.shields.io/badge/AppVersion-9.0.0-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -91,6 +91,8 @@ A Helm chart to deploy Cloud Pi Native Console
 | cnpg.backup.endpointCA.key | string | `""` | The secret key containing S3 CA for cnpg backups. |
 | cnpg.backup.endpointCA.name | string | `""` | The secret name containing S3 CA for cnpg backups. |
 | cnpg.backup.endpointURL | string | `""` | S3 endpoint for cnpg backups. |
+| cnpg.backup.maxParallelWal | int | `8` | The number of parallel process that will be applied when applying wals. |
+| cnpg.backup.recoveryTarget | object | `{}` | Recovery target config to perform a point in time recovery when restore. |
 | cnpg.backup.retentionPolicy | string | `"30d"` | Retention policy for cnpg backups recurrences. |
 | cnpg.backup.s3Credentials.accessKeyId.key | string | `"accessKeyId"` | S3 accessKeyId kubernetes secret key used for cnpg backups. |
 | cnpg.backup.s3Credentials.accessKeyId.value | string | `""` | S3 accessKeyId value used for cnpg backups. Only needed if `backup.s3Credentials.create` is set to `true`. |
