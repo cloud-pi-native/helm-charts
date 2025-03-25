@@ -1,6 +1,6 @@
 # observatorium
 
-![Version: 0.5.1](https://img.shields.io/badge/Version-0.5.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main-2025-02-10-1bcf722](https://img.shields.io/badge/AppVersion-main--2025--02--10--1bcf722-informational?style=flat-square)
+![Version: 0.5.2](https://img.shields.io/badge/Version-0.5.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main-2025-02-10-1bcf722](https://img.shields.io/badge/AppVersion-main--2025--02--10--1bcf722-informational?style=flat-square)
 
 This Helm chart deploy Observatorium API and help to manage tenant from values file.
 
@@ -9,6 +9,7 @@ This Helm chart deploy Observatorium API and help to manage tenant from values f
 | Name | Email | Url |
 | ---- | ------ | --- |
 | this-is-tobi | <thibault.colin@interieur.gouv.fr> | <https://this-is-tobi.com> |
+| tcheksa62 | <r.ducamp@gmail.com> |  |
 
 ## Values
 
