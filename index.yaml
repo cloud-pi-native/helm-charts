@@ -2851,4 +2851,20 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-ns-1.0.0/dso-ns-1.0.0.tgz
     version: 1.0.0
-generated: "2025-03-25T14:40:42.307329289Z"
+  observatorium:
+  - apiVersion: v2
+    appVersion: main-2025-02-10-1bcf722
+    created: "2025-03-25T17:10:44.117553006Z"
+    description: This Helm chart deploy Observatorium API and help to manage tenant
+      from values file.
+    digest: faeb44da9f1980301a74f4649039d8cfa165bbd9c9c31d9df601a1e63e5c440e
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: observatorium
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/observatorium-0.5.1/observatorium-0.5.1.tgz
+    version: 0.5.1
+generated: "2025-03-25T17:10:44.117880727Z"
