@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+     {{- include "observatorium.labels" (dict "ctx" $ "component" "api" ) | nindent 4 }}
+  name: {{ include "observatorium.resourceName" (dict "ctx" $ "component" "api") }}
+data:
+  rbac.yaml: |-
+    "roleBindings":
+    - "name": {{ .Values.api.config.id | quote }}
+      "roles":
+      - "read-{{ .Values.api.config.id }}"
+      "subjects":
+      {{- range $group := .Values.api.config.groups }}
+      - "kind": "group"
+        "name": {{ $group | quote }}
+      {{- end }}
+    {{- range $project := default .Values.projects .Values.global.projects }}
+    {{- range $env, $val := $project.envs }}
+    - "name": {{ printf "%s-%s" $env $project.projectName | quote }}
+      "roles":
+      - "read-{{ printf "%s-%s" $env $project.projectName }}"
+      "subjects":
+      {{- range $group := $val.groups }}
+      - "kind": "group"
+        "name": {{ $group | quote }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+    "roles":
+    - "name": "read-{{ .Values.api.config.id }}"
+      "permissions":
+      - "read"
+      "resources":
+      - "logs"
+      - "metrics"
+      - "traces"
+      "tenants":
+      - {{ .Values.api.config.id }}
+    {{- range $project := default .Values.projects .Values.global.projects }}
+    {{- range $env, $val := $project.envs }}
+    - "name": "read-{{ printf "%s-%s" $env $project.projectName }}"
+      "permissions":
+      - "read"
+      "resources":
+      - "logs"
+      - "metrics"
+      - "traces"
+      "tenants":
+      {{- range $tenant, $val := $val.tenants }}
+      - {{ $tenant | quote }}
+      {{- end }}
+    {{- end }}
+    {{- end }}

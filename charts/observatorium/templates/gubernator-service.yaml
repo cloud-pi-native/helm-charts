@@ -1,0 +1,19 @@
+{{- if .Values.rate_limiter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "observatorium.resourceName" (dict "ctx" . "component" "rate-limiter") }}
+  labels:
+    {{- include "observatorium.labels" (dict "ctx" . "component" "rate-limiter") | nindent 4 }}
+spec:
+  clusterIP: None
+  ports:
+  - name: grpc
+    port: 8081
+    targetPort: 8081
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    {{- include "observatorium.selectorLabels" (dict "ctx" $ "component" "rate-limiter") | nindent 4 }}
+{{- end }}
