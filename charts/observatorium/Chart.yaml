@@ -1,0 +1,14 @@
+apiVersion: v2
+name: observatorium
+description: This Helm chart deploy Observatorium API and help to manage tenant from values file.
+
+type: application
+
+version: 0.5.1
+
+appVersion: "main-2025-02-10-1bcf722"
+
+maintainers:
+  - name: this-is-tobi
+    email: thibault.colin@interieur.gouv.fr
+    url: https://this-is-tobi.com

@@ -1,0 +1,128 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    {{- include "observatorium.labels" (dict "ctx" $ "component" "api" ) | nindent 4 }}
+  name: {{ include "observatorium.resourceName" (dict "ctx" $ "component" "api") }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "observatorium.selectorLabels" (dict "ctx" $ "component" "api") | nindent 6 }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  template:
+    metadata:
+      annotations:
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+        {{- include "observatorium.config.checksum" . | nindent 8 }}
+      labels:
+        {{- include "observatorium.labels" (dict "ctx" $ "component" "api" ) | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "observatorium.resourceName" (dict "ctx" $ "component" "api") }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - args:
+        - --web.listen=0.0.0.0:8080
+        - --web.internal.listen=0.0.0.0:8081
+        - --log.level={{ .Values.api.loglevel }}
+        {{- if .Values.logs.enabled }}
+        - --logs.read.endpoint={{ .Values.logs.read.endpoint }}
+        - --logs.tail.endpoint={{ .Values.logs.tail.endpoint }}
+        - --logs.write.endpoint={{ .Values.logs.write.endpoint }}
+        {{- if ne .Values.logs.rules.endpoint "" }}
+        - --logs.rules.endpoint={{ .Values.logs.rules.endpoint }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.metrics.enabled }}
+        - --metrics.tenant-header={{ .Values.metrics.tenantHeader }}
+        - --metrics.read.endpoint={{ .Values.metrics.read.endpoint }}
+        - --metrics.write.endpoint={{ .Values.metrics.write.endpoint }}
+        - --metrics.rules.endpoint={{ .Values.metrics.rules.endpoint }}
+        - --metrics.alertmanager.endpoint={{ .Values.metrics.alertmanager.endpoint }}
+        {{- end }}
+        - --rbac.config=/etc/observatorium/rbac.yaml
+        - --tenants.config=/etc/observatorium/tenants.yaml
+        {{- if .Values.rate_limiter.enabled }}
+        - --middleware.rate-limiter.grpc-address=observatorium-gubernator.{{ .Release.Namespace }}.svc.cluster.local:8081
+        {{- end }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        livenessProbe:
+          failureThreshold: 10
+          httpGet:
+            path: /live
+            port: 8081
+            scheme: HTTP
+          periodSeconds: 30
+        name: {{ include "observatorium.resourceName" (dict "ctx" $ "component" "api") }}
+        ports:
+        - containerPort: 8090
+          name: grpc-public
+        - containerPort: 8081
+          name: internal
+        - containerPort: 8080
+          name: public
+        {{- with .Values.extraEnv }}
+        env:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+        readinessProbe:
+          failureThreshold: 12
+          httpGet:
+            path: /ready
+            port: 8081
+            scheme: HTTP
+          periodSeconds: 5
+        resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        volumeMounts:
+        - mountPath: /etc/observatorium/rbac.yaml
+          name: rbac
+          readOnly: true
+          subPath: rbac.yaml
+        - mountPath: /etc/observatorium/tenants.yaml
+          name: tenants
+          readOnly: true
+          subPath: tenants.yaml
+        {{- if .Values.api.config.customCA.enabled }}
+        - mountPath: /etc/observatorium/ca.crt
+          name: ca
+          readOnly: true
+          subPath: ca.crt
+        {{- end }}
+      volumes:
+      - configMap:
+          name: {{ include "observatorium.resourceName" (dict "ctx" $ "component" "api") }}
+        name: rbac
+      - name: tenants
+        secret:
+          secretName: {{ include "observatorium.resourceName" (dict "ctx" $ "component" "api") }}
+      {{- if .Values.api.config.customCA.enabled }}
+      - name: ca
+        secret:
+          secretName: {{ include "observatorium.resourceName" (dict "ctx" $ "component" "api") }}-crt
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
