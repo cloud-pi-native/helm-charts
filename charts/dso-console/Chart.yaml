@@ -2,8 +2,8 @@ apiVersion: v2
 name: cpn-console
 description: A Helm chart to deploy Cloud Pi Native Console
 type: application
-version: 2.1.2
-appVersion: 9.2.0
+version: 2.1.3
+appVersion: 9.2.1
 keywords: []
 home: https://cloud-pi-native.fr
 sources:
