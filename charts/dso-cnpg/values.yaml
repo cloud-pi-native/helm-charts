@@ -10,6 +10,8 @@ instances: 3
 # -- Name of the image used for database.
 # By default (empty string), the operator will install the latest available minor version of the latest major version of PostgreSQL when the operator was released
 imageName: ""
+# -- Name of the image pull secrets.
+imagePullSecrets: ""
 # -- Username of the database user.
 username: "username"
 # -- Name of the database.
@@ -107,6 +109,9 @@ backup:
   # -- Retention policy for cnpg backups recurrences.
   retentionPolicy: "14d"
 
+# -- Whether or not PodMonitor should be deployed.
+monitoring:
+  enabled: false
 
 # CNPG operator configuration
 cnpg-operator:

@@ -1,6 +1,6 @@
 # cpn-cnpg
 
-![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 2.0.1](https://img.shields.io/badge/Version-2.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 A Helm Chart to deploy easily a CNPG cluster
 
@@ -51,9 +51,11 @@ A Helm Chart to deploy easily a CNPG cluster
 | exposed | bool | `false` | Whether or not a NodePort service should be created to exposed the database. |
 | fullnameOverride | string | `""` | String to fully override the default application name. |
 | imageName | string | `""` | Name of the image used for database. By default (empty string), the operator will install the latest available minor version of the latest major version of PostgreSQL when the operator was released |
+| imagePullSecrets | string | `""` | Name of the image pull secrets. |
 | instances | int | `3` | Number of instances to spawn in the cluster. |
 | labels | object | `{}` | Additional cnpg cluster labels. |
 | mode | string | `"primary"` | Mode used to deploy the cnpg cluster, it should be `primary`, `replica` or `restore`. |
+| monitoring | object | `{"enabled":false}` | Whether or not PodMonitor should be deployed. |
 | nameOverride | string | `""` | Provide a name in place of the default application name. |
 | nodePort | string | `nil` | Port used for NodePort service. Needs `exposed` tu be true. |
 | parameters | object | `{}` | Customize Postgresql parameters. |
