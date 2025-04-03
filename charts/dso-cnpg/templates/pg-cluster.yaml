@@ -1,4 +1,4 @@
-apiVersion: postgresql.io/v1
+apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: {{ .Values.nameOverride | default (printf "%s-%s" "pg-cluster" (include "cpnCnpg.fullname" .)) }}
@@ -16,14 +16,20 @@ spec:
   {{- if .Values.imageName }}
   imageName: {{ .Values.imageName }}
   {{- end }}
+  {{- if .Values.imagePullSecrets }}
+  imagePullSecrets:
+  - name: {{ .Values.imagePullSecrets }} 
+  {{- end }}
   postgresql:
     parameters:
       {{- with .Values.parameters }}
       {{- toYaml . | nindent 6 }}
       {{- end }}
+  {{- if eq .Values.mode "primary" }}
     pg_hba:
       - {{ printf "%s %s %s %s %s" "host" .Values.dbName .Values.username "all" "md5" }}
       - {{ printf "%s %s %s %s %s" "host" .Values.dbName "streaming_replica" "all" "md5" }}
+  {{- end }}
   bootstrap:
   {{- if eq .Values.mode "primary" }}
     initdb:
@@ -114,3 +120,5 @@ spec:
       {{- end }}
     retentionPolicy: {{ .Values.backup.retentionPolicy }}
   {{- end }}
+  monitoring:
+    enablePodMonitor: {{ .Values.monitoring.enabled }} 
