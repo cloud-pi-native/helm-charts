@@ -109,6 +109,19 @@ backup:
   # -- Retention policy for cnpg backups recurrences.
   retentionPolicy: "14d"
 
+# -- CNPG Pooler configuration
+pooler:
+  # -- Enabling or disabling PgBouncer Pooler
+  enabled: false
+  # -- Number of PgBouncer pods
+  instances: 3
+  # -- Type of PgBouncer connexion
+  poolMode: session
+  # -- Parameters to configure PgBouncer (see https://www.pgbouncer.org/config.html#section-databases)
+  parameters:
+    max_client_conn: "1000"
+    default_pool_size: "100"
+
 # -- Whether or not PodMonitor should be deployed.
 monitoring:
   enabled: false

@@ -1,6 +1,6 @@
 # cpn-cnpg
 
-![Version: 2.0.1](https://img.shields.io/badge/Version-2.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 2.1.0](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 A Helm Chart to deploy easily a CNPG cluster
 
@@ -59,6 +59,11 @@ A Helm Chart to deploy easily a CNPG cluster
 | nameOverride | string | `""` | Provide a name in place of the default application name. |
 | nodePort | string | `nil` | Port used for NodePort service. Needs `exposed` tu be true. |
 | parameters | object | `{}` | Customize Postgresql parameters. |
+| pooler | object | `{"enabled":false,"instances":3,"parameters":{"default_pool_size":"100","max_client_conn":"1000"},"poolMode":"session"}` | CNPG Pooler configuration |
+| pooler.enabled | bool | `false` | Enabling or disabling PgBouncer Pooler |
+| pooler.instances | int | `3` | Number of PgBouncer pods |
+| pooler.parameters | object | `{"default_pool_size":"100","max_client_conn":"1000"}` | Parameters to configure PgBouncer (see https://www.pgbouncer.org/config.html#section-databases) |
+| pooler.poolMode | string | `"session"` | Type of PgBouncer connexion |
 | primaryUpdateStrategy | string | `"unsupervised"` | Rolling update strategy used : unsupervised: automated update of the primary once all replicas have been upgraded (default) supervised: requires manual supervision to perform the switchover of the primary |
 | pvcSize.data | string | `"10Gi"` | Size of the data PVC used by each cnpg instance. |
 | pvcSize.wal | string | `"5Gi"` | Size of the WAL PVC used by each cnpg instance (if value is `null` then WAL files are stored within the data PVC). |
