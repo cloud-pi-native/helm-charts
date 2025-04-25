@@ -35,6 +35,10 @@ spec:
     initdb:
       database: {{ .Values.dbName }}
       owner: {{ .Values.username }}
+  {{- if and (eq .Values.mode "primary") .Values.initSecret.enabled }}
+      secret:
+        name: {{ (printf "%s-%s" .Values.nameOverride "db") | default (printf "%s-%s-%s" (include "cpnCnpg.fullname" .) "pg-cluster" "db") }}
+  {{- end }}
   {{- else if or (eq .Values.mode "replica") (eq .Values.mode "restore") }}
     recovery:
       source: {{ .Values.nameOverride | default (printf "%s-%s" "pg-cluster" (include "cpnCnpg.fullname" .)) }}

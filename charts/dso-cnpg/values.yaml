@@ -55,6 +55,12 @@ exposed: false
 nodePort:
 # -- Mode used to deploy the cnpg cluster, it should be `primary`, `replica` or `restore`.
 mode: "primary"
+# -- Only when mode: "primary" to allow choice of database user and password.
+initSecret:
+  enabled: false
+  secretName: ""
+  username: ""
+  password: ""
 replica:
   # -- Primary cnpg cluster host used for replica mode.
   host: ""
