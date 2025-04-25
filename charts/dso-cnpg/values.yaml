@@ -130,7 +130,14 @@ pooler:
 
 # -- Whether or not PodMonitor should be deployed.
 monitoring:
+  # -- Specifies whether the monitoring should be enabled. Requires Prometheus Operator CRDs.
   enabled: false
+  # -- Metrics relabel configurations to apply to samples before ingestion.
+  podMonitorMetricRelabelings: []
+  # -- Relabel configurations to apply to samples before scraping.
+  podMonitorRelabelings: []
+  # -- Additional labels for the podMonitor
+  podMonitorAdditionalLabels: {}
 
 # CNPG operator configuration
 cnpg-operator:

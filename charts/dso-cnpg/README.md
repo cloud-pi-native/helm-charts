@@ -1,6 +1,6 @@
 # cpn-cnpg
 
-![Version: 2.2.0](https://img.shields.io/badge/Version-2.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 2.3.0](https://img.shields.io/badge/Version-2.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 A Helm Chart to deploy easily a CNPG cluster
 
@@ -56,7 +56,11 @@ A Helm Chart to deploy easily a CNPG cluster
 | instances | int | `3` | Number of instances to spawn in the cluster. |
 | labels | object | `{}` | Additional cnpg cluster labels. |
 | mode | string | `"primary"` | Mode used to deploy the cnpg cluster, it should be `primary`, `replica` or `restore`. |
-| monitoring | object | `{"enabled":false}` | Whether or not PodMonitor should be deployed. |
+| monitoring | object | `{"enabled":false,"podMonitorAdditionalLabels":{},"podMonitorMetricRelabelings":[],"podMonitorRelabelings":[]}` | Whether or not PodMonitor should be deployed. |
+| monitoring.enabled | bool | `false` | Specifies whether the monitoring should be enabled. Requires Prometheus Operator CRDs. |
+| monitoring.podMonitorAdditionalLabels | object | `{}` | Additional labels for the podMonitor |
+| monitoring.podMonitorMetricRelabelings | list | `[]` | Metrics relabel configurations to apply to samples before ingestion. |
+| monitoring.podMonitorRelabelings | list | `[]` | Relabel configurations to apply to samples before scraping. |
 | nameOverride | string | `""` | Provide a name in place of the default application name. |
 | nodePort | string | `nil` | Port used for NodePort service. Needs `exposed` tu be true. |
 | parameters | object | `{}` | Customize Postgresql parameters. |
