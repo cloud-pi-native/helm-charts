@@ -21,6 +21,29 @@ entries:
   cpn-cnpg:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2025-04-25T07:24:20.305689022Z"
+    dependencies:
+    - alias: cnpg-operator
+      condition: cnpg-operator.enabled
+      name: cloudnative-pg
+      repository: https://cloudnative-pg.github.io/charts
+      version: 0.23.0
+    description: A Helm Chart to deploy easily a CNPG cluster
+    digest: 13b405e2d49dfb437598a786a07dac8eebd6d78c652c56f69ad46d767d6f5515
+    home: https://cloud-pi-native.fr
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: cpn-cnpg
+    sources:
+    - https://github.com/cloud-pi-native/helm-charts
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-cnpg-2.1.0/cpn-cnpg-2.1.0.tgz
+    version: 2.1.0
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2025-04-03T12:54:40.89126088Z"
     dependencies:
     - alias: cnpg-operator
@@ -2907,4 +2930,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/observatorium-0.5.1/observatorium-0.5.1.tgz
     version: 0.5.1
-generated: "2025-04-03T12:54:40.891476312Z"
+generated: "2025-04-25T07:24:20.305897572Z"
