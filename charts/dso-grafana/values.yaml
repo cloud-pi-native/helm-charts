@@ -1,0 +1,57 @@
+# -- Namespace to use for instances, dashboards and datasources creation
+grafanaNamespace: dso-grafana
+
+# -- Default instance to create (default mandatory project)
+default:
+  name: console
+
+# -- Default list of sample projects. One Grafana instance is created for each item. This is list is overriden by the global.projects list if provided.
+projects:
+  - projectName: console
+    envs:
+      hprod:
+        groups:
+          - Editors
+          - Viewers
+      prod:
+        groups:
+          - Editors
+          - Viewers
+# -- Global list of projects. One Grafana instance is created for each item. This list is provided dynamically by the Console webapp.
+global:
+  projects: []
+
+oauth:
+  # -- OAuth authentication enabling
+  enabled: true
+  # -- URL of the Idp provider to use
+  url: "https://grafana.example.com/realms/dso"
+  # -- Id of the OAuth client configuration
+  id: grafana
+  # -- Shared secret to autorize OAuth usage
+  secret: ""
+  # -- Audience value of the token
+  aud: grafana
+  # -- Scopes of the jwt token
+  scopes: profile, email, openid, offline_access
+
+# -- Ingress server configuration
+server:
+  # -- Enabling cert manager configuration
+  certManager:
+    enabled: true
+  # -- Class name of the ingress controller to use
+  ingressClassName: nginx
+  # -- Url of the ingress frontend. The instance is reachable with a /<name> context.
+  url: "grafana.example.com"
+
+# -- Grafana instances configuration
+grafana:
+  # -- Enable specific OpenShift configuration
+  isOpenShift: false
+  # -- Url of Observatorium instance
+  observatorium_url: http://observatorium-api.svc:8080
+
+dashboard:
+  # -- Enable default dashboard creation
+  default: true

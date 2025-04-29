@@ -1,0 +1,11 @@
+apiVersion: v2
+name: dso-grafana
+description: This Helm chart deploy Grafana instances and default dashboards for each projects read from values file.
+type: application
+version: 1.0.0
+maintainers:
+  - name: this-is-tobi
+    email: thibault.colin@interieur.gouv.fr
+    url: https://this-is-tobi.com
+  - name: tcheksa62
+    email: r.ducamp@gmail.com
