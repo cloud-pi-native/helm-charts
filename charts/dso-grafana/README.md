@@ -1,6 +1,6 @@
 # dso-grafana
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 This Helm chart deploy Grafana instances and default dashboards for each projects read from values file.
 
@@ -10,6 +10,12 @@ This Helm chart deploy Grafana instances and default dashboards for each project
 | ---- | ------ | --- |
 | this-is-tobi | <thibault.colin@interieur.gouv.fr> | <https://this-is-tobi.com> |
 | tcheksa62 | <r.ducamp@gmail.com> |  |
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| oci://ghcr.io/grafana/helm-charts | grafana-operator | v5.10.0 |
 
 ## Values
 
