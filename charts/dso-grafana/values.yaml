@@ -52,6 +52,7 @@ grafana:
   # -- Url of Observatorium instance
   observatorium_url: http://observatorium-api.svc:8080
 
-dashboard:
-  # -- Enable default dashboard creation
-  default: true
+# -- Select default dashboard creation among available json files
+dashboards:
+  - k8s-logs.json
+  - k8s-resources-namespace.json

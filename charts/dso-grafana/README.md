@@ -1,6 +1,6 @@
 # dso-grafana
 
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 This Helm chart deploy Grafana instances and default dashboards for each projects read from values file.
 
@@ -21,7 +21,7 @@ This Helm chart deploy Grafana instances and default dashboards for each project
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| dashboard.default | bool | `true` | Enable default dashboard creation |
+| dashboards | list | `["k8s-logs.json","k8s-resources-namespace.json"]` | Select default dashboard creation among available json files |
 | default | object | `{"name":"console"}` | Default instance to create (default mandatory project) |
 | global | object | `{"projects":[]}` | Global list of projects. One Grafana instance is created for each item. This list is provided dynamically by the Console webapp. |
 | grafana | object | `{"isOpenShift":false,"observatorium_url":"http://observatorium-api.svc:8080"}` | Grafana instances configuration |
