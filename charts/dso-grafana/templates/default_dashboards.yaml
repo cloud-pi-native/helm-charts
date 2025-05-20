@@ -11,6 +11,6 @@ spec:
   instanceSelector:
     matchLabels:
       dashboards: grafana
-  json: 
+  json: >
 {{- $.Files.Get $path | nindent 4 }}
 {{- end }}
