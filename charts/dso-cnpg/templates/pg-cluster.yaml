@@ -106,9 +106,11 @@ spec:
     barmanObjectStore:
       destinationPath: {{ .Values.backup.destinationPath }}
       endpointURL: {{ .Values.backup.endpointURL }}
+      {{- if .Values.backup.endpointCA.name }}
       endpointCA:
         name: {{ .Values.backup.endpointCA.name }}
         key: {{ .Values.backup.endpointCA.key }}
+      {{- end }}
       s3Credentials:
         accessKeyId:
           name: {{ .Values.backup.s3Credentials.secretName | default (printf "%s-%s" "pg-cluster" (include "cpnCnpg.fullname" .)) }}
