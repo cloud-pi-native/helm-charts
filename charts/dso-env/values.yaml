@@ -22,8 +22,9 @@ environment:
   # -- Nom du groupe à autoriser en lecture/écriture sur les objets applicatifs (-app) déployés par ArgoCD
   rwGroup: /project/environment/RW
 application:
-  # -- Préfixe des dépôts autorisés
-  sourceReposPrefix: https://gitlab.com/projects/org/demo
+  # -- Liste des dépôts à autoriser au niveau du AppProject
+  sourceRepos:
+  - https://gitlab.com/projects/org/demo
   destination:
     # -- Nom du cluster applicatif cible
     name: dest
