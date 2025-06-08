@@ -98,9 +98,11 @@ spec:
     barmanObjectStore:
       destinationPath: {{ .Values.cnpg.backup.destinationPath }}
       endpointURL: {{ .Values.cnpg.backup.endpointURL }}
+      {{- if .Values.cnpg.backup.endpointCA.name }}
       endpointCA:
         name: {{ .Values.cnpg.backup.endpointCA.name }}
         key: {{ .Values.cnpg.backup.endpointCA.key }}
+      {{- end }}
       s3Credentials:
         accessKeyId:
           name: {{ .Values.cnpg.backup.s3Credentials.secretName | default (printf "%s-%s" "pg-cluster" (include "cpnConsole.fullname" .)) }}
