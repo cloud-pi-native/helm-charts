@@ -2933,6 +2933,20 @@ entries:
   dso-env:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2025-06-10T09:59:20.387135213Z"
+    description: Creates argocd Project and Applications to deploy DSO project repositories.
+    digest: f197d41adc0b201e855839aadbbe1a2660a695aaa9da88c4d451c9c7e92d22ba
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: dso-env
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-env-1.5.1/dso-env-1.5.1.tgz
+    version: 1.5.1
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2025-06-05T09:05:04.937908075Z"
     description: Creates argocd Project and Applications to deploy DSO project repositories.
     digest: e5d91b5ea024203a93f7f7174e333d8b96b6d308ea6c890e4c1f375ce71357ce
@@ -3218,4 +3232,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/observatorium-0.5.1/observatorium-0.5.1.tgz
     version: 0.5.1
-generated: "2025-06-10T08:08:15.617790365Z"
+generated: "2025-06-10T09:59:20.387426867Z"
