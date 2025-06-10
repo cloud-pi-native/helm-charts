@@ -37,4 +37,7 @@ spec:
       allow
     - p, proj:{{ .Values.argocd.project }}-app:rw-group, applications, create, {{ .Values.argocd.project }}-app/*,
       deny
-  sourceRepos: {{ .Values.application.sourceRepos }}
+  sourceRepositories: 
+  {{- range .Values.application.sourceRepositories }}
+    - {{ . }}
+  {{- end }}

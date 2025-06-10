@@ -23,7 +23,7 @@ environment:
   rwGroup: /project/environment/RW
 application:
   # -- Liste des dépôts à autoriser au niveau du AppProject
-  sourceRepos:
+  sourceRepositories:
   - https://gitlab.com/projects/org/demo
   destination:
     # -- Nom du cluster applicatif cible
