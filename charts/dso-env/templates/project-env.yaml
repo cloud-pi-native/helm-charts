@@ -18,8 +18,8 @@ spec:
   namespaceResourceWhitelist:
   - group: '*'
     kind: '*'
-  {{- $combined := concat .Values.application.sourceRepos (list "https://github.com/cloud-pi-native/helm-charts.git" .Values.environment.valueFileRepository) }}
-  sourceRepos: 
+  {{- $combined := concat .Values.application.sourceRepositories (list "https://github.com/cloud-pi-native/helm-charts.git" .Values.environment.valueFileRepository) }}
+  sourceRepositories: 
   {{- range $combined }}
     - {{ . }}
   {{- end }}
