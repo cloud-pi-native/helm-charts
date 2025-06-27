@@ -1,0 +1,34 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: application-prevent-other-project
+  annotations:
+    policies.kyverno.io/title: Prevent using another Project
+    policies.kyverno.io/category: Argo
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Application
+    policies.kyverno.io/description: >-
+      This policy prevents using a wrong Project for infra-apps Applications.
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: project-updates
+      match:
+        any:
+        - resources:
+            kinds:
+              - Application
+      preconditions:
+        all:
+        - key: "{{ request.operation || 'BACKGROUND' }}"
+          operator: Equals
+          value: UPDATE
+      validate:
+        message: "The spec.project cannot be other than {{ .Values.argocd.project }}-infra-apps."
+        deny:
+          conditions:
+            any:
+            - key: "{{request.oldObject.spec.project}}"
+              operator: NotEquals
+              value: "{{request.oldObject.spec.project}}"
