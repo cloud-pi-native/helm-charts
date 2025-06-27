@@ -1,0 +1,28 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.argocd.project }}-infra-apps
+  namespace: {{ .Values.argocd.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: dso-console
+    {{- .Values.common | toYaml | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "4" # Force la suppression avant le AppProject
+  finalizers:
+    # foreground cascading deletion
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ .Values.argocd.project }}-infra-apps
+  source: 
+    repoURL: {{ .Values.application.infraApps.repoURL }}
+    targetRevision:  {{ .Values.application.infraApps.targetRevision }}
+    path: {{ .Values.application.infraApps.path }}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dso-infra-apps-{{ .Values.argocd.project }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true

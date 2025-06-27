@@ -22,6 +22,11 @@ environment:
   # -- Nom du groupe à autoriser en lecture/écriture sur les objets applicatifs (-app) déployés par ArgoCD
   rwGroup: /project/environment/RW
 application:
+  # -- Dépôt contenant des éléments d'infrastructure à déployer sur le cluster ArgoCD 
+  infraApps:
+    repoURL: https://gitlab.com/projects/org/demo/infra-apps.git
+    targetRevision: main
+    path: '.'
   # -- Liste des dépôts à autoriser au niveau du AppProject
   sourceRepositories:
   - https://gitlab.com/projects/org/demo
