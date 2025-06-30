@@ -1,0 +1,38 @@
+# -- Provide a name in place of the default application name.
+nameOverride: ""
+# -- String to fully override the default application name.
+fullnameOverride: ""
+
+global:
+  # -- For security context depending of the cluster distribution.
+  platform: kubernetes
+
+# Job configuration
+job:
+  # -- Playbook name.
+  name: "example-playbook"
+  serviceAccount:
+    # -- Create a service account for the job.
+    create: true
+    # -- Annotations applied to created service account.
+    annotations: {}
+    # -- Service account name.
+    name: ""
+  # -- Job restart policy (e.g., Never or OnFailure).
+  restartPolicy: OnFailure
+  image:
+    # -- Repository to use for the job.
+    repository: ghcr.io/cloud-pi-native/git-ansible
+    # -- Tag to use for the job.
+    ## Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+  # -- Kubernetes annotations to apply to the job resource.
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+
+cronJob:
+  # -- Create a cronJob.
+  create: false
+  # -- CronJob schedule.
+  schedule: "0 */6 * * *"
