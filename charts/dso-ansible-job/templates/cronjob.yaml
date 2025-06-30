@@ -1,0 +1,10 @@
+{{- if .Values.cronJob.create -}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "cpnAnsibleJob.fullname" . }}
+spec:
+  schedule: {{ .Values.cronJob.schedule }}
+  jobTemplate:
+{{ include "cpnAnsibleJob.jobPodSpec" . | indent 4 }}
+{{- end }}

@@ -1,0 +1,10 @@
+apiVersion: v2
+name: cpn-ansible-job
+description: Creates Job for Socle services post-configuration.
+type: application
+version: 1.0.0
+appVersion: 1.0.0
+maintainers:
+  - name: cloud-pi-native
+    email: cloudpinative-relations@interieur.gouv.fr
+    url: https://cloud-pi-native.fr
