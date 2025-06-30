@@ -1,6 +1,6 @@
 # dso-grafana
 
-![Version: 1.2.1](https://img.shields.io/badge/Version-1.2.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 This Helm chart deploy Grafana instances and default dashboards for each projects read from values file.
 
@@ -21,6 +21,7 @@ This Helm chart deploy Grafana instances and default dashboards for each project
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| argocd.namespace | string | `"dso-argocd"` | Namespace to use for additional Applications |
 | dashboards | list | `["k8s-logs.json","k8s-resources-namespace.json"]` | Select default dashboard creation among available json files |
 | default | object | `{"name":"console"}` | Default instance to create (default mandatory project) |
 | global | object | `{"projects":[]}` | Global list of projects. One Grafana instance is created for each item. This list is provided dynamically by the Console webapp. |
@@ -34,7 +35,7 @@ This Helm chart deploy Grafana instances and default dashboards for each project
 | oauth.scopes | string | `"profile, email, openid, offline_access"` | Scopes of the jwt token |
 | oauth.secret | string | `""` | Shared secret to autorize OAuth usage |
 | oauth.url | string | `"https://grafana.example.com/realms/dso"` | URL of the Idp provider to use |
-| projects | list | `[{"envs":{"hprod":{"groups":["Editors","Viewers"]},"prod":{"groups":["Editors","Viewers"]}},"projectName":"console"}]` | Default list of sample projects. One Grafana instance is created for each item. This is list is overriden by the global.projects list if provided. |
+| projects | list | `[{"dashboardsRepo":"https://gitlab/com/project/dashboards.git","envs":{"hprod":{"groups":["Editors","Viewers"]},"prod":{"groups":["Editors","Viewers"]}},"projectName":"console"}]` | Default list of sample projects. One Grafana instance is created for each item. This is list is overriden by the global.projects list if provided. |
 | server | object | `{"certManager":{"enabled":true},"ingressClassName":"nginx","url":"grafana.example.com"}` | Ingress server configuration |
 | server.certManager | object | `{"enabled":true}` | Enabling cert manager configuration |
 | server.ingressClassName | string | `"nginx"` | Class name of the ingress controller to use |

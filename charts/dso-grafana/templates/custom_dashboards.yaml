@@ -1,0 +1,74 @@
+{{- range $project := default .Values.projects .Values.global.projects }}
+{{- if $project.dashboardsRepo }}
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: dso-console
+  annotations:
+    argocd.argoproj.io/sync-wave: "1" # Evite la suppression avant les Applications
+  name: {{ $project.projectName }}-dashboards
+  namespace: {{ $.Values.argocd.namespace }}
+spec:
+  destinations:
+  - name: in-cluster
+    namespace: {{ $.Values.grafanaNamespace }}
+  clusterResourceBlacklist:
+  - group: '*'
+    kind: '*'
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: 'GrafanaDashboard'
+  - group: '*'
+    kind: 'PrometheusRule'
+  roles:
+  - description: read-only group
+    groups:
+{{- range $env, $val := $project.envs }}
+{{- range $val.groups }}
+    - {{ . }}
+{{- end }}
+{{- end }}
+    name: ro-group
+    policies:
+    - p, proj:{{ $project.projectName }}-dashboards:ro-group, applications, get, {{ $project.projectName }}-dashboards/*,
+      allow
+  sourceRepos: 
+    - {{ $project.dashboardsRepo }}
+{{- range $env, $val := $project.envs }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ printf "%s-%s" $env $project.projectName }}-dashboards
+  namespace: {{ $.Values.argocd.namespace }}
+  labels:
+    app.kubernetes.io/managed-by: dso-console
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    # foreground cascading deletion
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ $project.projectName }}-dashboards
+  sources: 
+  - repoURL: {{ $project.dashboardsRepo }}
+    targetRevision: main
+    path: .
+    helm:
+      values: |
+        global:
+          tenantId: {{ printf "%s-%s" $env $project.projectName }}
+  destination:
+    name: in-cluster
+    namespace: {{ $.Values.grafanaNamespace }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+      - ServerSideApply=true
+{{- end }}
+{{- end }}
+{{- end }}
