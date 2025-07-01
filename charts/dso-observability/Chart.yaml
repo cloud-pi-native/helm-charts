@@ -1,0 +1,10 @@
+apiVersion: v2
+name: dso-observability
+description: A Helm chart for Kubernetes to deploy custom GrafanaDashboard and PrometheusRule
+type: application
+version: 0.1.6
+appVersion: "0.0.1"
+maintainers:
+  - name: cloud-pi-native
+    email: cloudpinative-relations@interieur.gouv.fr
+    url: https://cloud-pi-native.fr
