@@ -49,12 +49,13 @@ Generate the common job pod spec used in both Job and CronJob templates.
 {{- define "cpnAnsibleJob.jobPodSpec" -}}
 spec:
   template:
-    spec:
+    metadata:
       labels:
         {{- include "cpnAnsibleJob.job.selectorLabels" . | nindent 8 }}
         {{- with .Values.job.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+    spec:
       serviceAccountName: {{ include "cpnAnsibleJob.job.serviceAccountName" . | default .Values.job.serviceAccount.name}}
       restartPolicy: {{ .Values.job.restartPolicy }}
       containers:
