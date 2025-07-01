@@ -1,0 +1,18 @@
+{{- define "grafana-dashboards.rules" -}}
+{{- range $path, $_ := $.Files.Glob "files/rules/*.yaml.tpl" }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ $.Values.global.tenantId }}-{{ $path | base | replace ".yaml.tpl"  "" }}
+  labels:
+    tenant_id: {{ $.Values.global.tenantId }}
+    {{- if regexMatch "/logs/" $path}}
+    type: logs
+    {{- else if regexMatch "/metrics/" $path }}
+    type: metrics
+    {{- end }}
+spec:
+  {{ tpl ($.Files.Get $path) $ }}
+{{- end }}
+{{- end -}}

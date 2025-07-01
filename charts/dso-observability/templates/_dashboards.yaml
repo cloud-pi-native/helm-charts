@@ -1,0 +1,19 @@
+{{- define "grafana-dashboards.dashboards" -}}
+{{- range $path, $_ := $.Files.Glob "files/dashboards/*.json" }}
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: {{ $.Values.global.tenantId }}-{{ $path | base | replace ".json"  "" }}
+  labels:
+    tenant_id: {{ $.Values.global.tenantId }}
+spec:
+  allowCrossNamespaceImport: true
+  resyncPeriod: 30s
+  instanceSelector:
+    matchLabels:
+      app: {{ $.Values.global.tenantId }}
+  json: >
+{{ $.Files.Get $path | indent 4 }}
+{{- end }}
+{{- end -}}

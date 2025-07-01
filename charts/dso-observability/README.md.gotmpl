@@ -1,0 +1,47 @@
+{{ template "chart.header" . }}
+{{ template "chart.description" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+## Description
+
+This chart only defines 2 functions, to be used in subcharts along with resources to be deployed : 
+- *.json files in `files/dashboards` will be deployed as `GrafanaDashboard`
+- *.yaml.tpl files in `files/rules` will be deployed as `PrometheusRule`
+
+### Usage
+
+1- Create a `Chart.yaml` file referencing current Chart as dependency:
+```
+apiVersion: v2
+name: custom-obs
+type: application
+version: 0.1.0
+appVersion: "0.0.1"
+dependencies:
+  - name: {{ template "chart.name" . }}
+    version: {{ template "chart.version" . }}
+    repository: https://cloud-pi-native.github.io/helm-charts
+```
+
+2- Create a file in your `template/` directory calling the two functions:
+```yaml
+{{"{{"}}- include "grafana-dashboards.dashboards" . -}}
+{{"{{"}}- include "grafana-dashboards.rules" . -}}
+```
+
+3- Add json et tpl files in `files/dashboards` and `files/rules` directories.
+
+4- Add in your `values.yaml` file the value corresponding to the `app` label of your grafana instance:
+```yaml
+global:
+    tenantId: your-app
+```
+
+5- Your Chart is ready to use.
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}
