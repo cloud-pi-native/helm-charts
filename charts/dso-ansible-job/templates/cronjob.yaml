@@ -1,4 +1,5 @@
 {{- if .Values.cronJob.create -}}
+{{- $playbookName := .Values.cronJob.name | default .Values.job.name }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -6,5 +7,5 @@ metadata:
 spec:
   schedule: {{ .Values.cronJob.schedule }}
   jobTemplate:
-{{ include "cpnAnsibleJob.jobPodSpec" . | indent 4 }}
+{{ include "cpnAnsibleJob.jobPodSpec" (dict "playbookName" $playbookName "Values" .Values "Chart" .Chart "Release" .Release) | indent 4 }}
 {{- end }}
