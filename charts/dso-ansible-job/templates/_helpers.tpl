@@ -59,7 +59,7 @@ spec:
       serviceAccountName: {{ include "cpnAnsibleJob.job.serviceAccountName" . | default .Values.job.serviceAccount.name}}
       restartPolicy: {{ .Values.job.restartPolicy }}
       containers:
-        - name: {{ .Values.job.name }}-post-conf
+        - name: {{ .playbookName }}-post-conf
           image: {{ .Values.job.image.repository }}:{{ .Values.job.image.tag | default .Chart.AppVersion }}
           command:
             - /bin/sh
@@ -67,8 +67,12 @@ spec:
             - |
               git clone https://github.com/cloud-pi-native/socle.git && \
               cd socle && \
-              ansible-playbook post-install/{{ .Values.job.name }}.yaml
+              ansible-playbook post-install/{{ .playbookName }}.yaml
           {{- include "cpnAnsibleJob.fullSecurityContext" . | indent 10 }}
+          {{- with .Values.job.extraEnv }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
 {{- end }}
 
 

@@ -1,3 +1,4 @@
+{{- $playbookName := .Values.job.name }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -6,4 +7,4 @@ metadata:
     {{- range $key, $value := .Values.job.annotations }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
-{{ include "cpnAnsibleJob.jobPodSpec" . }}
+{{ include "cpnAnsibleJob.jobPodSpec" (dict "playbookName" $playbookName "Values" .Values "Chart" .Chart "Release" .Release) }}

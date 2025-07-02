@@ -30,9 +30,15 @@ job:
   annotations:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookSucceeded
+  # -- (Optional) Extra environment variables to pass to the job container
+  extraEnv: []
+  #   - name: MY_CUSTOM_VAR
+  #     value: "custom-value"
 
 cronJob:
   # -- Create a cronJob.
   create: false
+  # -- Playbook name if different from job.
+  name: ""
   # -- CronJob schedule.
   schedule: "0 */6 * * *"
