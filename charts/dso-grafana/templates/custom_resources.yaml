@@ -34,7 +34,7 @@ spec:
     - p, proj:{{ $project.projectName }}-observability:ro-group, applications, get, {{ $project.projectName }}-observability/*,
       allow
   sourceRepos: 
-    - {{ $project.projectRepository }}
+    - {{ $project.projectRepository.url }}
 {{- range $env, $val := $project.envs }}
 ---
 apiVersion: argoproj.io/v1alpha1
@@ -52,9 +52,9 @@ metadata:
 spec:
   project: {{ $project.projectName }}-observability
   sources: 
-  - repoURL: {{ $project.projectRepository }}
+  - repoURL: {{ $project.projectRepository.url }}
     targetRevision: main
-    path: .
+    path: {{ default "." $project.projectRepository.path }}
     helm:
       values: |
         global:
