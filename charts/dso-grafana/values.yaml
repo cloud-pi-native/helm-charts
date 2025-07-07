@@ -12,7 +12,9 @@ default:
 # -- Default list of sample projects. One Grafana instance is created for each item. This is list is overriden by the global.projects list if provided.
 projects:
   - projectName: console
-    projectRepository: https://gitlab.com/project/infra-observability.git
+    projectRepository:
+      url: https://gitlab.com/project/infra-observability.git
+      path: .
     envs:
       hprod:
         groups:
