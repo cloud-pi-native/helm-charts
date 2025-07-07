@@ -1,5 +1,5 @@
 {{- range $project := default .Values.projects .Values.global.projects }}
-{{- if $project.dashboardsRepo }}
+{{- if $project.projectRepository }}
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/managed-by: dso-console
   annotations:
     argocd.argoproj.io/sync-wave: "1" # Evite la suppression avant les Applications
-  name: {{ $project.projectName }}-dashboards
+  name: {{ $project.projectName }}-observability
   namespace: {{ $.Values.argocd.namespace }}
 spec:
   destinations:
@@ -31,16 +31,16 @@ spec:
 {{- end }}
     name: ro-group
     policies:
-    - p, proj:{{ $project.projectName }}-dashboards:ro-group, applications, get, {{ $project.projectName }}-dashboards/*,
+    - p, proj:{{ $project.projectName }}-observability:ro-group, applications, get, {{ $project.projectName }}-observability/*,
       allow
   sourceRepos: 
-    - {{ $project.dashboardsRepo }}
+    - {{ $project.projectRepository }}
 {{- range $env, $val := $project.envs }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ printf "%s-%s" $env $project.projectName }}-dashboards
+  name: {{ printf "%s-%s" $env $project.projectName }}-observability
   namespace: {{ $.Values.argocd.namespace }}
   labels:
     app.kubernetes.io/managed-by: dso-console
@@ -50,9 +50,9 @@ metadata:
     # foreground cascading deletion
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: {{ $project.projectName }}-dashboards
+  project: {{ $project.projectName }}-observability
   sources: 
-  - repoURL: {{ $project.dashboardsRepo }}
+  - repoURL: {{ $project.projectRepository }}
     targetRevision: main
     path: .
     helm:
