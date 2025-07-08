@@ -1,4 +1,4 @@
-{{ if .Capabilities.APIVersions.Has "secrets.hashicorp.com/v1beta1" -}}
+{{ if .Values.application.vault.url -}}
 ---
 apiVersion: secrets.hashicorp.com/v1beta1
 kind: VaultConnection
@@ -10,6 +10,7 @@ metadata:
     {{- .Values.common | toYaml | nindent 4 }}
 spec:
   address: {{ .Values.application.vault.url }}
+{{ end -}}
 ---
 apiVersion: v1
 kind: Secret
@@ -31,7 +32,9 @@ metadata:
     app.kubernetes.io/managed-by: dso-console
     {{- .Values.common | toYaml | nindent 4 }}
 spec:
+{{- if .Values.application.vault.url }}
   vaultConnectionRef: default
+{{- end }}
   method: appRole
   mount: approle
   appRole:
@@ -39,4 +42,3 @@ spec:
     secretRef: vso-approle
   allowedNamespaces: 
     - {{ .Values.application.destination.namespace }}
-{{ end -}}
