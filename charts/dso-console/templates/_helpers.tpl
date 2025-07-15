@@ -35,6 +35,17 @@ Create image pull secret
 {{- end }}
 {{- end }}
 
+{{/*
+Create postgresql DB url connexion
+*/}}
+{{- define "cpnConsole.dbUrlValue" }}
+{{- if .Values.global.postgresql.dbUrl }}
+{{- .Values.global.postgresql.dbUrl }}
+{{- else }}
+{{- printf "postgresql://%s:%s@%s-%s-hl:%s/%s?schema=public" .Values.postgresql.auth.username .Values.postgresql.auth.password .Release.Name .Values.postgresql.nameOverride (.Values.postgresql.primary.service.ports.postgresql | toString) .Values.postgresql.auth.database }}
+{{- end }}
+{{- end }}
+
 
 {{/*
 Create container environment variables from configmap

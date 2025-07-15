@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 2.1.9](https://img.shields.io/badge/Version-2.1.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.3.3](https://img.shields.io/badge/AppVersion-9.3.3-informational?style=flat-square)
+![Version: 2.1.10](https://img.shields.io/badge/Version-2.1.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.3.3](https://img.shields.io/badge/AppVersion-9.3.3-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -135,6 +135,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | global.keycloak.realm | string | `"cloud-pi-native"` | Name of the keycloak realm used for authentication. |
 | global.keycloak.redirectUri | string | `"https://console.dso.local"` | Keycloak redirect uri used with keycloak. |
 | global.keycloak.sessionSecret | string | `"a-very-strong-secret-with-more-than-32-char"` | Session secret used to store keycloak session for Console CPN client. |
+| global.postgresql.cnpgSecretName | string | `""` | Name of the secret to use to connect to external CNPG-managed DB |
 | global.postgresql.dbUrl | string | `""` | Postgres database connection string used to override computed db url, usefull if external database. # For postgres it should look like this "postgresql://db_user:db_password@db_service:db_port/db_name?schema=public" |
 | global.secrets | object | `{}` | Map of environment variables to inject into backend and frontend containers. |
 | imageCredentials.email | string | `""` | Email to pull images. |
