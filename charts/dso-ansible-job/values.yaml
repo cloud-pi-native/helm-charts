@@ -11,6 +11,8 @@ global:
 job:
   # -- Playbook name.
   name: "example-playbook"
+  # -- Git branch or tag to checkout before applying the Ansible playbook
+  targetRevision: "main"
   serviceAccount:
     # -- Create a service account for the job.
     create: true

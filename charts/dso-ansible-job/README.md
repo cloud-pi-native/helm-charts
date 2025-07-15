@@ -1,6 +1,6 @@
 # cpn-ansible-job
 
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Creates Job for Socle services post-configuration.
 
@@ -28,6 +28,7 @@ Creates Job for Socle services post-configuration.
 | job.serviceAccount.annotations | object | `{}` | Annotations applied to created service account. |
 | job.serviceAccount.create | bool | `true` | Create a service account for the job. |
 | job.serviceAccount.name | string | `""` | Service account name. |
+| job.targetRevision | string | `"main"` | Git branch or tag to checkout before applying the Ansible playbook |
 | nameOverride | string | `""` | Provide a name in place of the default application name. |
 
 ----------------------------------------------
