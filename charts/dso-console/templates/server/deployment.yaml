@@ -92,12 +92,12 @@ spec:
           {{- toYaml .Values.server.envFrom | nindent 8 }}
         {{- end }}
         {{- if .Values.server.startupProbe.enabled }}
-        {{- if .Values.cnpg.enabled }}
+        {{- if .Values.global.postgresql.cnpgSecretName }}
         env:
         - name: DB_URL
           valueFrom:
             secretKeyRef:
-              name: pg-cluster-console-app
+              name: {{ .Values.global.postgresql.cnpgSecretName }}
               key: uri
         {{- end }}
         startupProbe:
