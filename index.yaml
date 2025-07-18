@@ -3,6 +3,20 @@ entries:
   cpn-ansible-job:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2025-07-18T13:20:10.449432127Z"
+    description: Creates Job for Socle services post-configuration.
+    digest: 837949a6d3e2b69b0dffd60997fd06b685b89c5b8459b2ea0f8ce87ff7394110
+    maintainers:
+    - email: cloudpinative-relations@interieur.gouv.fr
+      name: cloud-pi-native
+      url: https://cloud-pi-native.fr
+    name: cpn-ansible-job
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-ansible-job-1.3.0/cpn-ansible-job-1.3.0.tgz
+    version: 1.3.0
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2025-07-17T07:47:08.762814636Z"
     description: Creates Job for Socle services post-configuration.
     digest: 7df14d2be66da7caffae9e8f749faf16b9ab50215db61dfc33827fd56cee0699
@@ -3489,4 +3503,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/observatorium-0.5.1/observatorium-0.5.1.tgz
     version: 0.5.1
-generated: "2025-07-17T07:47:08.763142672Z"
+generated: "2025-07-18T13:20:10.449768863Z"
