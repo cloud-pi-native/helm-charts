@@ -59,6 +59,7 @@ spec:
       containers:
         - name: {{ .playbookName }}-post-conf
           image: {{ .Values.job.image.repository }}:{{ .Values.job.image.tag | default .Chart.AppVersion }}
+          imagePullPolicy: Always
           command:
             - /bin/sh
             - -c
