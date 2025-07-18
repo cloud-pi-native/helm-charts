@@ -46,6 +46,10 @@ Generate the common job pod spec used in both Job and CronJob templates.
 */}}
 {{- define "cpnAnsibleJob.jobPodSpec" -}}
 spec:
+  {{- if .Values.job.activeDeadlineSeconds }}
+  activeDeadlineSeconds: {{ .Values.job.activeDeadlineSeconds }}
+  {{- end }}
+  backoffLimit: {{ .Values.job.backoffLimit }}
   template:
     metadata:
       labels:
