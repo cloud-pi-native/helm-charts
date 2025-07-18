@@ -22,6 +22,10 @@ job:
     name: ""
   # -- Job restart policy (e.g., Never or OnFailure).
   restartPolicy: OnFailure
+  # -- Optional maximum time in seconds before de Pod is killed (no matter of the backoffLimit)
+  activeDeadlineSeconds: null
+  # -- Number of retries before setting de Job status to failed
+  backoffLimit: 6
   image:
     # -- Repository to use for the job.
     repository: ghcr.io/cloud-pi-native/git-ansible

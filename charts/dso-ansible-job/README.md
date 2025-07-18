@@ -1,6 +1,6 @@
 # cpn-ansible-job
 
-![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.4.0](https://img.shields.io/badge/Version-1.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Creates Job for Socle services post-configuration.
 
@@ -19,7 +19,9 @@ Creates Job for Socle services post-configuration.
 | cronJob.schedule | string | `"0 */6 * * *"` | CronJob schedule. |
 | fullnameOverride | string | `""` | String to fully override the default application name. |
 | global.platform | string | `"kubernetes"` | For security context depending of the cluster distribution. |
+| job.activeDeadlineSeconds | string | `nil` | Optional maximum time in seconds before de Pod is killed (no matter of the backoffLimit) |
 | job.annotations | object | `{"argocd.argoproj.io/hook":"PostSync","argocd.argoproj.io/hook-delete-policy":"HookSucceeded"}` | Kubernetes annotations to apply to the job resource. |
+| job.backoffLimit | int | `6` | Number of retries before setting de Job status to failed |
 | job.extraEnv | Optional | `[]` | Extra environment variables to pass to the job container |
 | job.image.repository | string | `"ghcr.io/cloud-pi-native/git-ansible"` | Repository to use for the job. |
 | job.image.tag | string | `""` | Tag to use for the job. # Overrides the image tag whose default is the chart appVersion. |
