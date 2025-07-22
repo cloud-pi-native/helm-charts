@@ -71,7 +71,7 @@ spec:
               git clone https://github.com/cloud-pi-native/socle.git && \
               cd socle && \
               git checkout {{ .Values.job.targetRevision }} && \
-              ansible-playbook post-install/{{ .playbookName }}.yaml
+              ansible-playbook post-install/{{ .playbookName }}.yaml -e dsc_cr={{ .Values.job.dscName }}
           {{- include "cpnAnsibleJob.fullSecurityContext" . | indent 10 }}
           {{- with .Values.job.extraEnv }}
           env:

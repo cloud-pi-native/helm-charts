@@ -11,6 +11,8 @@ global:
 job:
   # -- Playbook name.
   name: "example-playbook"
+  # -- (string) Name of the DsoSocleConfig to use as source-of-truth
+  dscName: null
   # -- Git branch or tag to checkout before applying the Ansible playbook
   targetRevision: "main"
   serviceAccount:
