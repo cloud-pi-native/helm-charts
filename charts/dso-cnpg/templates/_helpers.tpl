@@ -94,6 +94,7 @@ Selector labels
 {{- define "cpnCnpg.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "cpnCnpg.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+cnpg.io/cluster: {{ include "cpnCnpg.name" . }}
 {{- end }}
 
 
