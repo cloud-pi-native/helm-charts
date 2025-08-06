@@ -2,7 +2,7 @@ apiVersion: v2
 name: cpn-cnpg
 description: A Helm Chart to deploy easily a CNPG cluster
 type: application
-version: 2.3.2
+version: 2.3.3
 appVersion: 1.0.0
 keywords: []
 home: https://cloud-pi-native.fr
