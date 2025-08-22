@@ -63,7 +63,7 @@ spec:
       containers:
         - name: {{ .playbookName }}-post-conf
           image: {{ .Values.job.image.repository }}:{{ .Values.job.image.tag | default .Chart.AppVersion }}
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.job.image.pullPolicy }}
           command:
             - /bin/sh
             - -c
@@ -77,6 +77,14 @@ spec:
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- with .Values.job.extraVolumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.job.extraVolumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 {{- end }}
 
 
