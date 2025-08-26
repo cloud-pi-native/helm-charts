@@ -376,6 +376,38 @@ entries:
   cpn-console:
   - apiVersion: v2
     appVersion: 9.4.0
+    created: "2025-08-26T13:10:39.639361316Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.7.3
+    - condition: keycloak.enabled
+      name: keycloak
+      repository: https://charts.bitnami.com/bitnami
+      version: 19.3.0
+    - alias: cnpg-operator
+      condition: cnpg-operator.enabled
+      name: cloudnative-pg
+      repository: https://cloudnative-pg.github.io/charts
+      version: 0.21.5
+    description: A Helm chart to deploy Cloud Pi Native Console
+    digest: 61d7f89042d6ed790c01e8dcec907d1901303f28350e1107466ec4d2178e44f4
+    home: https://cloud-pi-native.fr
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: cpn-console
+    sources:
+    - https://github.com/cloud-pi-native/helm-charts
+    - https://github.com/cloud-pi-native/console
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-console-2.1.12/cpn-console-2.1.12.tgz
+    version: 2.1.12
+  - apiVersion: v2
+    appVersion: 9.4.0
     created: "2025-08-25T08:43:44.116296715Z"
     dependencies:
     - condition: postgresql.enabled
@@ -3623,4 +3655,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/observatorium-0.5.1/observatorium-0.5.1.tgz
     version: 0.5.1
-generated: "2025-08-25T08:43:44.11661109Z"
+generated: "2025-08-26T13:10:39.639699067Z"
