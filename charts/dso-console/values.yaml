@@ -52,20 +52,28 @@ global:
   secrets: {}
   ## Global informations about the Keycloak instance that will be shared to the server and client.
   keycloak:
-    # -- Keycloak domain used for authentication.
-    domain: "keycloak.domain.com"
+    # Keycloak domain used for authentication.
+    domain:
+      # -- Keycloak domain used for Console CPN server.
+      backend: "keycloak.namespace.svc.cluster.local"
+      # -- Keycloak domain used for Console CPN client.
+      frontend: "keycloak.domain.com"
     # -- Name of the keycloak realm used for authentication.
     realm: "cloud-pi-native"
-    # -- Protocol used to communicate with keycloak for authentication.
-    protocol: "https"
+    # Protocol used to communicate with keycloak for authentication.
+    protocol:
+      # -- Keycloak protocol used for Console CPN server.
+      backend: "http"
+      # -- Keycloak protocol used for Console CPN client.
+      frontend: "https"
     ## Keycloak client ids.
     clientIds:
-      # -- Keycloak clientId used for Console CPN client.
+      # -- Keycloak clientId used for Console CPN server.
       backend: "console-backend"
-      # -- Keycloak clientId used for frontend.
+      # -- Keycloak clientId used for Console CPN client.
       frontend: "console-frontend"
     clientSecrets:
-      # -- Keycloak clientSecret used for Console CPN client.
+      # -- Keycloak clientSecret used for Console CPN server.
       backend: ""
     # -- Keycloak redirect uri used with keycloak.
     redirectUri: "https://console.dso.local"
