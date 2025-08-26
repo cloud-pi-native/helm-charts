@@ -5,8 +5,8 @@ metadata:
   labels: {{- include "cpnConsole.server.labels" . | nindent 4 }}
 data:
   SERVER_PORT: {{ .Values.server.container.port | quote }}
-  KEYCLOAK_PROTOCOL: {{ .Values.global.keycloak.protocol }}
-  KEYCLOAK_DOMAIN: {{ .Values.global.keycloak.domain }}
+  KEYCLOAK_PROTOCOL: {{ .Values.global.keycloak.protocol.backend }}
+  KEYCLOAK_DOMAIN: {{ .Values.global.keycloak.domain.backend }}
   KEYCLOAK_REALM: {{ .Values.global.keycloak.realm }}
   KEYCLOAK_REDIRECT_URI: {{ .Values.global.keycloak.redirectUri }}
   KEYCLOAK_CLIENT_ID: {{ .Values.global.keycloak.clientIds.backend }}

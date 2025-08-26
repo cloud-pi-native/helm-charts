@@ -6,8 +6,8 @@ metadata:
 data: 
   SERVER_HOST: {{ include "cpnConsole.fullname" . }}-server
   SERVER_PORT: {{ .Values.server.service.port | quote }}
-  KEYCLOAK_PROTOCOL: {{ .Values.global.keycloak.protocol }}
-  KEYCLOAK_DOMAIN: {{ .Values.global.keycloak.domain }}
+  KEYCLOAK_PROTOCOL: {{ .Values.global.keycloak.protocol.frontend }}
+  KEYCLOAK_DOMAIN: {{ .Values.global.keycloak.domain.frontend }}
   KEYCLOAK_REALM: {{ .Values.global.keycloak.realm }}
   KEYCLOAK_REDIRECT_URI: {{ .Values.global.keycloak.redirectUri }}
   KEYCLOAK_CLIENT_ID: {{ .Values.global.keycloak.clientIds.frontend }}

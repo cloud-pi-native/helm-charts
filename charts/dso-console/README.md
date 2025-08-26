@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 2.1.11](https://img.shields.io/badge/Version-2.1.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.4.0](https://img.shields.io/badge/AppVersion-9.4.0-informational?style=flat-square)
+![Version: 2.1.12](https://img.shields.io/badge/Version-2.1.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.4.0](https://img.shields.io/badge/AppVersion-9.4.0-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -126,12 +126,14 @@ A Helm chart to deploy Cloud Pi Native Console
 | features.vaultSecrets.enabled | bool | `true` | enabling vault secret |
 | fullnameOverride | string | `""` | String to fully override the default application name. |
 | global.env | object | `{"NODE_ENV":"production"}` | Map of environment variables to inject into backend and frontend containers. |
-| global.keycloak.clientIds.backend | string | `"console-backend"` | Keycloak clientId used for Console CPN client. |
-| global.keycloak.clientIds.frontend | string | `"console-frontend"` | Keycloak clientId used for frontend. |
-| global.keycloak.clientSecrets.backend | string | `""` | Keycloak clientSecret used for Console CPN client. |
+| global.keycloak.clientIds.backend | string | `"console-backend"` | Keycloak clientId used for Console CPN server. |
+| global.keycloak.clientIds.frontend | string | `"console-frontend"` | Keycloak clientId used for Console CPN client. |
+| global.keycloak.clientSecrets.backend | string | `""` | Keycloak clientSecret used for Console CPN server. |
 | global.keycloak.devRealm | bool | `false` | Whether or not to deploy the keycloak dev realm into a configmap named `keycloak-realm-dev`. |
-| global.keycloak.domain | string | `"keycloak.domain.com"` | Keycloak domain used for authentication. |
-| global.keycloak.protocol | string | `"https"` | Protocol used to communicate with keycloak for authentication. |
+| global.keycloak.domain.backend | string | `"keycloak.namespace.svc.cluster.local"` | Keycloak domain used for Console CPN server. |
+| global.keycloak.domain.frontend | string | `"keycloak.domain.com"` | Keycloak domain used for Console CPN client. |
+| global.keycloak.protocol.backend | string | `"http"` | Keycloak protocol used for Console CPN server. |
+| global.keycloak.protocol.frontend | string | `"https"` | Keycloak protocol used for Console CPN client. |
 | global.keycloak.realm | string | `"cloud-pi-native"` | Name of the keycloak realm used for authentication. |
 | global.keycloak.redirectUri | string | `"https://console.dso.local"` | Keycloak redirect uri used with keycloak. |
 | global.keycloak.sessionSecret | string | `"a-very-strong-secret-with-more-than-32-char"` | Session secret used to store keycloak session for Console CPN client. |
