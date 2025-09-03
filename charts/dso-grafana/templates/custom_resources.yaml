@@ -1,5 +1,6 @@
 {{- range $project := default .Values.projects .Values.global.projects }}
 {{- if and $project.projectRepository $project.envs }}
+---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
