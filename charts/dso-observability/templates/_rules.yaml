@@ -1,5 +1,5 @@
 {{- define "grafana-dashboards.rules" -}}
-{{- range $path, $_ := $.Files.Glob "files/rules/*.yaml.tpl" }}
+{{- range $path, $_ := $.Files.Glob "files/rules/*/*.yaml.tpl" }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
