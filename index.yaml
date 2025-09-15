@@ -3649,6 +3649,21 @@ entries:
   dso-observability:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2025-09-15T12:23:41.209484905Z"
+    description: A Helm chart for Kubernetes to deploy custom GrafanaDashboard and
+      PrometheusRule
+    digest: bc472fad3d2405c6a028a95e833ef818d5ce8f1ea3980e4e7ba573f28dfa9ece
+    maintainers:
+    - email: cloudpinative-relations@interieur.gouv.fr
+      name: cloud-pi-native
+      url: https://cloud-pi-native.fr
+    name: dso-observability
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-observability-0.1.8/dso-observability-0.1.8.tgz
+    version: 0.1.8
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2025-07-04T11:38:38.098552398Z"
     description: A Helm chart for Kubernetes to deploy custom GrafanaDashboard and
       PrometheusRule
@@ -3695,4 +3710,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/observatorium-0.5.1/observatorium-0.5.1.tgz
     version: 0.5.1
-generated: "2025-09-03T12:50:32.614664292Z"
+generated: "2025-09-15T12:23:41.209731244Z"
