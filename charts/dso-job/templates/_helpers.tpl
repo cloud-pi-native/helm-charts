@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "cpnAnsibleJob.name" -}}
+{{- define "cpnJob.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -9,7 +9,7 @@ Expand the name of the chart.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "cpnAnsibleJob.chart" -}}
+{{- define "cpnJob.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -19,7 +19,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "cpnAnsibleJob.fullname" -}}
+{{- define "cpnJob.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -36,15 +36,19 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "cpnAnsibleJob.job.serviceAccountName" -}}
-{{- default (include "cpnAnsibleJob.name" .) .Values.job.serviceAccount.name }}
+{{- define "cpnJob.job.serviceAccountName" -}}
+{{- default (include "cpnJob.name" .) .Values.job.serviceAccount.name }}
 {{- end }}
 
 
 {{/*
 Generate the common job pod spec used in both Job and CronJob templates.
+This helper accepts an optional dict to override parts of the pod spec,
+such as the command.
+Usage:
+  {{ include "cpnJob.jobPodSpec" (dict "Values" .Values "Chart" .Chart "command" .Values.cronJob.command) }}
 */}}
-{{- define "cpnAnsibleJob.jobPodSpec" -}}
+{{- define "cpnJob.jobPodSpec" -}}
 spec:
   {{- if .Values.job.activeDeadlineSeconds }}
   activeDeadlineSeconds: {{ .Values.job.activeDeadlineSeconds }}
@@ -53,26 +57,22 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "cpnAnsibleJob.job.selectorLabels" . | nindent 8 }}
+        {{- include "cpnJob.job.selectorLabels" . | nindent 8 }}
         {{- with .Values.job.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      serviceAccountName: {{ include "cpnAnsibleJob.job.serviceAccountName" . | default .Values.job.serviceAccount.name}}
+      serviceAccountName: {{ include "cpnJob.job.serviceAccountName" . | default .Values.job.serviceAccount.name }}
       restartPolicy: {{ .Values.job.restartPolicy }}
       containers:
-        - name: {{ .playbookName }}-post-conf
+        - name: dso-job
           image: {{ .Values.job.image.repository }}:{{ .Values.job.image.tag | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.job.image.pullPolicy }}
+          {{- with .command | default .Values.job.command }}
           command:
-            - /bin/sh
-            - -c
-            - |
-              git clone https://github.com/cloud-pi-native/socle.git && \
-              cd socle && \
-              git checkout {{ .Values.job.targetRevision }} && \
-              ansible-playbook post-install/{{ .playbookName }}.yaml -e dsc_cr={{ .Values.job.dscName }}
-          {{- include "cpnAnsibleJob.fullSecurityContext" . | indent 10 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- include "cpnJob.fullSecurityContext" . | indent 10 }}
           {{- with .Values.job.extraEnv }}
           env:
             {{- toYaml . | nindent 12 }}
@@ -91,7 +91,7 @@ spec:
 {{/*
 Add securityContext depending on platform.
 */}}
-{{- define "cpnAnsibleJob.fullSecurityContext" -}}
+{{- define "cpnJob.fullSecurityContext" -}}
 {{- if eq .Values.global.platform "kubernetes" }}
 securityContext:
   allowPrivilegeEscalation: false
@@ -110,24 +110,24 @@ securityContext:
 {{/*
 Common labels
 */}}
-{{- define "cpnAnsibleJob.common.labels" -}}
-helm.sh/chart: {{ include "cpnAnsibleJob.chart" . }}
+{{- define "cpnJob.common.labels" -}}
+helm.sh/chart: {{ include "cpnJob.chart" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
-{{- define "cpnAnsibleJob.job.labels" -}}
-{{ include "cpnAnsibleJob.common.labels" . }}
-{{ include "cpnAnsibleJob.job.selectorLabels" . }}
+{{- define "cpnJob.job.labels" -}}
+{{ include "cpnJob.common.labels" . }}
+{{ include "cpnJob.job.selectorLabels" . }}
 {{- end }}
 
 
 {{/*
 Selector labels
 */}}
-{{- define "cpnAnsibleJob.job.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "cpnAnsibleJob.name" . }}
+{{- define "cpnJob.job.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "cpnJob.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
