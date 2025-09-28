@@ -9,12 +9,6 @@ global:
 
 # Job configuration.
 job:
-  # -- Playbook name.
-  name: "example-playbook"
-  # -- (string) Name of the DsoSocleConfig to use as source-of-truth.
-  dscName: null
-  # -- Git branch or tag to checkout before applying the Ansible playbook.
-  targetRevision: "main"
   serviceAccount:
     # -- Create a service account for the job.
     create: true
@@ -30,12 +24,17 @@ job:
   backoffLimit: 6
   image:
     # -- Repository to use for the job.
-    repository: ghcr.io/cloud-pi-native/git-ansible
+    repository: ""
     # -- Tag to use for the job.
     ## Overrides the image tag whose default is the chart appVersion.
     tag: ""
     # -- Pull policy for the job image.
     pullPolicy: IfNotPresent
+  # -- Command to run in the job container.
+  command: []
+  #   - /bin/sh
+  #   - -c
+  #   - "echo hello"
   # -- Kubernetes annotations to apply to the job resource.
   annotations:
     argocd.argoproj.io/hook: PostSync
@@ -58,7 +57,11 @@ job:
 cronJob:
   # -- Create a cronJob.
   create: false
-  # -- Playbook name if different from job.
-  name: ""
   # -- CronJob schedule.
   schedule: "0 */6 * * *"
+  # -- Command to run in the job container.
+  command: []
+  #   - /bin/sh
+  #   - -c
+  #   - "echo hello"
+  # -- Kubernetes annotations to apply to the job resource.
