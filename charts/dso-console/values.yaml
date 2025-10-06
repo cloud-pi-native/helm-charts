@@ -588,6 +588,8 @@ postgresql:
     username: "default"
     password: "default"
     database: "default"
+  image:
+    repository: bitnamilegacy/postgresql
   primary:
     service:
       type: "ClusterIP"
@@ -614,6 +616,8 @@ keycloak:
   auth:
     adminUser: "default"
     adminPassword: "default"
+  image:
+    repository: bitnamilegacy/keycloak
   ingress:
     enabled: true
     ingressClassName: ""

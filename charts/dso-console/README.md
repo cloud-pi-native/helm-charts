@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 2.1.12](https://img.shields.io/badge/Version-2.1.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.4.0](https://img.shields.io/badge/AppVersion-9.4.0-informational?style=flat-square)
+![Version: 2.1.13](https://img.shields.io/badge/Version-2.1.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.4.0](https://img.shields.io/badge/AppVersion-9.4.0-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -153,6 +153,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | keycloak.auth.adminPassword | string | `"default"` |  |
 | keycloak.auth.adminUser | string | `"default"` |  |
 | keycloak.enabled | bool | `false` |  |
+| keycloak.image.repository | string | `"bitnamilegacy/keycloak"` |  |
 | keycloak.ingress.annotations | object | `{}` |  |
 | keycloak.ingress.enabled | bool | `true` |  |
 | keycloak.ingress.hostname | string | `"keycloak.dso.local"` |  |
@@ -187,6 +188,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | postgresql.auth.postgresPassword | string | `"default"` |  |
 | postgresql.auth.username | string | `"default"` |  |
 | postgresql.enabled | bool | `true` |  |
+| postgresql.image.repository | string | `"bitnamilegacy/postgresql"` |  |
 | postgresql.nameOverride | string | `"cpn-console-db"` |  |
 | postgresql.primary.persistence.size | string | `"1Gi"` |  |
 | postgresql.primary.resources.limits.cpu | string | `"500m"` |  |
