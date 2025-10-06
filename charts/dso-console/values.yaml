@@ -640,6 +640,8 @@ keycloak:
       password: "default"
       database: "default"
       architecture: "standalone"
+    image:
+      repository: bitnamilegacy/postgresql
     primary:
       service:
         type: "ClusterIP"
