@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 2.1.13](https://img.shields.io/badge/Version-2.1.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.4.0](https://img.shields.io/badge/AppVersion-9.4.0-informational?style=flat-square)
+![Version: 2.1.14](https://img.shields.io/badge/Version-2.1.14-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.4.0](https://img.shields.io/badge/AppVersion-9.4.0-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -168,6 +168,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | keycloak.postgresql.auth.postgresPassword | string | `"default"` |  |
 | keycloak.postgresql.auth.username | string | `"default"` |  |
 | keycloak.postgresql.enabled | bool | `true` |  |
+| keycloak.postgresql.image.repository | string | `"bitnamilegacy/postgresql"` |  |
 | keycloak.postgresql.nameOverride | string | `"cpn-keycloak-db"` |  |
 | keycloak.postgresql.primary.persistence.size | string | `"1Gi"` |  |
 | keycloak.postgresql.primary.resources.limits.cpu | string | `"500m"` |  |
