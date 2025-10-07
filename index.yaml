@@ -3236,6 +3236,21 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-console-1.0.0/cpn-console-1.0.0.tgz
     version: 1.0.0
+  cpn-job:
+  - apiVersion: v2
+    appVersion: 1.1.0
+    created: "2025-10-07T16:07:15.295922629Z"
+    description: Creates Job in Kubernetes cluster.
+    digest: 23890dec405ac54157685e7c942842b5cfd44d1c410772c65b8dd3535729413f
+    maintainers:
+    - email: cloudpinative-relations@interieur.gouv.fr
+      name: cloud-pi-native
+      url: https://cloud-pi-native.fr
+    name: cpn-job
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-job-1.0.0/cpn-job-1.0.0.tgz
+    version: 1.0.0
   dso-argocd:
   - apiVersion: v2
     appVersion: 2.12.3
@@ -3774,4 +3789,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/observatorium-0.5.1/observatorium-0.5.1.tgz
     version: 0.5.1
-generated: "2025-10-06T11:29:57.751004562Z"
+generated: "2025-10-07T16:07:15.296205668Z"
