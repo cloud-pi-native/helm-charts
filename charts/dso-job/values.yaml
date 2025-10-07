@@ -43,6 +43,12 @@ job:
   extraEnv: []
   #   - name: MY_CUSTOM_VAR
   #     value: "custom-value"
+  # -- (Optional) Extra environment variables to pass from secret or configmap to the job container.
+  extraEnvFrom: []
+  #   - configMapRef:
+  #       name: custom-configmap
+  #   - secretRef:
+  #       name: custom-secret
   # -- (Optional) Extra volumes to mount into the job container.
   extraVolumes: []
   #   - name: my-random-volume
