@@ -1,6 +1,6 @@
 # cpn-job
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Creates Job in Kubernetes cluster.
 
@@ -24,6 +24,7 @@ Creates Job in Kubernetes cluster.
 | job.backoffLimit | int | `6` | Number of retries before setting de Job status to failed. |
 | job.command | list | `[]` | Command to run in the job container. |
 | job.extraEnv | Optional | `[]` | Extra environment variables to pass to the job container. |
+| job.extraEnvFrom | Optional | `[]` | Extra environment variables to pass from secret or configmap to the job container. |
 | job.extraVolumeMounts | Optional | `[]` | Extra volume mounts for the job container. |
 | job.extraVolumes | Optional | `[]` | Extra volumes to mount into the job container. |
 | job.image.pullPolicy | string | `"IfNotPresent"` | Pull policy for the job image. |

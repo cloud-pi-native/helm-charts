@@ -77,6 +77,10 @@ spec:
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- with .Values.job.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.job.extraVolumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 12 }}
