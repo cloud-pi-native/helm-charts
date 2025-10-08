@@ -3238,6 +3238,20 @@ entries:
     version: 1.0.0
   cpn-job:
   - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-10-08T07:55:29.775100117Z"
+    description: Creates Job in Kubernetes cluster.
+    digest: d1805e0cc7cdb1ffa39d59dcac6217c2a82d3deb6e67526fc73f78c6fecba092
+    maintainers:
+    - email: cloudpinative-relations@interieur.gouv.fr
+      name: cloud-pi-native
+      url: https://cloud-pi-native.fr
+    name: cpn-job
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-job-1.1.0/cpn-job-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
     appVersion: 1.1.0
     created: "2025-10-07T16:07:15.295922629Z"
     description: Creates Job in Kubernetes cluster.
@@ -3789,4 +3803,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/observatorium-0.5.1/observatorium-0.5.1.tgz
     version: 0.5.1
-generated: "2025-10-07T16:07:15.296205668Z"
+generated: "2025-10-08T07:55:29.775439212Z"
