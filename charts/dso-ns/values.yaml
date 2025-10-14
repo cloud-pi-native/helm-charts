@@ -10,6 +10,8 @@ application:
   quota:
     # -- (int) Quota CPU pour le namespace
     cpu:
+    # -- (int) Quota GPU pour le namespace
+    gpu:
     # -- Quota mémoire pour le namespace
     memory:
   vault:
