@@ -12,3 +12,4 @@ spec:
     limits.memory: {{ .Values.application.quota.memory }}
     requests.cpu: {{ .Values.application.quota.cpu | quote }}
     requests.memory: {{ .Values.application.quota.memory }}
+    requests.nvidia.com/gpu: {{ .Values.application.quota.gpu }}

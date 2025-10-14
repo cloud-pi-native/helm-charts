@@ -1,6 +1,6 @@
 # dso-ns
 
-![Version: 1.1.2](https://img.shields.io/badge/Version-1.1.2-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.1.3](https://img.shields.io/badge/Version-1.1.3-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 A Helm chart to create all the necessary resources for deploying applications by the DSO console (namespace, secrets, quota, ...).
 
@@ -16,6 +16,7 @@ A Helm chart to create all the necessary resources for deploying applications by
 |-----|------|---------|-------------|
 | application.destination.namespace | string | `"app1"` | Nom du namespace applicatif cible |
 | application.quota.cpu | int | `nil` | Quota CPU pour le namespace |
+| application.quota.gpu | int | `nil` | Quota GPU pour le namespace |
 | application.quota.memory | string | `nil` | Quota mémoire pour le namespace |
 | application.vault.kvName | string | `"forge-dso"` | Nom du Key Value store dans Vault |
 | application.vault.projectsRootDir | string | `"forge-mi/projects"` | Répertoire racine des projets à utiliser dans Vault |
