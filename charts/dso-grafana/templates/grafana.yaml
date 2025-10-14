@@ -63,6 +63,16 @@ spec:
           - {{ $.Values.server.url }}
           secretName: "{{ $.Values.server.url }}-tls"
   {{- end }}
+  {{- if $.Values.grafana.env }}
+  deployment:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: grafana
+              env:
+                {{- toYaml $.Values.grafana.env | nindent 14 }}
+  {{- end }}
   {{- if $.Values.grafana.isOpenShift }}
   route:
     {{- if $.Values.server.certManager.enabled }}

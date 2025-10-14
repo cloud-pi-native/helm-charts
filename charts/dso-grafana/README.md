@@ -1,6 +1,6 @@
 # dso-grafana
 
-![Version: 1.4.2](https://img.shields.io/badge/Version-1.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.5.0](https://img.shields.io/badge/Version-1.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 This Helm chart deploy Grafana instances and default dashboards for each projects read from values file.
 
@@ -8,8 +8,7 @@ This Helm chart deploy Grafana instances and default dashboards for each project
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| this-is-tobi | <thibault.colin@interieur.gouv.fr> | <https://this-is-tobi.com> |
-| tcheksa62 | <r.ducamp@gmail.com> |  |
+| cloud-pi-native | <cloudpinative-relations@interieur.gouv.fr> | <https://cloud-pi-native.fr> |
 
 ## Requirements
 
@@ -25,7 +24,8 @@ This Helm chart deploy Grafana instances and default dashboards for each project
 | dashboards | list | `["k8s-logs.json","k8s-resources-namespace.json"]` | Select default dashboard creation among available json files |
 | default | object | `{"name":"console"}` | Default instance to create (default mandatory project) |
 | global | object | `{"projects":[]}` | Global list of projects. One Grafana instance is created for each item. This list is provided dynamically by the Console webapp. |
-| grafana | object | `{"isOpenShift":false,"observatorium_url":"http://observatorium-api.svc:8080"}` | Grafana instances configuration |
+| grafana | object | `{"env":[],"isOpenShift":false,"observatorium_url":"http://observatorium-api.svc:8080"}` | Grafana instances configuration |
+| grafana.env | list | `[]` | Environment variables for the Grafana container |
 | grafana.isOpenShift | bool | `false` | Enable specific OpenShift configuration |
 | grafana.observatorium_url | string | `"http://observatorium-api.svc:8080"` | Url of Observatorium instance |
 | grafanaNamespace | string | `"dso-grafana"` | Namespace to use for instances, dashboards and datasources creation |

@@ -58,6 +58,12 @@ grafana:
   isOpenShift: false
   # -- Url of Observatorium instance
   observatorium_url: http://observatorium-api.svc:8080
+  # -- Environment variables for the Grafana container
+  env: []
+  #  - name: EXAMPLE_VAR
+  #    value: "example"
+  #  - name: ANOTHER_VAR
+  #    value: "another"
 
 # -- Select default dashboard creation among available json files
 dashboards:
