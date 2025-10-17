@@ -1,0 +1,31 @@
+{{ if not .Values.openshift.enabled -}}
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultConnection
+metadata:
+  name: default
+  namespace: {{ .Release.Namespace }}
+spec:
+  address: {{ .Values.vault.url }}
+{{- end }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vso-approle
+  namespace: {{ .Release.Namespace }}
+stringData:
+  id: {{ .Values.vault.secretId }}
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultAuth
+metadata:
+  name: vault-auth
+  namespace: {{ .Release.Namespace }}
+spec:
+  method: appRole
+  mount: approle
+  appRole:
+    roleId: {{ .Values.vault.roleId }}
+    secretRef: vso-approle
+  allowedNamespaces: 
+    - {{ .Release.Namespace }}

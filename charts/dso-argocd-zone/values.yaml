@@ -1,0 +1,19 @@
+# -- Repository URL where DSO Cosnole stores application specifications that must be applied by ArgoCD in current zone
+dsoZoneRepo: https://gitlab.com/infra/zone.git
+
+openshift:
+  # -- Indicates if OpenShift specificities are needed
+  enabled: false
+
+vault:
+  # -- URL of the Vualt instance storing zone secrets (like kubeconfigs)
+  url: test.com
+  # -- Name of the key-value store to use for retreiving zone secrets
+  kvName: zone-kv
+  # -- AppRole to use when connecting to Vault
+  roleId: app-role
+  # -- AppRole associated secret to autorize Vault connection
+  secretId: secret
+
+# -- List of managed cluster names for the entire zone
+clusters: []
