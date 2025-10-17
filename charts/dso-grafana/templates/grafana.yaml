@@ -38,6 +38,16 @@ spec:
     server:
       root_url: {{ printf "https://%s/%s/" $.Values.server.url (printf "%s-%s" $env $project.projectName ) }}
       serve_from_sub_path: "true"
+  {{- if $.Values.grafana.env }}
+  deployment:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: grafana
+              env:
+                {{- toYaml $.Values.grafana.env | nindent 14 }}
+  {{- end }}
   {{- if not $.Values.grafana.isOpenShift }}
   ingress:
     {{- if $.Values.server.certManager.enabled }}
@@ -62,18 +72,7 @@ spec:
         - hosts:
           - {{ $.Values.server.url }}
           secretName: "{{ $.Values.server.url }}-tls"
-  {{- end }}
-  {{- if $.Values.grafana.env }}
-  deployment:
-    spec:
-      template:
-        spec:
-          containers:
-            - name: grafana
-              env:
-                {{- toYaml $.Values.grafana.env | nindent 14 }}
-  {{- end }}
-  {{- if $.Values.grafana.isOpenShift }}
+  {{- else }}
   route:
     {{- if $.Values.server.certManager.enabled }}
     metadata:
@@ -160,8 +159,7 @@ spec:
         - hosts:
           - {{ $.Values.server.url }}
           secretName: "{{ $.Values.server.url }}-tls"
-  {{- end }}
-  {{- if $.Values.grafana.isOpenShift }}
+  {{- else }}
   route:
     {{- if $.Values.server.certManager.enabled }}
     metadata:
