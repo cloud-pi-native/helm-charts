@@ -3406,6 +3406,22 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-argocd-1.0.0/dso-argocd-1.0.0.tgz
     version: 1.0.0
+  dso-argocd-zone:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-10-17T10:03:59.980928855Z"
+    description: Creates an ApplicationSet that will scan and deploy all Console-managed
+      applications for its zone (multiple clusters).
+    digest: c7eceb522e4f23e2ad70114a8db3261695c216d630b56c6408b5e9ade71a36b7
+    maintainers:
+    - email: cloudpinative-relations@interieur.gouv.fr
+      name: cloud-pi-native
+      url: https://cloud-pi-native.fr
+    name: dso-argocd-zone
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-argocd-zone-1.0.0/dso-argocd-zone-1.0.0.tgz
+    version: 1.0.0
   dso-env:
   - apiVersion: v2
     appVersion: 1.0.0
@@ -3917,4 +3933,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/observatorium-0.5.1/observatorium-0.5.1.tgz
     version: 0.5.1
-generated: "2025-10-17T08:01:57.910087254Z"
+generated: "2025-10-17T10:03:59.981251947Z"
