@@ -1,6 +1,6 @@
 # dso-argocd-zone
 
-![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.0.3](https://img.shields.io/badge/Version-1.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Creates an ApplicationSet that will scan and deploy all Console-managed applications for its zone (multiple clusters).
 
@@ -16,7 +16,6 @@ Creates an ApplicationSet that will scan and deploy all Console-managed applicat
 |-----|------|---------|-------------|
 | clusters | list | `[]` | List of managed cluster names for the entire zone |
 | dsoZoneRepo | string | `"https://gitlab.com/infra/zone.git"` | Repository URL where DSO Cosnole stores application specifications that must be applied by ArgoCD in current zone |
-| openshift.enabled | bool | `false` | Indicates if OpenShift specificities are needed |
 | vault.kvName | string | `"zone-kv"` | Name of the key-value store to use for retreiving zone secrets |
 | vault.roleId | string | `"app-role"` | AppRole to use when connecting to Vault |
 | vault.secretId | string | `"secret"` | AppRole associated secret to autorize Vault connection |

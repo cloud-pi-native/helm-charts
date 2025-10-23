@@ -1,12 +1,10 @@
-{{ if not .Values.openshift.enabled -}}
 apiVersion: secrets.hashicorp.com/v1beta1
 kind: VaultConnection
 metadata:
-  name: default
+  name: argocd-vault-connection
   namespace: {{ .Release.Namespace }}
 spec:
   address: {{ .Values.vault.url }}
-{{- end }}
 ---
 apiVersion: v1
 kind: Secret
@@ -22,6 +20,7 @@ metadata:
   name: vault-auth
   namespace: {{ .Release.Namespace }}
 spec:
+  vaultConnectionRef: argocd-vault-connection
   method: appRole
   mount: approle
   appRole:
