@@ -2,7 +2,7 @@ apiVersion: v2
 name: dso-argocd-zone
 description: Creates an ApplicationSet that will scan and deploy all Console-managed applications for its zone (multiple clusters).
 type: application
-version: 1.0.0
+version: 1.0.1
 appVersion: 1.0.0
 maintainers:
   - name: cloud-pi-native
