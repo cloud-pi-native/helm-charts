@@ -149,3 +149,14 @@ projects: {}
   #         hprod-my-tenant2:
 global:
   projects: null
+
+# Related to https://github.com/observatorium/api/issues/739
+reverseProxy:
+  # -- Enables or disables the reverse proxy component.
+  enabled: false
+  # -- Hostname of the metrics backend to which requests should be proxied.
+  metricsHost: ""
+  # -- Hostname of the logs backend to which requests should be proxied.
+  logsHost: ""
+  # -- Container image used for the reverse proxy (default: non-root NGINX image).
+  image: nginxinc/nginx-unprivileged:1.28-alpine
