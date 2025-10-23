@@ -1,0 +1,35 @@
+{{- if .Values.reverseProxy.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+     {{- include "observatorium.labels" (dict "ctx" $ "component" "nginx" ) | nindent 4 }}
+  name: {{ include "observatorium.resourceName" (dict "ctx" $ "component" "nginx") }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "observatorium.selectorLabels" (dict "ctx" $ "component" "nginx") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "observatorium.selectorLabels" (dict "ctx" $ "component" "nginx") | nindent 8 }}
+    spec:
+      containers:
+        - name: nginx
+          image: {{ .Values.reverseProxy.image }}
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: run
+              mountPath: /run
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "observatorium.resourceName" (dict "ctx" $ "component" "nginx") }}
+        - name: run
+          emptyDir: {}
+{{- end }}

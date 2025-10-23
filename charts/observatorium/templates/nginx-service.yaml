@@ -1,0 +1,16 @@
+{{- if .Values.reverseProxy.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+     {{- include "observatorium.labels" (dict "ctx" $ "component" "nginx" ) | nindent 4 }}
+  name: {{ include "observatorium.resourceName" (dict "ctx" $ "component" "nginx") }}
+spec:
+  ports:
+  - appProtocol: http
+    name: internal
+    port: 8080
+    targetPort: 8080
+  selector:
+    {{- include "observatorium.selectorLabels" (dict "ctx" $ "component" "nginx") | nindent 4 }}
+{{- end }}

@@ -1,0 +1,28 @@
+{{- if .Values.reverseProxy.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+     {{- include "observatorium.labels" (dict "ctx" $ "component" "nginx" ) | nindent 4 }}
+  name: {{ include "observatorium.resourceName" (dict "ctx" $ "component" "nginx") }}
+data:
+  nginx.conf: |
+    events {}
+    http {
+      server {
+        listen 8080;
+
+        location /loki/ {
+          proxy_pass http://{{ .Values.reverseProxy.logsHost }}/;
+          proxy_set_header Host {{ .Values.reverseProxy.logsHost }};
+          proxy_ssl_server_name on;
+        }
+
+        location /mimir/ {
+          proxy_pass http://{{ .Values.reverseProxy.metricsHost }}/; 
+          proxy_set_header Host {{ .Values.reverseProxy.metricsHost }}; 
+          proxy_ssl_server_name on;
+        }
+      }
+    }
+{{- end }}
