@@ -441,6 +441,14 @@ server:
   plugins: []
   # -- CSV list of plugins to disabled.
   disabledPlugins: ""
+  proxy:
+    # -- Enable Proxy configuration for the plugins initContainer.
+    enabled: false
+    # -- Map of environment variables to inject into the plugins initContainers.
+    env:
+      http_proxy: "http://proxy.example.com:3128"
+      https_proxy: "http://proxy.example.com:3128"
+      no_proxy: ".cluster.local,.svc.cluster.local,.svc"
   resources:
     requests:
       # -- Memory request for the Console CPN server.

@@ -42,6 +42,10 @@ spec:
         name: fetch-plugins
         imagePullPolicy: {{ .Values.server.fetchContainer.pullPolicy }}
         envFrom:
+        {{- if .Values.server.proxy.enabled }}
+        - configMapRef:
+            name: {{ include "cpnConsole.fullname" . }}-server-proxy
+        {{- end }}
         - configMapRef:
             name: {{ include "cpnConsole.fullname" . }}-server
         - secretRef:
