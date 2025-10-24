@@ -25,3 +25,15 @@ data:
   {{- if not .Values.features.vaultSecrets.enabled }}
   VAULT__DISABLE_VAULT_SECRETS: "true"
   {{- end }}
+{{- if .Values.server.proxy.enabled }}
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "cpnConsole.fullname" . }}-server-proxy
+  labels: {{- include "cpnConsole.server.labels" . | nindent 4 }}
+data:
+  {{- if .Values.server.proxy.enabled -}}
+  {{- include "cpnConsole.env" .Values.server.proxy | indent 2 }}
+  {{- end -}}
+{{- end }}
