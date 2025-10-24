@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 2.1.16](https://img.shields.io/badge/Version-2.1.16-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.6.0](https://img.shields.io/badge/AppVersion-9.6.0-informational?style=flat-square)
+![Version: 2.2.0](https://img.shields.io/badge/Version-2.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.6.0](https://img.shields.io/badge/AppVersion-9.6.0-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -238,6 +238,8 @@ A Helm chart to deploy Cloud Pi Native Console
 | server.podAnnotations | object | `{}` | Annotations for the Console CPN server deployed pods. |
 | server.podLabels | object | `{}` | Labels for the Console CPN server deployed pods. |
 | server.podSecurityContext | object | `{}` | Toggle and define pod-level security context. |
+| server.proxy.enabled | bool | `false` | Enable Proxy configuration for the plugins initContainer. |
+| server.proxy.env | list | `[{"name":"http_proxy","value":"http://proxy.example.com:3128"},{"name":"https_proxy","value":"http://proxy.example.com:3128"},{"name":"no_proxy","value":".cluster.local,.svc.cluster.local,.svc"}]` | Map of environment variables to inject into the plugins initContainers. |
 | server.readinessProbe.enabled | bool | `true` | Whether or not enable the probe. |
 | server.readinessProbe.failureThreshold | int | `2` | Minimum consecutive failures for the probe to be considered failed after having succeeded. |
 | server.readinessProbe.initialDelaySeconds | int | `15` | Number of seconds after the container has started before probe is initiated. |

@@ -41,6 +41,10 @@ spec:
       - image: {{ .Values.server.fetchContainer.image }}
         name: fetch-plugins
         imagePullPolicy: {{ .Values.server.fetchContainer.pullPolicy }}
+        {{- if .Values.server.proxy.enabled }}
+        env:
+          {{- toYaml .Values.server.proxy | nindent 8 }}
+        {{- end }}
         envFrom:
         - configMapRef:
             name: {{ include "cpnConsole.fullname" . }}-server
