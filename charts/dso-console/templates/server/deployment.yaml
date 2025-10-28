@@ -43,7 +43,7 @@ spec:
         imagePullPolicy: {{ .Values.server.fetchContainer.pullPolicy }}
         {{- if .Values.server.proxy.enabled }}
         env:
-          {{- toYaml .Values.server.proxy | nindent 8 }}
+          {{- toYaml .Values.server.proxy.env | nindent 8 }}
         {{- end }}
         envFrom:
         - configMapRef:
