@@ -4,7 +4,7 @@ description: This Helm chart deploy Observatorium API and help to manage tenant 
 
 type: application
 
-version: 0.5.3
+version: 0.5.4
 
 appVersion: "main-2025-02-10-1bcf722"
 
