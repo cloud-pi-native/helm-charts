@@ -1,6 +1,6 @@
 # observatorium
 
-![Version: 0.5.3](https://img.shields.io/badge/Version-0.5.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main-2025-02-10-1bcf722](https://img.shields.io/badge/AppVersion-main--2025--02--10--1bcf722-informational?style=flat-square)
+![Version: 0.5.4](https://img.shields.io/badge/Version-0.5.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main-2025-02-10-1bcf722](https://img.shields.io/badge/AppVersion-main--2025--02--10--1bcf722-informational?style=flat-square)
 
 This Helm chart deploy Observatorium API and help to manage tenant from values file.
 

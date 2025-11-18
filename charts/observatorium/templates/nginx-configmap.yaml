@@ -9,6 +9,8 @@ data:
   nginx.conf: |
     events {}
     http {
+      client_header_buffer_size 4k;
+      large_client_header_buffers 4 16k;
       server {
         listen 8080;
 
