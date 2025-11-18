@@ -4076,6 +4076,23 @@ entries:
   observatorium:
   - apiVersion: v2
     appVersion: main-2025-02-10-1bcf722
+    created: "2025-11-18T14:26:25.68172056Z"
+    description: This Helm chart deploy Observatorium API and help to manage tenant
+      from values file.
+    digest: 9e1aed22d89fd774c51c9fc07ef5d6b6b2a9d65a86bfd5b0e9e87c7ccc9b4a1a
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    - email: r.ducamp@gmail.com
+      name: tcheksa62
+    name: observatorium
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/observatorium-0.5.4/observatorium-0.5.4.tgz
+    version: 0.5.4
+  - apiVersion: v2
+    appVersion: main-2025-02-10-1bcf722
     created: "2025-10-23T11:02:35.645846791Z"
     description: This Helm chart deploy Observatorium API and help to manage tenant
       from values file.
@@ -4123,4 +4140,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/observatorium-0.5.1/observatorium-0.5.1.tgz
     version: 0.5.1
-generated: "2025-11-17T12:41:19.890960114Z"
+generated: "2025-11-18T14:26:25.682119215Z"
