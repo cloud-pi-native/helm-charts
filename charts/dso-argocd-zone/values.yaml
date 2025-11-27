@@ -1,6 +1,9 @@
 # -- Repository URL where DSO Cosnole stores application specifications that must be applied by ArgoCD in current zone
 dsoZoneRepo: https://gitlab.com/infra/zone.git
 
+# -- Wether to activate auto-sync on each Application or not
+autosync: true
+
 vault:
   # -- URL of the Vualt instance storing zone secrets (like kubeconfigs)
   url: test.com
