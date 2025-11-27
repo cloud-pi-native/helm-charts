@@ -61,7 +61,9 @@ spec:
       destination:
         server: https://kubernetes.default.svc
         namespace: {{ .Release.Namespace }}
+{{- if .Values.autosync }}
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
+{{- end }}
