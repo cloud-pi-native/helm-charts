@@ -1,13 +1,15 @@
 {{- range .Values.application.repositories }}
+{{- $repositoryName := base .repoURL | trimSuffix ".git" }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ $.Values.argocd.project }}-{{ base .repoURL | trimSuffix ".git" }}-{{ sha1sum .repoURL | trunc 4 }}
+  name: {{ $.Values.argocd.project }}-{{ $repositoryName }}-{{ sha1sum .repoURL | trunc 4 }}
   namespace: {{ $.Values.argocd.namespace }}
   labels:
     app.kubernetes.io/managed-by: dso-console
     {{- $.Values.common | toYaml | nindent 4 }}
+    dso/repository: {{ $repositoryName }}
   annotations:
     argocd.argoproj.io/sync-wave: "4" # Force la suppression avant le AppProject
   finalizers:
