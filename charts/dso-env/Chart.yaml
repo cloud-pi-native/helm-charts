@@ -2,7 +2,7 @@ apiVersion: v2
 name: dso-env
 description: Creates argocd Project and Applications to deploy DSO project repositories.
 type: application
-version: 1.5.2
+version: 1.5.3
 appVersion: 1.0.0
 maintainers:
   - name: this-is-tobi
