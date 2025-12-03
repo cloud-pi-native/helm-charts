@@ -1,0 +1,93 @@
+{{- if .Values.autoSynchronizer.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "cpnConsole.name" . }}-repo-synchronizer
+spec:
+  {{- if eq .Values.autoSynchronizer.schedule "-" }}
+  suspend: true
+  {{- else }}
+  schedule: "{{ .Values.autoSynchronizer.schedule }}"
+  {{- end }}
+  jobTemplate:
+    metadata: 
+      {{- with .Values.autoSynchronizer.job.labels }}
+      labels:
+        {{ . | toYaml | nindent 8 }}
+      {{- end }}
+      {{- with .Values.autoSynchronizer.job.annotations }}
+      annotations:
+        {{ . | toYaml | nindent 8 }}
+      {{- end }}
+    spec:
+      completions: {{ .Values.autoSynchronizer.job.completions }}
+      parallelism: {{ .Values.autoSynchronizer.job.parallelism }}
+      backoffLimit: {{ .Values.autoSynchronizer.job.backoffLimit }}
+      ttlSecondsAfterFinished: {{ .Values.autoSynchronizer.job.ttlSecondsAfterFinished }}
+      template:
+        metadata:
+          {{- with .Values.autoSynchronizer.pod.labels }}
+          labels:
+            {{ . | toYaml | nindent 12 }}
+          {{- end }}
+          {{- with .Values.autoSynchronizer.pod.annotations }}
+          annotations:
+            {{ . | toYaml | nindent 12 }}
+          {{- end }}
+        spec:
+          {{- with .Values.autoSynchronizer.pod.affinity }}
+          affinity: 
+            {{ . | toYaml | nindent 12 }}
+          {{- end }}
+          automountServiceAccountToken: false
+          {{- with .Values.autoSynchronizer.pod.imagePullSecrets }}
+          imagePullSecrets: 
+            {{ . | toYaml | nindent 12 }}
+          {{- end }}
+          containers:
+          - name: repo-synchronizer
+            {{- with .Values.autoSynchronizer.pod.command }}
+            command:
+            {{ . | toYaml | nindent 14 }}
+            {{- end }}
+            {{- with .Values.autoSynchronizer.pod.args }}
+            args:
+            {{ . | toYaml | nindent 14 }}
+            {{- end }}
+            env: {{ not (empty .Values.autoSynchronizer.pod.env) | ternary nil "[]" }}
+            {{- range $key, $value := .Values.autoSynchronizer.pod.env }}
+            - name: {{ $key }}
+              {{- toYaml $value | nindent 14 }}
+            {{- end }}
+            image: "{{ .Values.autoSynchronizer.pod.image.registry }}/{{ .Values.autoSynchronizer.pod.image.repository }}:{{ .Values.autoSynchronizer.pod.image.tag }}"
+            imagePullPolicy: "{{ .Values.autoSynchronizer.pod.image.pullPolicy }}"
+            {{- with .Values.autoSynchronizer.pod.resources }}
+            resources:
+              {{ . | toYaml | nindent 14 }}
+            {{- end }}
+            {{- with .Values.autoSynchronizer.pod.containerSecurityContext }}
+            securityContext:
+              {{ . | toYaml | nindent 14 }}
+            {{- end }}
+            {{- with .Values.autoSynchronizer.pod.extraVolumeMounts }}
+            volumeMounts:
+              {{ . | toYaml | nindent 14 }}
+            {{- end }}
+          restartPolicy: {{ .Values.autoSynchronizer.pod.restartPolicy }}
+          {{- with .Values.autoSynchronizer.pod.podSecurityContext }}
+          securityContext:
+            {{ . | toYaml | nindent 12 }}
+          {{- end }}
+          {{- with .Values.autoSynchronizer.pod.tolerations }}
+          tolerations: 
+            {{ . | toYaml | nindent 12 }}
+          {{- end }}
+          {{- with .Values.autoSynchronizer.pod.topologySpreadConstraints }}
+          topologySpreadConstraints: 
+            {{ . | toYaml | nindent 12 }}
+          {{- end }}
+          {{- with .Values.autoSynchronizer.pod.extraVolumes }}
+          volumes:
+            {{ . | toYaml | nindent 12 }}
+          {{- end }}
+{{- end }}
