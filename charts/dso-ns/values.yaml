@@ -3,6 +3,7 @@ common:
   dso/organization: org
   dso/project: project
   dso/environment: env
+  oneagent.dynatrace.com/inject: "true"
 application:
   destination:
     # -- Nom du namespace applicatif cible

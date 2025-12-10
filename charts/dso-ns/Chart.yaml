@@ -1,7 +1,7 @@
 apiVersion: v2
 name: dso-ns
 description: A Helm chart to create all the necessary resources for deploying applications by the DSO console (namespace, secrets, quota, ...).
-version: 1.1.3
+version: 1.2.0
 appVersion: 1.0.0
 maintainers:
   - name: this-is-tobi
