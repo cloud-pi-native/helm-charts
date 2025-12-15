@@ -19,6 +19,9 @@ spec:
         {{- include "checksum" (list $ "/server/configmap.yaml") | nindent 8 }}
         {{- include "checksum" (list $ "/server/secret.yaml") | nindent 8 }}
         {{- include "checksum" (list $ "/server/scripts.yaml") | nindent 8 }}
+        {{- if .Values.config.create }}
+        {{- include "checksum" (list $ "/config.yaml") | nindent 8 }}
+        {{- end }}
         {{- with .Values.server.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
