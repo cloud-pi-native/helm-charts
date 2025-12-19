@@ -6,6 +6,8 @@ metadata:
   labels:
     app: {{ printf "%s-%s" $env $project.projectName }}
     dashboards: grafana
+    env: {{ $env }}
+    project: {{ $project.projectName }}
   name: "{{ $env }}-{{ $project.projectName }}-grafana"
   namespace: {{ $.Values.grafanaNamespace }}
 spec:
