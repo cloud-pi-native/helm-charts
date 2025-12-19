@@ -30,15 +30,22 @@ application:
     name: dest
     # -- Nom du namespace applicatif cible
     namespace: app1
+  # -- Activer la synchronisation automatique de l'application
+  autosync: true
   # -- Liste des dépôts à déployer
   repositories:
-  - repoURL: https://gitlab.com/projects/org/demo/quota-explorer.git
-    targetRevision: main
-    path: '.'
-    valueFiles: []
-  - repoURL: https://gitlab.com/projects/org/demo/tuto-java-infra-helm.git
-    targetRevision: HEAD
-    path: .
-    valueFiles:
-      - values.yaml
-      - values-integ.yaml
+  # @example
+  # - name: quota-explorer
+  #   id: e5aeeb57-c2b0-476a-8227-5890a7c0354b
+  #   repoURL: https://gitlab.com/projects/org/demo/quota-explorer.git
+  #   targetRevision: main
+  #   path: '.'
+  #   valueFiles: []
+  # - name: tuto-java-infra-helm
+  #   id: b1f4d3e2-3c4b-4d5e-9f6a-7b8c9d0e1f2a
+  #   repoURL: https://gitlab.com/projects/org/demo/tuto-java-infra-helm.git
+  #   targetRevision: HEAD
+  #   path: .
+  #   valueFiles:
+  #     - values.yaml
+  #     - values-integ.yaml
