@@ -670,3 +670,110 @@ keycloak:
     readReplicas:
       persistence:
         size: "1Gi"
+
+# Console CPN auto-sync configuration.
+autoSynchronizer:
+  # -- Enable or disable the auto-sync CronJob deployment
+  enabled: false
+  # -- Cron schedule for the synchronization job (runs every 15 minutes by default)
+  # To disable the cronjob without deleting the resource, set to '-'
+  schedule: "*/15 * * * *"
+  # -- Number of successful job executions to retain in history
+  successfulJobsHistoryLimit: 3
+  # -- Number of failed job executions to retain in history
+  failedJobsHistoryLimit: 1
+  
+  job:
+    # -- Additional labels to apply to the CronJob resource
+    labels: {}
+    # -- Additional annotations to apply to the CronJob resource
+    annotations: {}
+    # -- Number of retries before considering the job as failed
+    backoffLimit: 6
+    # -- Number of successful completions required for the job to be considered complete
+    completions: 1
+    # -- Number of pods that can run in parallel
+    parallelism: 1
+    # -- Time (in seconds) before automatically deleting finished jobs
+    ttlSecondsAfterFinished: 30
+  
+  pod:
+    # -- Additional labels to apply to the pod
+    labels: {}
+    # -- Additional annotations to apply to the pod
+    annotations: {}
+    # -- Affinity rules for pod scheduling
+    affinity: {}
+    # -- Image pull secrets for private registries
+    imagePullSecrets: []
+    # -- Resource requests and limits for the container
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+    # -- Restart policy for the pod (OnFailure or Never)
+    restartPolicy: OnFailure
+    # -- Security context at the pod level
+    podSecurityContext: {}
+    # -- Security context at the container level (follows security best practices)
+    containerSecurityContext:
+      readOnlyRootFilesystem: true
+      privileged: false
+      capabilities:
+        drop: ["ALL"]
+      allowPrivilegeEscalation: false
+    # -- Tolerations for pod scheduling on tainted nodes
+    tolerations: []
+    # -- Topology spread constraints for pod distribution
+    topologySpreadConstraints: []
+    # -- Additional volumes to mount in the pod
+    extraVolumes: []
+    # -- Additional volume mounts for the container
+    extraVolumeMounts: []
+    # -- Environment variables for the container
+    # Required: DSO_TOKEN for API authentication
+    # Optional: CONSOLE_URL to override default Console API URL
+    env: {}
+    # CONSOLE_URL:
+    #   value: https://console.dso.local
+    # DSO_TOKEN:
+    #   valueFrom:
+    #     secretKeyRef:
+    #       name: console-secrets
+    #       key: DSO_TOKEN
+    # -- Command to execute in the container
+    command:
+      - sh
+      - -c
+    # -- Arguments containing the synchronization script
+    # The script calls the /api/v1/repositories/sync endpoint which handles
+    # the synchronization logic for all projects marked as auto-sync
+    args:
+      - |
+        SYNC_ENDPOINT="${CONSOLE_URL:-http://console.dso.local}/api/v1/repositories/sync"
+        echo "Synchronisation des projets auto-sync..."
+        HTTP_CODE=$(curl -X 'POST' \
+          "${SYNC_ENDPOINT}" \
+          -H 'accept: application/json' \
+          -H "x-dso-token: ${DSO_TOKEN}" \
+          -w "%{http_code}" \
+          -s -o /dev/null)
+        if [ "$HTTP_CODE" -eq 204 ]; then
+          echo "✓ Synchronisation réussie (HTTP $HTTP_CODE)"
+          exit 0
+        else
+          echo "✗ Erreur lors de la synchronisation (HTTP $HTTP_CODE)"
+          exit 1
+        fi  
+  image:
+    # -- Docker registry for the image
+    registry: docker.io
+    # -- Image repository (alpine/curl contains curl and sh)
+    repository: alpine/curl
+    # -- Image tag
+    tag: 8.14.1
+    # -- Image pull policy
+    pullPolicy: IfNotPresent
