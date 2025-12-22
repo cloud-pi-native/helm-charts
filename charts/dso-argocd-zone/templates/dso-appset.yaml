@@ -31,10 +31,6 @@ spec:
         revision: HEAD
         files:
           - path: "**/values.yaml" # project/cluster/environment/values.yaml
-  ignoreApplicationDifferences:
-    - jsonPointers:
-        - /spec/syncPolicy
-        - /spec/sources/0/targetRevision
   template:
     metadata:
       name: {{"\"{{ index .path.segments 0 }}-{{ index .path.segments 1 }}-{{ index .path.segments 2 }}-root\"" }}
