@@ -1,9 +1,0 @@
-dependencies:
-- name: argo-cd
-  repository: https://argoproj.github.io/argo-helm
-  version: 7.5.2
-- name: vault-secrets-operator
-  repository: https://helm.releases.hashicorp.com
-  version: 0.8.1
-digest: sha256:9afbd19b021c523fb44d57dd476b95b6f8fb37edf4d03d6fd404aa92358a6d76
-generated: "2024-09-19T16:47:11.542579767+02:00"
