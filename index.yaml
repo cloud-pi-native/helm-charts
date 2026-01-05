@@ -4032,6 +4032,24 @@ entries:
     version: 1.0.0
   dso-grafana:
   - apiVersion: v2
+    created: "2026-01-05T16:51:51.059469268Z"
+    dependencies:
+    - name: grafana-operator
+      repository: oci://ghcr.io/grafana/helm-charts
+      version: v5.10.0
+    description: This Helm chart deploy Grafana instances and default dashboards for
+      each projects read from values file.
+    digest: a454d5ee492ee68ae85968b0c4051157d3f2ef6aea1d5e56577c6d6991237506
+    maintainers:
+    - email: cloudpinative-relations@interieur.gouv.fr
+      name: cloud-pi-native
+      url: https://cloud-pi-native.fr
+    name: dso-grafana
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-grafana-1.6.0/dso-grafana-1.6.0.tgz
+    version: 1.6.0
+  - apiVersion: v2
     created: "2025-12-22T12:59:15.458056052Z"
     dependencies:
     - name: grafana-operator
@@ -4454,4 +4472,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/observatorium-0.5.1/observatorium-0.5.1.tgz
     version: 0.5.1
-generated: "2025-12-22T15:10:25.066191924Z"
+generated: "2026-01-05T16:51:51.059810036Z"
