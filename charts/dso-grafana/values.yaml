@@ -69,3 +69,7 @@ grafana:
 dashboards:
   - k8s-logs.json
   - k8s-resources-namespace.json
+  - falco-dashboard.json
+  - kyverno-policy-reporter.json
+  - security-overview.json
+  - trivy-dashboard.json
