@@ -1,6 +1,7 @@
 # -- Informations communes, notamment appliquées en label sur les différents objets
 common:
   dso/project: project
+  dso/project.slug: project
   dso/environment: env
 application:
   destination:
