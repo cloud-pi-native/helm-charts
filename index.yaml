@@ -4442,6 +4442,20 @@ entries:
   dso-ns:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2026-01-27T11:01:26.401422254Z"
+    description: A Helm chart to create all the necessary resources for deploying
+      applications by the DSO console (namespace, secrets, quota, ...).
+    digest: e8abb873b7c0049ee8db25ede62850acd73334492cfb656f2bd1eadf20df42c3
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: dso-ns
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-ns-1.1.5/dso-ns-1.1.5.tgz
+    version: 1.1.5
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2025-12-18T14:38:28.110710468Z"
     description: A Helm chart to create all the necessary resources for deploying
       applications by the DSO console (namespace, secrets, quota, ...).
@@ -4632,4 +4646,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/observatorium-0.5.1/observatorium-0.5.1.tgz
     version: 0.5.1
-generated: "2026-01-26T15:51:47.238841788Z"
+generated: "2026-01-27T11:01:26.401812823Z"
