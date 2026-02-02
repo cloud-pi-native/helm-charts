@@ -25,26 +25,3 @@ spec:
 {{- end }}
 {{- end }}
 {{- end }}
----
-{{- with .Values.default }}
-apiVersion: grafana.integreatly.org/v1beta1
-kind: GrafanaDatasource
-metadata:
-  name: "{{ .name }}-loki-ds"
-  namespace: {{ $.Values.grafanaNamespace }}
-spec:
-  datasource:
-    access: proxy
-    isDefault: false
-    jsonData:
-      oauthPassThru: true
-      tlsSkipVerify: true
-    name: loki
-    type: loki
-    uid: loki
-    url: "{{ $.Values.grafana.observatorium_url }}/api/logs/v1/{{ .name }}/"
-  instanceSelector:
-    matchLabels:
-      app: {{ .name }}
-  resyncPeriod: 5m
-{{- end }}

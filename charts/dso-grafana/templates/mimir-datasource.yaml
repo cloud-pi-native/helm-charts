@@ -27,28 +27,3 @@ spec:
 {{- end }}
 {{- end }}
 {{- end }}
----
-{{- with .Values.default }}
-apiVersion: grafana.integreatly.org/v1beta1
-kind: GrafanaDatasource
-metadata:
-  name: "{{ .name }}-mimir-ds"
-  namespace: {{ $.Values.grafanaNamespace }}
-spec:
-  datasource:
-    access: proxy
-    isDefault: true
-    jsonData:
-      oauthPassThru: true
-      tlsSkipVerify: true
-      prometheusType: "Mimir"
-      prometheusVersion: "2.6.0"
-    name: prometheus
-    type: prometheus
-    uid: prometheus
-    url: "{{ $.Values.grafana.observatorium_url }}/api/metrics/v1/{{ .name }}/prometheus"
-  instanceSelector:
-    matchLabels:
-      app: {{ .name }}
-  resyncPeriod: 5m
-{{- end }}
