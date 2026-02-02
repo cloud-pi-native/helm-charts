@@ -26,27 +26,3 @@ spec:
 {{- end }}
 {{- end }}
 {{- end }}
----
-{{- with .Values.default }}
-apiVersion: grafana.integreatly.org/v1beta1
-kind: GrafanaDatasource
-metadata:
-  name: "{{ .name }}-alertmanager-ds"
-  namespace: {{ $.Values.grafanaNamespace }}
-spec:
-  datasource:
-    access: proxy
-    isDefault: false
-    jsonData:
-      oauthPassThru: true
-      tlsSkipVerify: true
-      implementation: "mimir"
-    name: alertmanager
-    type: alertmanager
-    uid: alertmanager
-    url: "{{ $.Values.grafana.observatorium_url }}/api/metrics/v1/{{ .name }}"
-  instanceSelector:
-    matchLabels:
-      app: {{ .name }}
-  resyncPeriod: 5m
-{{- end }}
