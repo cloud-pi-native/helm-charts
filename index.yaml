@@ -4760,4 +4760,24 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/observatorium-0.5.1/observatorium-0.5.1.tgz
     version: 0.5.1
-generated: "2026-02-19T13:27:33.315268705Z"
+  socle-observability:
+  - apiVersion: v2
+    created: "2026-02-20T08:55:05.357179413Z"
+    dependencies:
+    - alias: observability
+      name: dso-observability
+      repository: https://cloud-pi-native.github.io/helm-charts
+      version: '>=0.0.0 <1.0.0'
+    description: A Helm chart for Kubernetes to deploy GrafanaDashboard and PrometheusRule
+      for the socle's services
+    digest: ad31f51090bc10bc98d9c49ab829103321f4e4ad7c938cdc76b50aabe38c85b4
+    maintainers:
+    - email: cloudpinative-relations@interieur.gouv.fr
+      name: cloud-pi-native
+      url: https://cloud-pi-native.fr
+    name: socle-observability
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/socle-observability-1.0.0/socle-observability-1.0.0.tgz
+    version: 1.0.0
+generated: "2026-02-20T08:55:05.357496392Z"
