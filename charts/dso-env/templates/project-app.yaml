@@ -37,7 +37,59 @@ spec:
       allow
     - p, proj:{{ .Values.argocd.project }}-app:rw-group, applications, create, {{ .Values.argocd.project }}-app/*,
       deny
-  sourceRepos: 
+  - description: platform admin group
+    groups:
+    - {{ .Values.environment.platformAdminGroup }}
+    name: platform-admin
+    policies:
+    - p, proj:{{ .Values.argocd.project }}-app:platform-admin, applications, *, {{ .Values.argocd.project }}-app/*, allow
+  - description: platform readonly group
+    groups:
+    - {{ .Values.environment.platformReadonlyGroup }}
+    name: platform-readonly
+    policies:
+    - p, proj:{{ .Values.argocd.project }}-app:platform-readonly, applications, get, {{ .Values.argocd.project }}-app/*, allow
+  - description: project admin group
+    groups:
+    - {{ .Values.environment.projectAdminGroup }}
+    name: project-admin
+    policies:
+    - p, proj:{{ .Values.argocd.project }}-app:project-admin, applications, *, {{ .Values.argocd.project }}-app/*, allow
+    - p, proj:{{ .Values.argocd.project }}-app:project-admin, applications, create, {{ .Values.argocd.project }}-app/*, deny
+  - description: project devops group
+    groups:
+    - {{ .Values.environment.projectDevopsGroup }}
+    name: project-devops
+    policies:
+    - p, proj:{{ .Values.argocd.project }}-app:project-devops, applications, get, {{ .Values.argocd.project }}-app/*, allow
+    - p, proj:{{ .Values.argocd.project }}-app:project-devops, applications, sync, {{ .Values.argocd.project }}-app/*, allow
+    - p, proj:{{ .Values.argocd.project }}-app:project-devops, applications, update, {{ .Values.argocd.project }}-app/*, allow
+  - description: project developer group
+    groups:
+    - {{ .Values.environment.projectDevelopperGroup }}
+    name: project-developer
+    policies:
+    - p, proj:{{ .Values.argocd.project }}-app:project-developer, applications, get, {{ .Values.argocd.project }}-app/*, allow
+    - p, proj:{{ .Values.argocd.project }}-app:project-developer, applications, sync, {{ .Values.argocd.project }}-app/*, allow
+  - description: project readonly group
+    groups:
+    - {{ .Values.environment.projectReadonlyGroup }}
+    name: project-readonly
+    policies:
+    - p, proj:{{ .Values.argocd.project }}-app:project-readonly, applications, get, {{ .Values.argocd.project }}-app/*, allow
+  {{- range .Values.environment.additionalRoles }}
+  - name: {{ .name }}
+    description: {{ .description }}
+    groups:
+    {{- range .groups }}
+    - {{ . }}
+    {{- end }}
+    policies:
+    {{- range .policies }}
+    - {{ . }}
+    {{- end }}
+  {{- end }}
+  sourceRepos:
   {{- range .Values.application.sourceRepositories }}
     - {{ . }}
   {{- end }}
