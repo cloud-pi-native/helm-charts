@@ -21,6 +21,14 @@ environment:
   roGroup: /project/environment/RO
   # -- Nom du groupe à autoriser en lecture/écriture sur les objets applicatifs (-app) déployés par ArgoCD
   rwGroup: /project/environment/RW
+  # -- Liste de rôles supplémentaires à ajouter au AppProject
+  additionalRoles: []
+  # - name: custom-role
+  #   description: Custom role description
+  #   groups:
+  #   - /my/custom/group
+  #   policies:
+  #   - p, proj:my-project:custom-role, applications, get, my-project/*, allow
 application:
   # -- Liste des dépôts à autoriser au niveau du AppProject
   sourceRepositories:

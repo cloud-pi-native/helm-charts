@@ -37,7 +37,19 @@ spec:
       allow
     - p, proj:{{ .Values.argocd.project }}-app:rw-group, applications, create, {{ .Values.argocd.project }}-app/*,
       deny
-  sourceRepos: 
+  {{- range .Values.environment.additionalRoles }}
+  - name: {{ .name }}
+    description: {{ .description }}
+    groups:
+    {{- range .groups }}
+    - {{ . }}
+    {{- end }}
+    policies:
+    {{- range .policies }}
+    - {{ . }}
+    {{- end }}
+  {{- end }}
+  sourceRepos:
   {{- range .Values.application.sourceRepositories }}
     - {{ . }}
   {{- end }}
