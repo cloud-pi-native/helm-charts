@@ -5,10 +5,6 @@ argocd:
   # -- Namespace to use for additional Applications
   namespace: dso-argocd
 
-# -- Default instance to create (default mandatory project)
-default:
-  name: console
-
 # -- Default list of sample projects. One Grafana instance is created for each item. This is list is overriden by the global.projects list if provided.
 projects:
   - projectName: console

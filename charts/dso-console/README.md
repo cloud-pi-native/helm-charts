@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 2.2.15](https://img.shields.io/badge/Version-2.2.15-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.11.5](https://img.shields.io/badge/AppVersion-9.11.5-informational?style=flat-square)
+![Version: 2.2.19](https://img.shields.io/badge/Version-2.2.19-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.13.2](https://img.shields.io/badge/AppVersion-9.13.2-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 

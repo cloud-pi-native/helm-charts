@@ -1,6 +1,6 @@
 # dso-grafana
 
-![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.7.0](https://img.shields.io/badge/Version-1.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 This Helm chart deploy Grafana instances and default dashboards for each projects read from values file.
 
@@ -22,7 +22,6 @@ This Helm chart deploy Grafana instances and default dashboards for each project
 |-----|------|---------|-------------|
 | argocd.namespace | string | `"dso-argocd"` | Namespace to use for additional Applications |
 | dashboards | list | `["k8s-logs.json","k8s-resources-namespace.json","falco-dashboard.json","kyverno-policy-reporter.json","security-overview.json","trivy-dashboard.json"]` | Select default dashboard creation among available json files |
-| default | object | `{"name":"console"}` | Default instance to create (default mandatory project) |
 | global | object | `{"projects":[]}` | Global list of projects. One Grafana instance is created for each item. This list is provided dynamically by the Console webapp. |
 | grafana | object | `{"env":[],"isOpenShift":false,"observatorium_url":"http://observatorium-api.svc:8080"}` | Grafana instances configuration |
 | grafana.env | list | `[]` | Environment variables for the Grafana container |
