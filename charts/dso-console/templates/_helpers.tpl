@@ -127,6 +127,10 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{ include "cpnConsole.server.selectorLabels" . }}
 {{- end }}
 
+{{- define "cpnConsole.strangler.labels" -}}
+{{ include "cpnConsole.common.labels" . }}
+{{ include "cpnConsole.strangler.selectorLabels" . }}
+{{- end }}
 
 {{- define "cpnConsole.backend.labels" -}}
 {{ include "cpnConsole.common.labels" . }}
@@ -138,6 +142,11 @@ Selector labels
 */}}
 {{- define "cpnConsole.client.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "cpnConsole.name" . }}-client
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "cpnConsole.strangler.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "cpnConsole.name" . }}-strangler
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
