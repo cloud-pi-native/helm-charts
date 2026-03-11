@@ -69,3 +69,23 @@ dashboards:
   - kyverno-policy-reporter.json
   - security-overview.json
   - trivy-dashboard.json
+
+# -- Alloy instance configuration to forward rules to loki/mimir
+rules:
+  # -- Enabling alloy rules forwarder
+  enabled: false 
+  endpoints:
+    # -- URL of the loki ruler
+    logs: ""
+    # -- URL of the Mimir ruler
+    metrics: ""
+  crds:
+    create: false
+  alloy:
+    configMap:
+      create: false
+      name: alloy-rules-forwarder
+      key: config.alloy
+  controller:
+    type: "deployment"
+    replicas: "2"
