@@ -21,6 +21,24 @@ environment:
   roGroup: /project/environment/RO
   # -- Nom du groupe à autoriser en lecture/écriture sur les objets applicatifs (-app) déployés par ArgoCD
   rwGroup: /project/environment/RW
+  # -- Nom du groupe d'administration de la plateforme (experimentale)
+  platformAdminGroup: /console/admin
+  # -- Nom du groupe d'administration globale (Console) (experimentale)
+  consoleAdminGroup: /console-admin
+  # -- Nom du groupe de lecture seule de la plateforme (experimentale)
+  platformReadonlyGroup: /console/readonly
+  # -- Nom du groupe de sécurité de la plateforme (experimentale)
+  platformSecurityGroup: /console/security
+  # -- Nom du groupe d'administration du projet (experimentale)
+  projectAdminGroup: /project1/console/admin
+  # -- Nom du groupe DevOps du projet (experimentale)
+  projectDevopsGroup: /project1/console/devops
+  # -- Nom du groupe Développeur du projet (experimentale)
+  projectDevelopperGroup: /project1/console/developer
+  # -- Nom du groupe de sécurité du projet (experimentale)
+  projectSecurityGroup: /project1/console/security
+  # -- Nom du groupe de lecture seule du projet (experimentale)
+  projectReadonlyGroup: /project1/console/readonly
 application:
   # -- Liste des dépôts à autoriser au niveau du AppProject
   sourceRepositories:
@@ -49,3 +67,9 @@ application:
   #   valueFiles:
   #     - values.yaml
   #     - values-integ.yaml
+# -- Set of feature settings - experimental
+features:
+  # -- Fine grained roles support
+  fineGrainedRoles:
+    # -- enabling fine grained roles
+    enabled: false
