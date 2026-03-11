@@ -587,6 +587,10 @@ features:
   vaultSecrets:
     # -- enabling vault secret
     enabled: true
+  # -- Fine grained roles support
+  fineGrainedRoles:
+    # -- enabling fine grained roles
+    enabled: false
 
 # Postgresql configuration.
 ## Ref: https://artifacthub.io/packages/helm/bitnami/postgresql
