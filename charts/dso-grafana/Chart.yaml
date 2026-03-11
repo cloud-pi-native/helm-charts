@@ -2,11 +2,16 @@ apiVersion: v2
 name: dso-grafana
 description: This Helm chart deploy Grafana instances and default dashboards for each projects read from values file.
 type: application
-version: 1.7.0
+version: 1.8.0
 dependencies:
 - name: grafana-operator
   repository: oci://ghcr.io/grafana/helm-charts
   version: v5.10.0
+- name: alloy
+  alias: rules
+  version: 1.6.2
+  repository: https://grafana.github.io/helm-charts
+  condition: rules.enabled
 maintainers:
   - name: cloud-pi-native
     email: cloudpinative-relations@interieur.gouv.fr

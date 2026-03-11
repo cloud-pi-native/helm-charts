@@ -1,6 +1,6 @@
 # dso-grafana
 
-![Version: 1.7.0](https://img.shields.io/badge/Version-1.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.8.0](https://img.shields.io/badge/Version-1.8.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 This Helm chart deploy Grafana instances and default dashboards for each projects read from values file.
 
@@ -14,6 +14,7 @@ This Helm chart deploy Grafana instances and default dashboards for each project
 
 | Repository | Name | Version |
 |------------|------|---------|
+| https://grafana.github.io/helm-charts | rules(alloy) | 1.6.2 |
 | oci://ghcr.io/grafana/helm-charts | grafana-operator | v5.10.0 |
 
 ## Values
@@ -35,6 +36,10 @@ This Helm chart deploy Grafana instances and default dashboards for each project
 | oauth.secret | string | `""` | Shared secret to autorize OAuth usage |
 | oauth.url | string | `"https://grafana.example.com/realms/dso"` | URL of the Idp provider to use |
 | projects | list | `[{"envs":{"hprod":{"groups":["Editors","Viewers"]},"prod":{"groups":["Editors","Viewers"]}},"projectName":"console","projectRepository":{"path":".","url":"https://gitlab.com/project/infra-observability.git"}}]` | Default list of sample projects. One Grafana instance is created for each item. This is list is overriden by the global.projects list if provided. |
+| rules | object | `{"alloy":{"configMap":{"create":false,"key":"config.alloy","name":"alloy-rules-forwarder"}},"controller":{"replicas":"2","type":"deployment"},"crds":{"create":false},"enabled":false,"endpoints":{"logs":"","metrics":""}}` | Alloy instance configuration to forward rules to loki/mimir |
+| rules.enabled | bool | `false` | Enabling alloy rules forwarder |
+| rules.endpoints.logs | string | `""` | URL of the loki ruler |
+| rules.endpoints.metrics | string | `""` | URL of the Mimir ruler |
 | server | object | `{"certManager":{"enabled":true},"ingressClassName":"nginx","url":"grafana.example.com"}` | Ingress server configuration |
 | server.certManager | object | `{"enabled":true}` | Enabling cert manager configuration |
 | server.ingressClassName | string | `"nginx"` | Class name of the ingress controller to use |
