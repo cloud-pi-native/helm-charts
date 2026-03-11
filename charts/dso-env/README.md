@@ -6,28 +6,31 @@ Creates argocd Project and Applications to deploy DSO project repositories.
 
 ## Maintainers
 
-| Name | Email | Url |
-| ---- | ------ | --- |
+| Name         | Email                              | Url                        |
+| ------------ | ---------------------------------- | -------------------------- |
 | this-is-tobi | <thibault.colin@interieur.gouv.fr> | <https://this-is-tobi.com> |
 
 ## Values
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| application.autosync | bool | `true` | Activer la synchronisation automatique de l'application |
-| application.destination.name | string | `"dest"` | Nom du cluster applicatif cible |
-| application.destination.namespace | string | `"app1"` | Nom du namespace applicatif cible |
-| application.repositories | string | `nil` | Liste des dépôts à déployer |
-| application.sourceRepositories | list | `["https://gitlab.com/projects/org/demo"]` | Liste des dépôts à autoriser au niveau du AppProject |
-| argocd.namespace | string | `"argocd"` | Namespace de création des objets ArgoCD |
-| argocd.nsChartVersion | string | `"1.0.0"` | Version du Chart dso-ns à utiliser |
-| argocd.project | string | `"project1"` | Préfixe des projets ArgoCD à créer |
-| common | object | `{"dso/environment":"env","dso/organization":"org","dso/project":"project"}` | Informations communes, notamment appliquées en label sur les différents objets |
-| environment.roGroup | string | `"/project/environment/RO"` | Nom du groupe à autoriser en lecture seule sur les objets applicatifs (-app) déployés par ArgoCD |
-| environment.rwGroup | string | `"/project/environment/RW"` | Nom du groupe à autoriser en lecture/écriture sur les objets applicatifs (-app) déployés par ArgoCD |
-| environment.valueFilePath | string | `"values.yaml"` | Chemin du fichier à utiliser lors de la récupération des values |
-| environment.valueFileRepository | string | `"https://gitlab.com/projects/Infra/org/demo/infra.git"` | URL du repo avec le fichier values à utiliser pour cet environnement |
-| environment.valueFileRevision | string | `"HEAD"` | Revision Git à utiliser lors de la récupération des values |
+| Key                               | Type   | Default                                                                      | Description                                                                                         |
+| --------------------------------- | ------ | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| application.autosync              | bool   | `true`                                                                       | Activer la synchronisation automatique de l'application                                             |
+| application.destination.name      | string | `"dest"`                                                                     | Nom du cluster applicatif cible                                                                     |
+| application.destination.namespace | string | `"app1"`                                                                     | Nom du namespace applicatif cible                                                                   |
+| application.repositories          | string | `nil`                                                                        | Liste des dépôts à déployer                                                                         |
+| application.sourceRepositories    | list   | `["https://gitlab.com/projects/org/demo"]`                                   | Liste des dépôts à autoriser au niveau du AppProject                                                |
+| argocd.namespace                  | string | `"argocd"`                                                                   | Namespace de création des objets ArgoCD                                                             |
+| argocd.nsChartVersion             | string | `"1.0.0"`                                                                    | Version du Chart dso-ns à utiliser                                                                  |
+| argocd.project                    | string | `"project1"`                                                                 | Préfixe des projets ArgoCD à créer                                                                  |
+| common                            | object | `{"dso/environment":"env","dso/organization":"org","dso/project":"project"}` | Informations communes, notamment appliquées en label sur les différents objets                      |
+| environment.roGroup               | string | `"/project/environment/RO"`                                                  | Nom du groupe à autoriser en lecture seule sur les objets applicatifs (-app) déployés par ArgoCD    |
+| environment.rwGroup               | string | `"/project/environment/RW"`                                                  | Nom du groupe à autoriser en lecture/écriture sur les objets applicatifs (-app) déployés par ArgoCD |
+| environment.valueFilePath         | string | `"values.yaml"`                                                              | Chemin du fichier à utiliser lors de la récupération des values                                     |
+| environment.valueFileRepository   | string | `"https://gitlab.com/projects/Infra/org/demo/infra.git"`                     | URL du repo avec le fichier values à utiliser pour cet environnement                                |
+| environment.valueFileRevision     | string | `"HEAD"`                                                                     | Revision Git à utiliser lors de la récupération des values                                          |
+| features                          | object | `{"fineGrainedRoles":{"enabled":true}}`                                      | Set of feature settings - experimental                                                              |
+| features.fineGrainedRoles.enabled | bool   | `false`                                                                      | enable fine grained roles in the roles matrix                                                       |
 
-----------------------------------------------
+***
+
 Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)
