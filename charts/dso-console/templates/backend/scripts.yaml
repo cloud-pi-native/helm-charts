@@ -1,0 +1,16 @@
+{{- if .Values.backend.plugins }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "cpnConsole.fullname" . }}-fetch-script
+  labels: {{- include "cpnConsole.backend.labels" . | nindent 4 }}
+data:
+  fetch: |
+    #!/bin/bash
+    cd /tmp
+{{- range $i, $val := .Values.backend.plugins }}
+    wget {{ $val }} -O {{ $i }}.zip;
+    mkdir -p /plugins/{{ $i }}
+    unzip -o {{ $i }}.zip -d /plugins/{{ $i }}
+{{- end }}
+{{- end }}

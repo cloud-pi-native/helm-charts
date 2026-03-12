@@ -1,0 +1,211 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cpnConsole.fullname" . }}-backend
+  labels:
+    {{- include "cpnConsole.backend.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.backend.autoscaling.enabled }}
+  replicas: {{ .Values.backend.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "cpnConsole.backend.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: {{ .Values.backend.strategy.type }}
+  template:
+    metadata:
+      annotations:
+        {{- include "checksum" (list $ "/backend/configmap.yaml") | nindent 8 }}
+        {{- include "checksum" (list $ "/backend/secret.yaml") | nindent 8 }}
+        {{- include "checksum" (list $ "/backend/scripts.yaml") | nindent 8 }}
+        {{- if .Values.config.create }}
+        {{- include "checksum" (list $ "/config.yaml") | nindent 8 }}
+        {{- end }}
+        {{- with .Values.backend.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "cpnConsole.backend.selectorLabels" . | nindent 8 }}
+        {{- with .Values.backend.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if and .Values.imageCredentials.username .Values.imageCredentials.password }}
+      imagePullSecrets:
+      - name: {{ include "cpnConsole.name" . }}-pullsecret
+      {{- end }}
+      serviceAccountName: {{ include "cpnConsole.backend.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.backend.podSecurityContext | nindent 8 }}
+      {{- if or .Values.backend.plugins .Values.backend.initContainers }}
+      initContainers:
+      {{- if and .Values.backend.plugins (len .Values.backend.plugins) }}
+      - image: {{ .Values.backend.fetchContainer.image }}
+        name: fetch-plugins
+        imagePullPolicy: {{ .Values.backend.fetchContainer.pullPolicy }}
+        {{- if .Values.backend.proxy.enabled }}
+        env:
+          {{- toYaml .Values.backend.proxy.env | nindent 8 }}
+        {{- end }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "cpnConsole.fullname" . }}-backend
+        - secretRef:
+            name: {{ include "cpnConsole.fullname" . }}-backend
+        {{- if .Values.backend.envFrom }}
+          {{- toYaml .Values.backend.envFrom | nindent 8 }}
+        {{- end }}
+        command:
+        - sh
+        - /script/fetch
+        volumeMounts:
+        - name: fetch-script
+          mountPath: /script
+        - name: plugins
+          mountPath: /plugins
+      {{- end }}
+      {{- if .Values.backend.initContainers }}
+        {{- tpl (toYaml .Values.backend.initContainers) . | nindent 8 }}
+      {{- end }}
+      {{- end }}
+      containers:
+      - name: backend
+        securityContext:
+          {{- toYaml .Values.backend.container.securityContext | nindent 12 }}
+        image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+        {{- if .Values.backend.container.command }}
+        command:
+        {{- range .Values.backend.container.command }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.backend.container.args }}
+        args:
+        {{- range .Values.backend.container.args }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        ports:
+          - containerPort: {{ .Values.backend.service.port }}
+            protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: {{ include "cpnConsole.fullname" . }}-backend
+        - secretRef:
+            name: {{ include "cpnConsole.fullname" . }}-backend
+        {{- if .Values.backend.envFrom }}
+          {{- toYaml .Values.backend.envFrom | nindent 8 }}
+        {{- end }}
+        {{- if .Values.backend.startupProbe.enabled }}
+        {{- if .Values.global.postgresql.cnpgSecretName }}
+        env:
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.global.postgresql.cnpgSecretName }}
+              key: uri
+        {{- end }}
+        startupProbe:
+          httpGet:
+            path: {{ .Values.backend.healthcheckPath }}
+            port: {{ .Values.backend.container.port }}
+          initialDelaySeconds: {{ .Values.backend.startupProbe.initialDelaySeconds }}
+          successThreshold: {{ .Values.backend.startupProbe.successThreshold }}
+          failureThreshold: {{ .Values.backend.startupProbe.failureThreshold }}
+          periodSeconds: {{ .Values.backend.startupProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.backend.startupProbe.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.backend.readinessProbe.enabled }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.backend.healthcheckPath }}
+            port: {{ .Values.backend.container.port }}
+          initialDelaySeconds: {{ .Values.backend.readinessProbe.initialDelaySeconds }}
+          successThreshold: {{ .Values.backend.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.backend.readinessProbe.failureThreshold }}
+          periodSeconds: {{ .Values.backend.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.backend.readinessProbe.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.backend.livenessProbe.enabled }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.backend.healthcheckPath }}
+            port: {{ .Values.backend.container.port }}
+          initialDelaySeconds: {{ .Values.backend.livenessProbe.initialDelaySeconds }}
+          successThreshold: {{ .Values.backend.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.backend.livenessProbe.failureThreshold }}
+          periodSeconds: {{ .Values.backend.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.backend.livenessProbe.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.backend.hostAliases }}
+        hostAliases:
+          {{- toYaml .Values.backend.hostAliases | nindent 8 }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.backend.resources | nindent 10 }}
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        {{- if .Values.backend.dbDataCm }}
+        - name: imports
+          mountPath: /app/dist/init/db/imports
+        {{- end }}
+        {{- if and .Values.backend.plugins (len .Values.backend.plugins) }}
+        - name: plugins
+          mountPath: /plugins
+        {{- end }}
+        {{- range $volumeMount := .Values.backend.extraVolumeMounts }}
+        - name: {{ $volumeMount.name }}
+          mountPath: {{ $volumeMount.mountPath }}
+        {{- end }}
+      {{- if .Values.backend.extraContainers }}
+        {{- tpl (toYaml .Values.backend.extraContainers) . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backend.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backend.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backend.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - name: config
+        {{- if .Values.backend.extraCa.name }}
+        projected:
+          sources:
+          - configMap:
+              name: {{ .Values.backend.extraCa.name }}
+              items:
+              - key: {{ .Values.backend.extraCa.key }}
+                path: {{ .Values.backend.extraCa.mountSubPath }}
+        {{- end }}
+      {{- if .Values.backend.dbDataCm }}
+      - name: imports
+        configMap:
+          name: {{ .Values.backend.dbDataCm }}
+      {{- end }}
+      {{- if and .Values.backend.plugins (len .Values.backend.plugins) }}
+      - name: plugins
+        emptyDir: {}
+      - name: fetch-script
+        configMap:
+          name: {{ include "cpnConsole.fullname" . }}-fetch-script
+      {{- end }}
+      {{- range $volume := .Values.backend.extraVolumes }}
+      - name: {{ $volume.name }}
+        {{- if eq $volume.type "hostPath" }}
+        hostPath:
+          path: {{ $volume.path }}
+        {{- end }}
+        {{- if eq $volume.type "configMap" }}
+        configMap:
+          name: {{ $volume.name }}
+        {{- end }}
+      {{- end }}
