@@ -101,7 +101,7 @@ spec:
           periodSeconds: {{ .Values.client.livenessProbe.periodSeconds }}
           timeoutSeconds: {{ .Values.client.livenessProbe.timeoutSeconds }}
         {{- end }}
-        {{- if .Values.client.hostAliases }}  
+        {{- if .Values.client.hostAliases }}
         hostAliases:
           {{- toYaml .Values.client.hostAliases | nindent 8 }}
         {{- end }}
@@ -112,8 +112,8 @@ spec:
         - name: {{ $volumeMount.name }}
           mountPath: {{ $volumeMount.mountPath }}
         {{- end }}
-      {{- if .Values.client.extraContainers }}  
-        {{- tpl (toYaml .Values.client.extraContainers) . | nindent 8 }}  
+      {{- if .Values.client.extraContainers }}
+        {{- tpl (toYaml .Values.client.extraContainers) . | nindent 8 }}
       {{- end }}
       {{- with .Values.client.nodeSelector }}
       nodeSelector:

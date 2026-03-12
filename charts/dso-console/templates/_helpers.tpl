@@ -25,6 +25,13 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
+{{- define "cpnConsole.backend.serviceAccountName" -}}
+{{- if .Values.backend.serviceAccount.create }}
+{{- default (include "cpnConsole.name" .) .Values.backend.serviceAccount.name }}
+{{- else }}
+{{- default "cpn-backend" .Values.backend.serviceAccount.name }}
+{{- end }}
+{{- end }}
 
 {{/*
 Create image pull secret
@@ -120,6 +127,15 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{ include "cpnConsole.server.selectorLabels" . }}
 {{- end }}
 
+{{- define "cpnConsole.strangler.labels" -}}
+{{ include "cpnConsole.common.labels" . }}
+{{ include "cpnConsole.strangler.selectorLabels" . }}
+{{- end }}
+
+{{- define "cpnConsole.backend.labels" -}}
+{{ include "cpnConsole.common.labels" . }}
+{{ include "cpnConsole.backend.selectorLabels" . }}
+{{- end }}
 
 {{/*
 Selector labels
@@ -129,7 +145,17 @@ app.kubernetes.io/name: {{ include "cpnConsole.name" . }}-client
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+{{- define "cpnConsole.strangler.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "cpnConsole.name" . }}-strangler
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
 {{- define "cpnConsole.server.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "cpnConsole.name" . }}-server
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "cpnConsole.backend.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "cpnConsole.name" . }}-backend
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
