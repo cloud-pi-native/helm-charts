@@ -18,12 +18,12 @@ imageCredentials:
 config:
   # -- Whether or not helm should create the console config.
   create: false
-  # -- Name of the generated config.
+  # -- Name of the genrated config.
   name: "dso-config"
   # -- Projects root directory to use in other services such as Gitlab, etc.
   projectsRootDir: "forge"
   # -- Secrets to inject into the configuration.
-  # It is needed for the backend to get services informations such as urls, admin username, admin password or token, etc.
+  # It is needed for server to get services informations such as urls, admin username, admin password or token, etc.
   secrets: {}
     # ARGO_NAMESPACE: "dso-argocd"
     # ARGOCD_URL: "https://argocd.domain.local"
@@ -50,11 +50,11 @@ global:
     NODE_ENV: "production"
   # -- Map of environment variables to inject into backend and frontend containers.
   secrets: {}
-  ## Global informations about the Keycloak instance that will be shared to the backend and client.
+  ## Global informations about the Keycloak instance that will be shared to the server and client.
   keycloak:
     # Keycloak domain used for authentication.
     domain:
-      # -- Keycloak domain used for Console CPN backend.
+      # -- Keycloak domain used for Console CPN server.
       backend: "keycloak.namespace.svc.cluster.local"
       # -- Keycloak domain used for Console CPN client.
       frontend: "keycloak.domain.com"
@@ -62,18 +62,18 @@ global:
     realm: "cloud-pi-native"
     # Protocol used to communicate with keycloak for authentication.
     protocol:
-      # -- Keycloak protocol used for Console CPN backend.
+      # -- Keycloak protocol used for Console CPN server.
       backend: "http"
       # -- Keycloak protocol used for Console CPN client.
       frontend: "https"
     ## Keycloak client ids.
     clientIds:
-      # -- Keycloak clientId used for Console CPN backend.
+      # -- Keycloak clientId used for Console CPN server.
       backend: "console-backend"
       # -- Keycloak clientId used for Console CPN client.
       frontend: "console-frontend"
     clientSecrets:
-      # -- Keycloak clientSecret used for Console CPN backend.
+      # -- Keycloak clientSecret used for Console CPN server.
       backend: ""
     # -- Keycloak redirect uri used with keycloak.
     redirectUri: "https://console.dso.local"
@@ -278,23 +278,22 @@ client:
   # -- Default affinity for Console CPN client.
   affinity: {}
 
-# Console CPN backend configuration.
-# -- DEPRECATED. Will be progressively replaced by `server-nestjs`
+# Console CPN server configuration.
 server:
   # -- The number of application controller pods to run.
   replicaCount: 1
-  ## Console CPN backend image.
+  ## Console CPN server image.
   image:
-    # -- Repository to use for the Console CPN backend.
+    # -- Repository to use for the Console CPN server.
     repository: "ghcr.io/cloud-pi-native/console/server"
-    # -- Image pull policy for the Console CPN backend.
+    # -- Image pull policy for the Console CPN server.
     pullPolicy: "Always"
-    # -- Tag to use for the Console CPN backend.
+    # -- Tag to use for the Console CPN server.
     ## Overrides the image tag whose default is the chart appVersion.
     tag: ""
-  # -- Annotations for the Console CPN backend deployed pods.
+  # -- Annotations for the Console CPN server deployed pods.
   podAnnotations: {}
-  # -- Labels for the Console CPN backend deployed pods.
+  # -- Labels for the Console CPN server deployed pods.
   podLabels: {}
   # -- Toggle and define pod-level security context.
   podSecurityContext: {}
@@ -312,11 +311,11 @@ server:
   #   - mountPath: /custom-volume
   #     name: custom-volume
   container:
-    # -- Console CPN backend container port.
+    # -- Console CPN server container port.
     port: 8080
-    # -- Console CPN backend container command.
+    # -- Console CPN server container command.
     command: []
-    # -- Console CPN backend container command args.
+    # -- Console CPN server container command args.
     args: []
     # -- Toggle and define container-level security context.
     securityContext: {}
@@ -326,34 +325,34 @@ server:
       # readOnlyRootFilesystem: true
       # runAsNonRoot: true
       # runAsUser: 1000
-  # -- Extra containers to add to the Console CPN backend pod as sidecars.
+  # -- Extra containers to add to the Console CPN server pod as sidecars.
   extraContainers: []
   # - name: fluentd
   #   image: "fluentd"
   #   volumeMounts:
   #     - mountPath: /my-volume/config
   #       name: config
-  # -- Console CPN backend container env variables loaded from configmap or secret reference.
+  # -- Console CPN server container env variables loaded from configmap or secret reference.
   envFrom: []
   # - configMapRef:
   #     name: my-config
   # - secretRef:
   #     name: my-secret
-  # -- Console CPN backend container env variables, it will be injected into a configmap and loaded into the container.
+  # -- Console CPN server container env variables, it will be injected into a configmap and loaded into the container.
   env: {}
     ## csv list of plugins to disabled
     # DISABLED_PLUGINS: ""
-  # -- Console CPN backend container env secrets, it will be injected into a secret and loaded into the container.
+  # -- Console CPN server container env secrets, it will be injected into a secret and loaded into the container.
   secrets: {}
-  # -- Name of the configmap with javascript data that need to be imported by the backend at start up.
+  # -- Name of the configmap with javascript data that need to be imported by the server at start up.
   dbDataCm: ""
-  # -- Console CPN backend container healthcheck endpoint.
+  # -- Console CPN server container healthcheck endpoint.
   healthcheckPath: "/api/v1/healthz"
-  ## Deployment strategy for CPN backend deployment.
+  ## Deployment strategy for CPN server deployment.
   strategy:
     # -- Strategy type used to replace old Pods by new ones, can be "Recreate" or "RollingUpdate".
     type: "RollingUpdate"
-  ## Startup probe for Console CPN backend.
+  ## Startup probe for Console CPN server.
   startupProbe:
     # -- Whether or not enable the probe.
     enabled: true
@@ -367,7 +366,7 @@ server:
     periodSeconds: 10
     # -- Number of seconds after which the probe times out.
     timeoutSeconds: 5
-  ## Readiness probe for Console CPN backend.
+  ## Readiness probe for Console CPN server.
   readinessProbe:
     # -- Whether or not enable the probe.
     enabled: true
@@ -381,7 +380,7 @@ server:
     periodSeconds: 10
     # -- Number of seconds after which the probe times out.
     timeoutSeconds: 5
-  ## Liveness probe for Console CPN backend.
+  ## Liveness probe for Console CPN server.
   livenessProbe:
     # -- Whether or not enable the probe.
     enabled: true
@@ -429,9 +428,9 @@ server:
   # - name: extra-vol-cm
   #   mountPath: /volume/cm/path
   service:
-    # -- Console CPN backend service type.
+    # -- Console CPN server service type.
     type: "ClusterIP"
-    # -- Console CPN backend service port.
+    # -- Console CPN server service port.
     port: 80
   fetchContainer:
     # -- Image used to fetch plugins inside the initContainer.
@@ -455,249 +454,39 @@ server:
       value: ".cluster.local,.svc.cluster.local,.svc"
   resources:
     requests:
-      # -- Memory request for the Console CPN backend.
+      # -- Memory request for the Console CPN server.
       memory: "128Mi"
-      # -- CPU request for the Console CPN backend.
+      # -- CPU request for the Console CPN server.
       cpu: "250m"
     limits:
-      # -- Memory limit for the Console CPN backend.
+      # -- Memory limit for the Console CPN server.
       memory: "512Mi"
-      # -- CPU limit for the Console CPN backend.
+      # -- CPU limit for the Console CPN server.
       cpu: "500m"
   autoscaling:
-    # -- Enable Horizontal Pod Autoscaler ([HPA]) for the Console CPN backend.
+    # -- Enable Horizontal Pod Autoscaler ([HPA]) for the Console CPN server.
     enabled: false
-    # -- Minimum number of replicas for the Console CPN backend [HPA].
+    # -- Minimum number of replicas for the Console CPN server [HPA].
     minReplicas: 1
-    # -- Maximum number of replicas for the Console CPN backend [HPA].
+    # -- Maximum number of replicas for the Console CPN server [HPA].
     maxReplicas: 3
-    # -- Average CPU utilization percentage for the Console CPN backend [HPA].
+    # -- Average CPU utilization percentage for the Console CPN server [HPA].
     targetCPUUtilizationPercentage: 80
-    # -- Average memory utilization percentage for the Console CPN backend [HPA].
+    # -- Average memory utilization percentage for the Console CPN server [HPA].
     targetMemoryUtilizationPercentage: 80
-  # -- Default node selector for Console CPN backend.
+  # -- Default node selector for Console CPN server.
   nodeSelector: {}
-  # -- Default tolerations for Console CPN backend.
+  # -- Default tolerations for Console CPN server.
   tolerations: []
-  # -- Default affinity for Console CPN backend.
+  # -- Default affinity for Console CPN server.
   affinity: {}
   serviceAccount:
-    # -- Create a service account for the Console CPN backend.
+    # -- Create a service account for the Console CPN server.
     create: true
     # -- Annotations applied to created service account.
     annotations: {}
     # -- Service account name.
     name: "cpn-console-server"
-
-# Console CPN backend configuration, for the new backend written in NestJS
-server-nestjs:
-  # -- The number of application controller pods to run.
-  replicaCount: 1
-  ## Console CPN backend image.
-  image:
-    # -- Repository to use for the Console CPN server.
-    repository: "ghcr.io/cloud-pi-native/console/server-nestjs"
-    # -- Image pull policy for the Console CPN backend.
-    pullPolicy: "Always"
-    # -- Tag to use for the Console CPN backend.
-    ## Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-  # -- Annotations for the Console CPN backend deployed pods.
-  podAnnotations: {}
-  # -- Labels for the Console CPN backend deployed pods.
-  podLabels: {}
-  # -- Toggle and define pod-level security context.
-  podSecurityContext: {}
-    # fsGroup: 2000
-  # -- Init containers to add to the Console CPN client pod.
-  initContainers: []
-  # - name: wait-for-keycloak
-  #   image: docker.io/curlimages/curl:latest
-  #   command:
-  #   - "/bin/sh"
-  #   - "-c"
-  #   args:
-  #   - "while [ $(curl -sw '%{http_code}' http://webserver.svc.cluster.local -o /dev/null) -ne 200 ]; do sleep 5; echo 'Waiting for the webserver...'; done"
-  #   volumeMounts:
-  #   - mountPath: /custom-volume
-  #     name: custom-volume
-  container:
-    # -- Console CPN backend container port.
-    port: 8080
-    # -- Console CPN backend container command.
-    command: []
-    # -- Console CPN backend container command args.
-    args: []
-    # -- Toggle and define container-level security context.
-    securityContext: {}
-      # capabilities:
-      #   drop:
-      #   - ALL
-      # readOnlyRootFilesystem: true
-      # runAsNonRoot: true
-      # runAsUser: 1000
-  # -- Extra containers to add to the Console CPN backend pod as sidecars.
-  extraContainers: []
-  # - name: fluentd
-  #   image: "fluentd"
-  #   volumeMounts:
-  #     - mountPath: /my-volume/config
-  #       name: config
-  # -- Console CPN backend container env variables loaded from configmap or secret reference.
-  envFrom: []
-  # - configMapRef:
-  #     name: my-config
-  # - secretRef:
-  #     name: my-secret
-  # -- Console CPN backend container env variables, it will be injected into a configmap and loaded into the container.
-  env: {}
-    ## csv list of plugins to disabled
-    # DISABLED_PLUGINS: ""
-  # -- Console CPN backend container env secrets, it will be injected into a secret and loaded into the container.
-  secrets: {}
-  # -- Name of the configmap with javascript data that need to be imported by the backend at start up.
-  dbDataCm: ""
-  # -- Console CPN backend container healthcheck endpoint.
-  healthcheckPath: "/api/v1/healthz"
-  ## Deployment strategy for CPN backend deployment.
-  strategy:
-    # -- Strategy type used to replace old Pods by new ones, can be "Recreate" or "RollingUpdate".
-    type: "RollingUpdate"
-  ## Startup probe for Console CPN backend.
-  startupProbe:
-    # -- Whether or not enable the probe.
-    enabled: true
-    # -- Number of seconds after the container has started before probe is initiated.
-    initialDelaySeconds: 0
-    # -- Minimum consecutive successes for the probe to be considered successful after having failed.
-    successThreshold: 1
-    # -- Minimum consecutive failures for the probe to be considered failed after having succeeded.
-    failureThreshold: 10
-    # -- How often (in seconds) to perform the probe.
-    periodSeconds: 10
-    # -- Number of seconds after which the probe times out.
-    timeoutSeconds: 5
-  ## Readiness probe for Console CPN backend.
-  readinessProbe:
-    # -- Whether or not enable the probe.
-    enabled: true
-    # -- Number of seconds after the container has started before probe is initiated.
-    initialDelaySeconds: 15
-    # -- Minimum consecutive successes for the probe to be considered successful after having failed.
-    successThreshold: 2
-    # -- Minimum consecutive failures for the probe to be considered failed after having succeeded.
-    failureThreshold: 2
-    # -- How often (in seconds) to perform the probe.
-    periodSeconds: 10
-    # -- Number of seconds after which the probe times out.
-    timeoutSeconds: 5
-  ## Liveness probe for Console CPN backend.
-  livenessProbe:
-    # -- Whether or not enable the probe.
-    enabled: true
-    # -- Whether or not enable the probe.
-    initialDelaySeconds: 30
-    # -- Number of seconds after the container has started before probe is initiated.
-    successThreshold: 1
-    # -- Minimum consecutive successes for the probe to be considered successful after having failed.
-    failureThreshold: 3
-    # -- Minimum consecutive failures for the probe to be considered failed after having succeeded.
-    periodSeconds: 30
-    # -- How often (in seconds) to perform the probe.
-    timeoutSeconds: 5
-  # -- Host aliases that will be injected at pod-level into /etc/hosts.
-  hostAliases: []
-  # - ip: "127.0.0.1"
-  #   hostnames:
-  #   - "foo.local"
-  #   - "bar.local"
-  # - ip: "10.1.2.3"
-  #   hostnames:
-  #   - "foo.remote"
-  #   - "bar.remote"
-  ## Extra certificate to add to the container, it should be provide as a configmap.
-  extraCa:
-    # -- The name of the configmap in namespace where certificates are stored.
-    name: ""
-    # -- The key to lookup.
-    key: ""
-    # -- The path inside the container where the certificate file should be mount.
-    # This is a native Nodejs environment variable to extends certificates, see: https://nodejs.org/api/cli.html#node_extra_ca_certsfile.
-    # This mount path represent the subpath to use under the `/config` config root path.
-    mountSubPath: "ca_certs"
-  # -- List of extra volumes to add.
-  extraVolumes: []
-  # - name: extra-vol
-  #   path: /host/path
-  #   type: hostPath
-  # - name: extra-vol-cm
-  #   type: configMap
-  # -- List of extra mounts to add (normally used with extraVolumes)
-  extraVolumeMounts: []
-  # - name: extra-vol
-  #   mountPath: /volume/path
-  # - name: extra-vol-cm
-  #   mountPath: /volume/cm/path
-  service:
-    # -- Console CPN backend service type.
-    type: "ClusterIP"
-    # -- Console CPN backend service port.
-    port: 80
-  fetchContainer:
-    # -- Image used to fetch plugins inside the initContainer.
-    image: docker.io/wbitt/network-multitool:alpine-minimal
-    # -- Image pull policy to fetch plugins inside the initContainer.
-    pullPolicy: "IfNotPresent"
-  # -- List of zips to download; basically curl url, unzip and stores it in plugins/external/<dir_name>.
-  plugins: []
-  # -- CSV list of plugins to disabled.
-  disabledPlugins: ""
-  proxy:
-    # -- Enable Proxy configuration for the plugins initContainer.
-    enabled: false
-    # -- Map of environment variables to inject into the plugins initContainers.
-    env:
-    - name: http_proxy
-      value: "http://proxy.example.com:3128"
-    - name: https_proxy
-      value: "http://proxy.example.com:3128"
-    - name: no_proxy
-      value: ".cluster.local,.svc.cluster.local,.svc"
-  resources:
-    requests:
-      # -- Memory request for the Console CPN backend.
-      memory: "128Mi"
-      # -- CPU request for the Console CPN backend.
-      cpu: "250m"
-    limits:
-      # -- Memory limit for the Console CPN backend.
-      memory: "512Mi"
-      # -- CPU limit for the Console CPN backend.
-      cpu: "500m"
-  autoscaling:
-    # -- Enable Horizontal Pod Autoscaler ([HPA]) for the Console CPN backend.
-    enabled: false
-    # -- Minimum number of replicas for the Console CPN backend [HPA].
-    minReplicas: 1
-    # -- Maximum number of replicas for the Console CPN backend [HPA].
-    maxReplicas: 3
-    # -- Average CPU utilization percentage for the Console CPN backend [HPA].
-    targetCPUUtilizationPercentage: 80
-    # -- Average memory utilization percentage for the Console CPN backend [HPA].
-    targetMemoryUtilizationPercentage: 80
-  # -- Default node selector for Console CPN backend.
-  nodeSelector: {}
-  # -- Default tolerations for Console CPN backend.
-  tolerations: []
-  # -- Default affinity for Console CPN backend.
-  affinity: {}
-  serviceAccount:
-    # -- Create a service account for the Console CPN backend.
-    create: true
-    # -- Annotations applied to created service account.
-    annotations: {}
-    # -- Service account name.
-    name: "cpn-console-server-nestjs"
 
 # CNPG operator configuration
 cnpg-operator:
