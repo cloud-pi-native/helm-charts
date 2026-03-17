@@ -333,59 +333,6 @@ A Helm chart to deploy Cloud Pi Native Console
 | server.startupProbe.timeoutSeconds | int | `5` | Number of seconds after which the probe times out. |
 | server.strategy.type | string | `"RollingUpdate"` | Strategy type used to replace old Pods by new ones, can be "Recreate" or "RollingUpdate". |
 | server.tolerations | list | `[]` | Default tolerations for Console CPN backend. |
-| strangler.affinity | object | `{}` | Default affinity for Console CPN strangler. |
-| strangler.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the Console CPN strangler. |
-| strangler.autoscaling.maxReplicas | int | `3` | Maximum number of replicas for the Console CPN strangler [HPA]. |
-| strangler.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the Console CPN strangler [HPA]. |
-| strangler.autoscaling.targetCPUUtilizationPercentage | int | `80` | Average CPU utilization percentage for the Console CPN strangler [HPA]. |
-| strangler.autoscaling.targetMemoryUtilizationPercentage | int | `80` | Average memory utilization percentage for the Console CPN strangler [HPA]. |
-| strangler.container.args | list | `[]` | Console CPN strangler container command args. |
-| strangler.container.command | list | `[]` | Console CPN strangler container command. |
-| strangler.container.port | int | `8080` | Console CPN strangler container port. |
-| strangler.container.securityContext | object | `{}` | Toggle and define container-level security context. |
-| strangler.env | object | `{}` | Console CPN strangler container env variables, it will be injected into a configmap and loaded into the container. |
-| strangler.envFrom | list | `[]` | Console CPN strangler container env variables loaded from configmap or secret reference. |
-| strangler.extraContainers | list | `[]` | Extra containers to add to the Console CPN strangler pod as sidecars. |
-| strangler.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes). |
-| strangler.extraVolumes | list | `[]` | List of extra volumes to add. |
-| strangler.healthcheckPath | string | `"/"` | Console CPN strangler container healthcheck endpoint. |
-| strangler.hostAliases | list | `[]` | Host aliases that will be injected at pod-level into /etc/hosts. |
-| strangler.image.pullPolicy | string | `"Always"` | Image pull policy for the Console CPN strangler. |
-| strangler.image.repository | string | `"ghcr.io/cloud-pi-native/console/strangler"` | Repository to use for the Console CPN strangler. |
-| strangler.image.tag | string | `""` | Tag to use for the Console CPN strangler. # Overrides the image tag whose default is the chart appVersion. |
-| strangler.initContainers | list | `[]` | Init containers to add to the Console CPN strangler pod. |
-| strangler.livenessProbe.enabled | bool | `true` | Whether or not enable the probe. |
-| strangler.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the probe to be considered failed after having succeeded. |
-| strangler.livenessProbe.initialDelaySeconds | int | `30` | Number of seconds after the container has started before probe is initiated. |
-| strangler.livenessProbe.periodSeconds | int | `30` | How often (in seconds) to perform the probe. |
-| strangler.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the probe to be considered successful after having failed. |
-| strangler.livenessProbe.timeoutSeconds | int | `5` | Number of seconds after which the probe times out |
-| strangler.nodeSelector | object | `{}` | Default node selector for Console CPN strangler. |
-| strangler.podAnnotations | object | `{}` | Annotations for the Console CPN strangler deployed pods. |
-| strangler.podLabels | object | `{}` | Labels for the Console CPN strangler deployed pods. |
-| strangler.podSecurityContext | object | `{}` | Toggle and define pod-level security context. |
-| strangler.readinessProbe.enabled | bool | `true` | Whether or not enable the probe. |
-| strangler.readinessProbe.failureThreshold | int | `2` | Minimum consecutive failures for the probe to be considered failed after having succeeded. |
-| strangler.readinessProbe.initialDelaySeconds | int | `15` | Number of seconds after the container has started before probe is initiated. |
-| strangler.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the probe. |
-| strangler.readinessProbe.successThreshold | int | `2` | Minimum consecutive successes for the probe to be considered successful after having failed. |
-| strangler.readinessProbe.timeoutSeconds | int | `5` | Number of seconds after which the probe times out. |
-| strangler.replicaCount | int | `1` | The number of application controller pods to run. |
-| strangler.resources.limits.cpu | string | `"500m"` | CPU limit for the Console CPN strangler. |
-| strangler.resources.limits.memory | string | `"512Mi"` | Memory limit for the Console CPN strangler. |
-| strangler.resources.requests.cpu | string | `"250m"` | CPU request for the Console CPN strangler. |
-| strangler.resources.requests.memory | string | `"128Mi"` | Memory request for the Console CPN strangler. |
-| strangler.secrets | object | `{}` | Console CPN strangler container env secrets, it will be injected into a secret and loaded into the container. |
-| strangler.service.port | int | `80` | Console CPN strangler service port. |
-| strangler.service.type | string | `"ClusterIP"` | Console CPN strangler service type. |
-| strangler.startupProbe.enabled | bool | `true` | Whether or not enable the probe. |
-| strangler.startupProbe.failureThreshold | int | `10` | Minimum consecutive failures for the probe to be considered failed after having succeeded. |
-| strangler.startupProbe.initialDelaySeconds | int | `0` | Number of seconds after the container has started before probe is initiated. |
-| strangler.startupProbe.periodSeconds | int | `10` | How often (in seconds) to perform the probe. |
-| strangler.startupProbe.successThreshold | int | `1` | Minimum consecutive successes for the probe to be considered successful after having failed. |
-| strangler.startupProbe.timeoutSeconds | int | `5` | Number of seconds after which the probe times out. |
-| strangler.strategy.type | string | `"RollingUpdate"` | Strategy type used to replace old Pods by new ones, can be "Recreate" or "RollingUpdate". |
-| strangler.tolerations | list | `[]` | Default tolerations for Console CPN strangler. |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)
