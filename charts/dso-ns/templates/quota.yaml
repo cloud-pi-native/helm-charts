@@ -8,7 +8,6 @@ metadata:
     {{- .Values.common | toYaml | nindent 4 }}
 spec:
   hard:
-    limits.cpu: {{ .Values.application.quota.cpu | quote }}
     limits.memory: {{ .Values.application.quota.memory }}
     requests.cpu: {{ .Values.application.quota.cpu | quote }}
     requests.memory: {{ .Values.application.quota.memory }}
