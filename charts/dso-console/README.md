@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 2.3.1](https://img.shields.io/badge/Version-2.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.13.2](https://img.shields.io/badge/AppVersion-9.13.2-informational?style=flat-square)
+![Version: 2.3.2](https://img.shields.io/badge/Version-2.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.13.2](https://img.shields.io/badge/AppVersion-9.13.2-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -55,7 +55,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | backend.healthcheckPath | string | `"/api/v1/healthz"` | Console CPN backend container healthcheck endpoint. |
 | backend.hostAliases | list | `[]` | Host aliases that will be injected at pod-level into /etc/hosts. |
 | backend.image.pullPolicy | string | `"Always"` | Image pull policy for the Console CPN backend. |
-| backend.image.repository | string | `"ghcr.io/cloud-pi-native/console/backend"` | Repository to use for the Console CPN server. |
+| backend.image.repository | string | `"ghcr.io/cloud-pi-native/console/server-nestjs"` | Repository to use for the Console CPN server. |
 | backend.image.tag | string | `""` | Tag to use for the Console CPN backend. # Overrides the image tag whose default is the chart appVersion. |
 | backend.initContainers | list | `[]` | Init containers to add to the Console CPN client pod. |
 | backend.livenessProbe.enabled | bool | `true` | Whether or not enable the probe. |
@@ -351,7 +351,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | strangler.healthcheckPath | string | `"/"` | Console CPN strangler container healthcheck endpoint. |
 | strangler.hostAliases | list | `[]` | Host aliases that will be injected at pod-level into /etc/hosts. |
 | strangler.image.pullPolicy | string | `"Always"` | Image pull policy for the Console CPN strangler. |
-| strangler.image.repository | string | `"ghcr.io/cloud-pi-native/console/strangler"` | Repository to use for the Console CPN strangler. |
+| strangler.image.repository | string | `"ghcr.io/cloud-pi-native/console/nginx-strangler"` | Repository to use for the Console CPN strangler. |
 | strangler.image.tag | string | `""` | Tag to use for the Console CPN strangler. # Overrides the image tag whose default is the chart appVersion. |
 | strangler.initContainers | list | `[]` | Init containers to add to the Console CPN strangler pod. |
 | strangler.livenessProbe.enabled | bool | `true` | Whether or not enable the probe. |
