@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cpnConsole.fullname" . }}-strangler
+  labels:
+    {{- include "cpnConsole.strangler.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.strangler.autoscaling.enabled }}
+  replicas: {{ .Values.strangler.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "cpnConsole.strangler.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: {{ .Values.strangler.strategy.type }}
+  template:
+    metadata:
+      annotations:
+        {{- include "checksum" (list $ "/strangler/configmap.yaml") | nindent 8 }}
+        {{- include "checksum" (list $ "/strangler/secret.yaml") | nindent 8 }}
+        {{- with .Values.strangler.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "cpnConsole.strangler.selectorLabels" . | nindent 8 }}
+        {{- with .Values.strangler.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if and .Values.imageCredentials.username .Values.imageCredentials.password }}
+      imagePullSecrets:
+      - name: {{ include "cpnConsole.name" . }}-pullsecret
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.strangler.podSecurityContext | nindent 8 }}
+      {{- if .Values.strangler.initContainers }}
+      initContainers:
+        {{- tpl (toYaml .Values.strangler.initContainers) . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: strangler
+        securityContext:
+          {{- toYaml .Values.strangler.container.securityContext | nindent 12 }}
+        image: "{{ .Values.strangler.image.repository }}:{{ .Values.strangler.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.strangler.image.pullPolicy }}
+        {{- if .Values.strangler.container.command }}
+        command:
+        {{- range .Values.strangler.container.command }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.strangler.container.args }}
+        args:
+        {{- range .Values.strangler.container.args }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        ports:
+          - containerPort: {{ .Values.strangler.container.port }}
+            protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: {{ include "cpnConsole.fullname" . }}-strangler
+        {{- if or .Values.global.secrets .Values.strangler.secrets }}
+        - secretRef:
+            name: {{ include "cpnConsole.fullname" . }}-strangler
+        {{- end }}
+        {{- if .Values.strangler.envFrom }}
+          {{- toYaml .Values.strangler.envFrom | nindent 8 }}
+        {{- end }}
+        {{- if .Values.strangler.startupProbe.enabled }}
+        startupProbe:
+          httpGet:
+            path: {{ .Values.strangler.healthcheckPath }}
+            port: {{ .Values.strangler.container.port }}
+          initialDelaySeconds: {{ .Values.strangler.startupProbe.initialDelaySeconds }}
+          successThreshold: {{ .Values.strangler.startupProbe.successThreshold }}
+          failureThreshold: {{ .Values.strangler.startupProbe.failureThreshold }}
+          periodSeconds: {{ .Values.strangler.startupProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.strangler.startupProbe.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.strangler.readinessProbe.enabled }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.strangler.healthcheckPath }}
+            port: {{ .Values.strangler.container.port }}
+          initialDelaySeconds: {{ .Values.strangler.readinessProbe.initialDelaySeconds }}
+          successThreshold: {{ .Values.strangler.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.strangler.readinessProbe.failureThreshold }}
+          periodSeconds: {{ .Values.strangler.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.strangler.readinessProbe.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.strangler.livenessProbe.enabled }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.strangler.healthcheckPath }}
+            port: {{ .Values.strangler.container.port }}
+          initialDelaySeconds: {{ .Values.strangler.livenessProbe.initialDelaySeconds }}
+          successThreshold: {{ .Values.strangler.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.strangler.livenessProbe.failureThreshold }}
+          periodSeconds: {{ .Values.strangler.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.strangler.livenessProbe.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.strangler.hostAliases }}
+        hostAliases:
+          {{- toYaml .Values.strangler.hostAliases | nindent 8 }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.strangler.resources | nindent 10 }}
+        volumeMounts:
+        {{- range $volumeMount := .Values.strangler.extraVolumeMounts }}
+        - name: {{ $volumeMount.name }}
+          mountPath: {{ $volumeMount.mountPath }}
+        {{- end }}
+      {{- if .Values.strangler.extraContainers }}
+        {{- tpl (toYaml .Values.strangler.extraContainers) . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.strangler.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.strangler.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.strangler.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      {{- range $volume := .Values.strangler.extraVolumes }}
+      - name: {{ $volume.name }}
+        {{- if eq $volume.type "hostPath" }}
+        hostPath:
+          path: {{ $volume.path }}
+        {{- end }}
+        {{- if eq $volume.type "configMap" }}
+        configMap:
+          name: {{ $volume.name }}
+        {{- end }}
+      {{- end }}
