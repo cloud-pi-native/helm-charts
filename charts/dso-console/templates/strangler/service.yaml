@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cpnConsole.fullname" . }}-strangler
+  labels:
+    {{- include "cpnConsole.strangler.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.strangler.service.type }}
+  ports:
+    - port: {{ .Values.strangler.service.port }}
+      targetPort: {{ .Values.strangler.container.port }}
+      protocol: TCP
+  selector:
+    {{- include "cpnConsole.strangler.selectorLabels" . | nindent 4 }}

@@ -1,0 +1,14 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "cpnConsole.fullname" . }}-strangler
+  labels: {{- include "cpnConsole.strangler.labels" . | nindent 4 }}
+data:
+  LEGACY_UPSTREAM: {{ include "cpnConsole.fullname" . }}-server:{{ .Values.server.service.port }}
+  NESTJS_UPSTREAM: {{ include "cpnConsole.fullname" . }}-backend:{{ .Values.backend.service.port }}
+  {{- if .Values.global.env -}}
+  {{- include "cpnConsole.env" .Values.global | indent 2 }}
+  {{- end -}}
+  {{- if .Values.strangler.env -}}
+  {{- include "cpnConsole.env" .Values.strangler | indent 2 }}
+  {{- end -}}
