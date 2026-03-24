@@ -1,6 +1,6 @@
 # cpn-console
 
-![Version: 2.3.4](https://img.shields.io/badge/Version-2.3.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.14.1](https://img.shields.io/badge/AppVersion-9.14.1-informational?style=flat-square)
+![Version: 2.3.5](https://img.shields.io/badge/Version-2.3.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 9.14.1](https://img.shields.io/badge/AppVersion-9.14.1-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
 
@@ -38,7 +38,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | backend.autoscaling.targetMemoryUtilizationPercentage | int | `80` | Average memory utilization percentage for the Console CPN backend [HPA]. |
 | backend.container.args | list | `[]` | Console CPN backend container command args. |
 | backend.container.command | list | `[]` | Console CPN backend container command. |
-| backend.container.port | int | `8080` | Console CPN backend container port. |
+| backend.container.port | int | `3001` | Console CPN backend container port. |
 | backend.container.securityContext | object | `{}` | Toggle and define container-level security context. |
 | backend.dbDataCm | string | `""` | Name of the configmap with javascript data that need to be imported by the backend at start up. |
 | backend.disabledPlugins | string | `""` | CSV list of plugins to disabled. |
@@ -348,7 +348,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | strangler.extraContainers | list | `[]` | Extra containers to add to the Console CPN strangler pod as sidecars. |
 | strangler.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes). |
 | strangler.extraVolumes | list | `[]` | List of extra volumes to add. |
-| strangler.healthcheckPath | string | `"/"` | Console CPN strangler container healthcheck endpoint. |
+| strangler.healthcheckPath | string | `"/health"` | Console CPN strangler container healthcheck endpoint. |
 | strangler.hostAliases | list | `[]` | Host aliases that will be injected at pod-level into /etc/hosts. |
 | strangler.image.pullPolicy | string | `"Always"` | Image pull policy for the Console CPN strangler. |
 | strangler.image.repository | string | `"ghcr.io/cloud-pi-native/console/nginx-strangler"` | Repository to use for the Console CPN strangler. |
