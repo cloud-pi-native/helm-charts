@@ -693,7 +693,7 @@ backend:
   #     name: custom-volume
   container:
     # -- Console CPN backend container port.
-    port: 8080
+    port: 3001
     # -- Console CPN backend container command.
     command: []
     # -- Console CPN backend container command args.
