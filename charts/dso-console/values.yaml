@@ -343,7 +343,7 @@ strangler:
   # -- Console CPN strangler container env secrets, it will be injected into a secret and loaded into the container.
   secrets: {}
   # -- Console CPN strangler container healthcheck endpoint.
-  healthcheckPath: "/"
+  healthcheckPath: "/health"
   ## Deployment strategy for CPN strangler deployment.
   strategy:
     # -- Strategy type used to replace old Pods by new ones, can be "Recreate" or "RollingUpdate".
