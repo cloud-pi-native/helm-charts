@@ -1,0 +1,37 @@
+{{- if .Values.rules.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alloy-rules-forwarder
+  namespace: {{ $.Values.grafanaNamespace }}
+data:
+  config.alloy: |
+    {{- range $project := default .Values.projects .Values.global.projects }}
+    {{- range $env, $val := $project.envs }}
+    {{- range $tenant, $val := $val.tenants }}
+    mimir.rules.kubernetes {{ regexReplaceAll "\\W+" $tenant "_" | quote }} {
+      address = {{ $.Values.rules.endpoints.metrics | quote }}
+      tenant_id = {{ $tenant | quote }}
+      rule_selector {
+        match_labels = {
+          type = "metrics",
+          tenant_id = {{ $tenant | quote }},
+        }
+      }
+    }
+    
+    loki.rules.kubernetes {{ regexReplaceAll "\\W+" $tenant "_" | quote }} {
+      address = {{ $.Values.rules.endpoints.logs | quote }}
+      tenant_id = {{ $tenant | quote }}
+      rule_selector { 
+        match_labels = {
+          type = "logs",
+          tenant_id = {{ $tenant | quote }},
+        }
+      }
+    }
+
+    {{- end }}
+    {{- end }}
+    {{- end }}
+{{- end }}
