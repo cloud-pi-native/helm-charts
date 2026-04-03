@@ -60,7 +60,7 @@ spec:
         - sh
         - /script/fetch
         volumeMounts:
-        - name: fetch-script
+        - name: fetch-script-server
           mountPath: /script
         - name: plugins
           mountPath: /plugins
@@ -194,9 +194,9 @@ spec:
       {{- if and .Values.server.plugins (len .Values.server.plugins) }}
       - name: plugins
         emptyDir: {}
-      - name: fetch-script
+      - name: fetch-script-server
         configMap:
-          name: {{ include "cpnConsole.fullname" . }}-fetch-script
+          name: {{ include "cpnConsole.fullname" . }}-fetch-script-server
       {{- end }}
       {{- range $volume := .Values.server.extraVolumes }}
       - name: {{ $volume.name }}
