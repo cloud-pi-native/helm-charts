@@ -64,7 +64,7 @@ spec:
         http:
           paths:
           - path: "/{{ printf "%s-%s" $env $project.projectName }}"
-            pathType: ImplementationSpecific
+            pathType: {{ $.Values.server.ingressPathType }}
             backend:
               service:
                 name: "{{ printf "%s-%s" $env $project.projectName }}-grafana-service"
