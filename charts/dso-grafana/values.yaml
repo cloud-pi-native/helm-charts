@@ -45,6 +45,10 @@ server:
     enabled: true
   # -- Class name of the ingress controller to use
   ingressClassName: nginx
+  # -- Ingress path type to use for routing.
+  # Some ingress class controllers (e.g. Apisix), does not support `ImplementationSpecific`
+  # so we make it the default, but be optionally overridable.
+  ingressPathType: ImplementationSpecific
   # -- Url of the ingress frontend. The instance is reachable with a /<name> context.
   url: "grafana.example.com"
 
