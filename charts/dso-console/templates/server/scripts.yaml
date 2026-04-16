@@ -2,7 +2,7 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: {{ include "cpnConsole.fullname" . }}-fetch-script
+  name: {{ include "cpnConsole.fullname" . }}-fetch-script-server
   labels: {{- include "cpnConsole.server.labels" . | nindent 4 }}
 data:
   fetch: |
