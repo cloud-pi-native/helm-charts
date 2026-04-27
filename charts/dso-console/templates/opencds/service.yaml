@@ -1,0 +1,16 @@
+{{- if .Values.opencds.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cpnConsole.fullname" . }}-opencds
+  labels:
+    {{- include "cpnConsole.opencds.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.opencds.service.type }}
+  ports:
+    - port: {{ .Values.opencds.service.port }}
+      targetPort: {{ .Values.opencds.container.port }}
+      protocol: TCP
+  selector:
+    {{- include "cpnConsole.opencds.selectorLabels" . | nindent 4 }}
+{{- end -}}

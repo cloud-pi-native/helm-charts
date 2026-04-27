@@ -1,0 +1,14 @@
+{{- if .Values.opencds.enabled }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "cpnConsole.fullname" . }}-opencds
+  labels: {{- include "cpnConsole.opencds.labels" . | nindent 4 }}
+data:
+  {{- if .Values.global.env -}}
+  {{- include "cpnConsole.env" .Values.global | indent 2 }}
+  {{- end -}}
+  {{- if .Values.opencds.env -}}
+  {{- include "cpnConsole.env" .Values.opencds | indent 2 }}
+  {{- end -}}
+{{- end -}}

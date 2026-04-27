@@ -1051,3 +1051,166 @@ keycloak:
     readReplicas:
       persistence:
         size: "1Gi"
+
+# OpenCDS mock implementation (based on mockoon)
+opencds:
+  # -- Enable OpenCDS service
+  # Defaulted to false because we want to enable it only on some environments
+  # and we do NOT want to enable it on prod-like environments
+  enabled: false
+  # -- The number of application controller pods to run.
+  replicaCount: 1
+  ## Console CPN opencds image
+  image:
+    # -- Repository to use for the Console CPN opencds.
+    repository: "ghcr.io/cloud-pi-native/console/opencds-mockoon"
+    # -- Image pull policy for the Console CPN opencds.
+    pullPolicy: "Always"
+    # -- Tag to use for the Console CPN opencds.
+    ## Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+  # -- Annotations for the Console CPN opencds deployed pods.
+  podAnnotations: {}
+  # -- Labels for the Console CPN opencds deployed pods.
+  podLabels: {}
+  # -- Toggle and define pod-level security context.
+  podSecurityContext: {}
+  # -- Init containers to add to the Console CPN opencds pod.
+  initContainers: []
+  container:
+    # -- Console CPN opencds container port.
+    port: 3100
+    # -- Console CPN opencds container command.
+    command: []
+    # -- Console CPN opencds container command args.
+    args: []
+    # -- Toggle and define container-level security context.
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
+  # -- Extra containers to add to the Console CPN opencds pod as sidecars.
+  extraContainers: []
+  # - name: fluentd
+  #   image: "fluentd"
+  #   volumeMounts:
+  #     - mountPath: /my-volume/config
+  #       name: config
+  # -- Console CPN opencds container env variables loaded from configmap or secret reference.
+  envFrom: []
+  # - configMapRef:
+  #     name: my-config
+  # - secretRef:
+  #     name: my-secret
+  # -- Console CPN opencds container env variables, it will be injected into a configmap and loaded into the container.
+  env: {}
+  # -- Console CPN opencds container env secrets, it will be injected into a secret and loaded into the container.
+  secrets: {}
+  # -- Console CPN opencds container healthcheck endpoint.
+  healthcheckPath: "/health"
+  ## Deployment strategy for CPN opencds deployment.
+  strategy:
+    # -- Strategy type used to replace old Pods by new ones, can be "Recreate" or "RollingUpdate".
+    type: "RollingUpdate"
+  ## Startup probe for Console CPN opencds.
+  startupProbe:
+    # -- Whether or not enable the probe.
+    enabled: true
+    # -- Number of seconds after the container has started before probe is initiated.
+    initialDelaySeconds: 0
+    # -- Minimum consecutive successes for the probe to be considered successful after having failed.
+    successThreshold: 1
+    # -- Minimum consecutive failures for the probe to be considered failed after having succeeded.
+    failureThreshold: 10
+    # -- How often (in seconds) to perform the probe.
+    periodSeconds: 10
+    # -- Number of seconds after which the probe times out.
+    timeoutSeconds: 5
+  ## Readiness probe for Console CPN opencds.
+  readinessProbe:
+    # -- Whether or not enable the probe.
+    enabled: true
+    # -- Number of seconds after the container has started before probe is initiated.
+    initialDelaySeconds: 15
+    # -- Minimum consecutive successes for the probe to be considered successful after having failed.
+    successThreshold: 2
+    # -- Minimum consecutive failures for the probe to be considered failed after having succeeded.
+    failureThreshold: 2
+    # -- How often (in seconds) to perform the probe.
+    periodSeconds: 10
+    # -- Number of seconds after which the probe times out.
+    timeoutSeconds: 5
+  ## Liveness probe for Console CPN opencds.
+  livenessProbe:
+    # -- Whether or not enable the probe.
+    enabled: true
+    # -- Number of seconds after the container has started before probe is initiated.
+    initialDelaySeconds: 30
+    # -- Minimum consecutive successes for the probe to be considered successful after having failed.
+    successThreshold: 1
+    # -- Minimum consecutive failures for the probe to be considered failed after having succeeded.
+    failureThreshold: 3
+    # -- How often (in seconds) to perform the probe.
+    periodSeconds: 30
+    # -- Number of seconds after which the probe times out
+    timeoutSeconds: 5
+  # -- Host aliases that will be injected at pod-level into /etc/hosts.
+  hostAliases: []
+  # - ip: "127.0.0.1"
+  #   hostnames:
+  #   - "foo.local"
+  #   - "bar.local"
+  # - ip: "10.1.2.3"
+  #   hostnames:
+  #   - "foo.remote"
+  #   - "bar.remote"
+  # -- List of extra volumes to add.
+  extraVolumes: []
+  # - name: extra-vol
+  #   path: /host/path
+  #   type: hostPath
+  # - name: extra-vol-cm
+  #   type: configMap
+  # -- List of extra mounts to add (normally used with extraVolumes).
+  extraVolumeMounts: []
+  # - name: extra-vol
+  #   mountPath: /volume/path
+  # - name: extra-vol-cm
+  #   mountPath: /volume/cm/path
+  service:
+    # -- Console CPN opencds service type.
+    type: "ClusterIP"
+    # -- Console CPN opencds service port.
+    port: 80
+  resources:
+    requests:
+      # -- Memory request for the Console CPN opencds.
+      memory: "128Mi"
+      # -- CPU request for the Console CPN opencds.
+      cpu: "250m"
+    limits:
+      # -- Memory limit for the Console CPN opencds.
+      memory: "512Mi"
+      # -- CPU limit for the Console CPN opencds.
+      cpu: "500m"
+  ## Console CPN opencds Horizontal Pod Autoscaler
+  autoscaling:
+    # -- Enable Horizontal Pod Autoscaler ([HPA]) for the Console CPN opencds.
+    enabled: false
+    # -- Minimum number of replicas for the Console CPN opencds [HPA].
+    minReplicas: 1
+    # -- Maximum number of replicas for the Console CPN opencds [HPA].
+    maxReplicas: 3
+    # -- Average CPU utilization percentage for the Console CPN opencds [HPA].
+    targetCPUUtilizationPercentage: 80
+    # -- Average memory utilization percentage for the Console CPN opencds [HPA].
+    targetMemoryUtilizationPercentage: 80
+  # -- Default node selector for Console CPN opencds.
+  nodeSelector: {}
+  # -- Default tolerations for Console CPN opencds.
+  tolerations: []
+  # -- Default affinity for Console CPN opencds.
+  affinity: {}
