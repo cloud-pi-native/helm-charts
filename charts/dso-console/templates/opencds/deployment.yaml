@@ -1,0 +1,143 @@
+{{- if .Values.opencds.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "cpnConsole.fullname" . }}-opencds
+  labels:
+    {{- include "cpnConsole.opencds.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.opencds.autoscaling.enabled }}
+  replicas: {{ .Values.opencds.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "cpnConsole.opencds.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: {{ .Values.opencds.strategy.type }}
+  template:
+    metadata:
+      annotations:
+        {{- include "checksum" (list $ "/opencds/configmap.yaml") | nindent 8 }}
+        {{- include "checksum" (list $ "/opencds/secret.yaml") | nindent 8 }}
+        {{- with .Values.opencds.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "cpnConsole.opencds.selectorLabels" . | nindent 8 }}
+        {{- with .Values.opencds.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if and .Values.imageCredentials.username .Values.imageCredentials.password }}
+      imagePullSecrets:
+      - name: {{ include "cpnConsole.name" . }}-pullsecret
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.opencds.podSecurityContext | nindent 8 }}
+      {{- if .Values.opencds.initContainers }}
+      initContainers:
+        {{- tpl (toYaml .Values.opencds.initContainers) . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: opencds
+        securityContext:
+          {{- toYaml .Values.opencds.container.securityContext | nindent 12 }}
+        image: "{{ .Values.opencds.image.repository }}:{{ .Values.opencds.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.opencds.image.pullPolicy }}
+        {{- if .Values.opencds.container.command }}
+        command:
+        {{- range .Values.opencds.container.command }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.opencds.container.args }}
+        args:
+        {{- range .Values.opencds.container.args }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        ports:
+          - containerPort: {{ .Values.opencds.container.port }}
+            protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: {{ include "cpnConsole.fullname" . }}-opencds
+        {{- if or .Values.global.secrets .Values.opencds.secrets }}
+        - secretRef:
+            name: {{ include "cpnConsole.fullname" . }}-opencds
+        {{- end }}
+        {{- if .Values.opencds.envFrom }}
+          {{- toYaml .Values.opencds.envFrom | nindent 8 }}
+        {{- end }}
+        {{- if .Values.opencds.startupProbe.enabled }}
+        startupProbe:
+          httpGet:
+            path: {{ .Values.opencds.healthcheckPath }}
+            port: {{ .Values.opencds.container.port }}
+          initialDelaySeconds: {{ .Values.opencds.startupProbe.initialDelaySeconds }}
+          successThreshold: {{ .Values.opencds.startupProbe.successThreshold }}
+          failureThreshold: {{ .Values.opencds.startupProbe.failureThreshold }}
+          periodSeconds: {{ .Values.opencds.startupProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.opencds.startupProbe.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.opencds.readinessProbe.enabled }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.opencds.healthcheckPath }}
+            port: {{ .Values.opencds.container.port }}
+          initialDelaySeconds: {{ .Values.opencds.readinessProbe.initialDelaySeconds }}
+          successThreshold: {{ .Values.opencds.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.opencds.readinessProbe.failureThreshold }}
+          periodSeconds: {{ .Values.opencds.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.opencds.readinessProbe.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.opencds.livenessProbe.enabled }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.opencds.healthcheckPath }}
+            port: {{ .Values.opencds.container.port }}
+          initialDelaySeconds: {{ .Values.opencds.livenessProbe.initialDelaySeconds }}
+          successThreshold: {{ .Values.opencds.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.opencds.livenessProbe.failureThreshold }}
+          periodSeconds: {{ .Values.opencds.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.opencds.livenessProbe.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.opencds.hostAliases }}
+        hostAliases:
+          {{- toYaml .Values.opencds.hostAliases | nindent 8 }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.opencds.resources | nindent 10 }}
+        volumeMounts:
+        {{- range $volumeMount := .Values.opencds.extraVolumeMounts }}
+        - name: {{ $volumeMount.name }}
+          mountPath: {{ $volumeMount.mountPath }}
+        {{- end }}
+      {{- if .Values.opencds.extraContainers }}
+        {{- tpl (toYaml .Values.opencds.extraContainers) . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.opencds.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.opencds.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.opencds.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      {{- range $volume := .Values.opencds.extraVolumes }}
+      - name: {{ $volume.name }}
+        {{- if eq $volume.type "hostPath" }}
+        hostPath:
+          path: {{ $volume.path }}
+        {{- end }}
+        {{- if eq $volume.type "configMap" }}
+        configMap:
+          name: {{ $volume.name }}
+        {{- end }}
+      {{- end }}
+{{- end }}
