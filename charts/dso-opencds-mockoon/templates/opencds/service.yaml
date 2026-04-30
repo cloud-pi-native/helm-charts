@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "cpnOpenCDSMockoon.fullname" . }}-opencds
+  labels:
+    {{- include "cpnOpenCDSMockoon.opencds.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.opencds.service.type }}
+  ports:
+    - port: {{ .Values.opencds.service.port }}
+      targetPort: {{ .Values.opencds.container.port }}
+      protocol: TCP
+  selector:
+    {{- include "cpnOpenCDSMockoon.opencds.selectorLabels" . | nindent 4 }}
