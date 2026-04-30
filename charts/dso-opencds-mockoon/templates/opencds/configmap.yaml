@@ -1,0 +1,12 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "cpnOpenCDSMockoon.fullname" . }}-opencds
+  labels: {{- include "cpnOpenCDSMockoon.opencds.labels" . | nindent 4 }}
+data:
+  {{- if .Values.global.env -}}
+  {{- include "cpnOpenCDSMockoon.env" .Values.global | indent 2 }}
+  {{- end -}}
+  {{- if .Values.opencds.env -}}
+  {{- include "cpnOpenCDSMockoon.env" .Values.opencds | indent 2 }}
+  {{- end -}}
