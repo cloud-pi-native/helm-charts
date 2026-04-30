@@ -1,0 +1,19 @@
+apiVersion: v2
+name: cpn-opencds-mockoon
+description: A Helm chart to deploy a mocked API (through Mockoon) of OpenCDS
+type: application
+version: 1.0.0
+appVersion: 9.3.0
+keywords: []
+icon: https://cloud-pi-native.fr/favicon.ico
+home: https://cloud-pi-native.fr
+sources:
+  - https://github.com/cloud-pi-native/helm-charts
+  - https://github.com/cloud-pi-native/console
+dependencies: []
+deprecated: false
+annotations: {}
+maintainers:
+  - name: StephaneTrebel
+    email: cloudpinative-relations@interieur.gouv.fr
+    url: https://www.interieur.gouv.fr/
