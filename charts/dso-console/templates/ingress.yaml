@@ -46,12 +46,19 @@ spec:
             name: {{ $fullName }}-strangler
             port:
               number: {{ $svcPortStrangler }}
-      - path: /swagger-ui
+      - path: /swagger-ui-server
         pathType: Prefix
         backend:
           service:
-            name: {{ $fullName }}-server
+            name: {{ $fullName }}-strangler
             port:
-              number: {{ $svcPortServer }}
+              number: {{ $svcPortStrangler }}
+      - path: /swagger-ui-server-nestjs
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ $fullName }}-strangler
+            port:
+              number: {{ $svcPortStrangler }}
   {{- end }}
 {{- end }}
