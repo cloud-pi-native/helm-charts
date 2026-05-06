@@ -6,6 +6,7 @@ version: 2.4.4
 appVersion: 9.17.1
 keywords: []
 home: https://cloud-pi-native.fr
+icon: https://cloud-pi-native.fr/favicon.ico
 sources:
   - https://github.com/cloud-pi-native/helm-charts
   - https://github.com/cloud-pi-native/console
