@@ -2,7 +2,7 @@ apiVersion: v2
 name: cpn-opencds-mockoon
 description: A Helm chart to deploy a mocked API (through Mockoon) of OpenCDS
 type: application
-version: 1.0.2
+version: 1.0.3
 appVersion: 9.18.0
 keywords: []
 icon: https://cloud-pi-native.fr/favicon.ico
