@@ -4495,6 +4495,25 @@ entries:
   cpn-opencds-mockoon:
   - apiVersion: v2
     appVersion: 9.18.0
+    created: "2026-05-22T08:37:57.522071169Z"
+    description: A Helm chart to deploy a mocked API (through Mockoon) of OpenCDS
+    digest: 9979d0b202c46fd19ed15625a15c9850c6602b11cc22192b970d52b0248ae499
+    home: https://cloud-pi-native.fr
+    icon: https://cloud-pi-native.fr/favicon.ico
+    maintainers:
+    - email: cloudpinative-relations@interieur.gouv.fr
+      name: StephaneTrebel
+      url: https://www.interieur.gouv.fr/
+    name: cpn-opencds-mockoon
+    sources:
+    - https://github.com/cloud-pi-native/helm-charts
+    - https://github.com/cloud-pi-native/console
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-opencds-mockoon-1.0.3/cpn-opencds-mockoon-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
+    appVersion: 9.18.0
     created: "2026-05-18T15:02:34.42967669Z"
     description: A Helm chart to deploy a mocked API (through Mockoon) of OpenCDS
     digest: 50b653641b124cf7a79b2997959584b9df5cacf1b4052c863accaa8ac8bfb8f7
@@ -5425,4 +5444,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/socle-observability-1.0.0/socle-observability-1.0.0.tgz
     version: 1.0.0
-generated: "2026-05-18T15:02:34.430169199Z"
+generated: "2026-05-22T08:37:57.522454274Z"
