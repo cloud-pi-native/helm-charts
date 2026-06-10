@@ -1,0 +1,89 @@
+---
+# ConfigMap for application scaling (generic - used by all strategies)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backup-scripts-app-scaler-{{ .Values.global.appName }}
+  namespace: {{ include "dso-backup.namespace" . }}
+  labels:
+    {{- include "dso-backup.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backup-scripts
+    script-type: app-scaler
+data:
+  scale-down.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "=========================================="
+    echo "  SCALE DOWN APPLICATION"
+    echo "=========================================="
+    echo ""
+
+    NAMESPACE="${NAMESPACE}"
+
+    {{- if .Values.application.workloads }}
+    {{- range $index, $workload := .Values.application.workloads }}
+    # Workload {{ add $index 1 }}: {{ $workload.type }}/{{ $workload.name }}
+    echo "Scaling down {{ $workload.type }}/{{ $workload.name }} to 0 replicas..."
+    kubectl scale {{ $workload.type }} {{ $workload.name }} -n ${NAMESPACE} --replicas=0
+
+    echo "Waiting for pods to terminate (timeout: {{ $workload.shutdownTimeout }}s)..."
+    {{- if $workload.podLabelSelector }}
+    kubectl wait --for=delete pod \
+      {{- range $key, $value := $workload.podLabelSelector }}
+      -l {{ $key }}={{ $value }} \
+      {{- end }}
+      -n ${NAMESPACE} \
+      --timeout={{ $workload.shutdownTimeout }}s || true
+    {{- else }}
+    sleep 30
+    {{- end }}
+
+    echo "✓ {{ $workload.type }}/{{ $workload.name }} scaled down"
+    echo ""
+    {{- end }}
+    {{- else }}
+    echo "⚠️  No workloads configured for scaling"
+    {{- end }}
+
+    echo "✓ All workloads scaled down successfully"
+    echo ""
+
+  scale-up.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "=========================================="
+    echo "  SCALE UP APPLICATION"
+    echo "=========================================="
+    echo ""
+
+    NAMESPACE="${NAMESPACE}"
+
+    {{- if .Values.application.workloads }}
+    {{- range $index, $workload := .Values.application.workloads }}
+    # Workload {{ add $index 1 }}: {{ $workload.type }}/{{ $workload.name }}
+    echo "Scaling {{ $workload.type }}/{{ $workload.name }} back to {{ $workload.replicas }} replicas..."
+    kubectl scale {{ $workload.type }} {{ $workload.name }} -n ${NAMESPACE} --replicas={{ $workload.replicas }}
+
+    echo "Waiting for pods to be ready..."
+    {{- if $workload.podLabelSelector }}
+    kubectl wait --for=condition=ready pod \
+      {{- range $key, $value := $workload.podLabelSelector }}
+      -l {{ $key }}={{ $value }} \
+      {{- end }}
+      -n ${NAMESPACE} \
+      --timeout=300s || echo "⚠️  Timeout - check pods manually"
+    {{- else }}
+    sleep 30
+    {{- end }}
+
+    echo "✓ {{ $workload.type }}/{{ $workload.name }} scaled to {{ $workload.replicas }} replicas"
+    echo ""
+    {{- end }}
+    {{- else }}
+    echo "⚠️  No workloads configured for scaling"
+    {{- end }}
+
+    echo "✓ All workloads scaled up successfully"
+    echo ""

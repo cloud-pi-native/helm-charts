@@ -1,0 +1,108 @@
+{{- if .Values.rbac.create }}
+---
+# ServiceAccount for backup orchestration
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "dso-backup.serviceAccountName" . }}
+  namespace: {{ include "dso-backup.namespace" . }}
+  labels:
+    app.kubernetes.io/component: backup
+  {{- with .Values.rbac.serviceAccountAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
+---
+# Role with permissions to manage application and database resources
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "dso-backup.serviceAccountName" . }}-role
+  namespace: {{ include "dso-backup.namespace" . }}
+  labels:
+    app.kubernetes.io/component: backup
+rules:
+# Permissions for scaling workloads (get needed to check current state)
+- apiGroups: ["apps"]
+  resources: ["deployments", "statefulsets", replicasets" ]
+  verbs: ["get"]
+- apiGroups: ["apps"]
+  resources: ["deployments/scale", "statefulsets/scale", replicasets/scale" ]
+  verbs: ["get", "patch"]
+
+# Permissions for waiting on pods (no delete needed, just watch for termination)
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["list", "watch"]
+
+{{- if eq .Values.strategy "cnpg" }}
+# Permissions for CNPG Cluster (patch for annotations)
+- apiGroups: ["postgresql.cnpg.io"]
+  resources: ["clusters"]
+  verbs: ["get", "patch"]
+
+# Permissions for CNPG Backups (create + watch status)
+- apiGroups: ["postgresql.cnpg.io"]
+  resources: ["backups"]
+  verbs: ["get", "create", "watch"]
+{{- end }}
+
+{{- with .Values.rbac.additionalRules }}
+# Additional custom rules
+{{ toYaml . | nindent 0 }}
+{{- end }}
+
+---
+# RoleBinding in application namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "dso-backup.serviceAccountName" . }}-rolebinding
+  namespace: {{ include "dso-backup.namespace" . }}
+  labels:
+    app.kubernetes.io/component: backup
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "dso-backup.serviceAccountName" . }}-role
+subjects:
+- kind: ServiceAccount
+  name: {{ include "dso-backup.serviceAccountName" . }}
+  namespace: {{ include "dso-backup.namespace" . }}
+
+---
+# Role in Velero namespace to create Backup resources
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "dso-backup.serviceAccountName" . }}-velero-role
+  namespace: {{ .Values.velero.namespace }}
+  labels:
+    app.kubernetes.io/component: backup
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+rules:
+# Permissions for Velero Backup resources (create + watch status)
+- apiGroups: ["velero.io"]
+  resources: ["backups"]
+  verbs: ["get", "create", "watch"]
+
+---
+# RoleBinding in Velero namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "dso-backup.serviceAccountName" . }}-velero-rolebinding
+  namespace: {{ .Values.velero.namespace }}
+  labels:
+    app.kubernetes.io/component: backup
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "dso-backup.serviceAccountName" . }}-velero-role
+subjects:
+- kind: ServiceAccount
+  name: {{ include "dso-backup.serviceAccountName" . }}
+  namespace: {{ include "dso-backup.namespace" . }}
+{{- end }}
