@@ -3,7 +3,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ $.Values.argocd.project }}-{{ .name }}-{{ sha1sum .repoURL | trunc 4 }}
+  name: {{ printf "%s-%s-%s" $.Values.argocd.project .name (sha1sum .repoURL | trunc 4) | trunc 63 | trimSuffix "-" }}
   namespace: {{ $.Values.argocd.namespace }}
   labels:
     app.kubernetes.io/managed-by: dso-console
@@ -28,7 +28,8 @@ spec:
   destination:
     name: {{ $.Values.application.destination.name }}
     namespace: {{ $.Values.application.destination.namespace }}
-  {{- if $.Values.application.autosync }}
+  {{- $autoSync := .autosync | default $.Values.application.autosync -}}
+  {{- if $autoSync }}
   syncPolicy:
     automated:
       prune: true
