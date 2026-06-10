@@ -1,0 +1,93 @@
+{{- if eq .Values.strategy "cnpg" }}
+---
+# CronJob for orchestrated CNPG backup
+# Runs pre-hook, creates Velero backup, runs post-hook sequentially
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Values.global.appName }}-backup-cronjob
+  namespace: {{ include "dso-backup.namespace" . }}
+  labels:
+    {{- include "dso-backup.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backup-cronjob
+spec:
+  schedule: {{ .Values.schedule.cron | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: {{ .Values.schedule.successfulJobsHistoryLimit | default 3 }}
+  failedJobsHistoryLimit: {{ .Values.schedule.failedJobsHistoryLimit | default 3 }}
+  jobTemplate:
+    metadata:
+      labels:
+        {{- include "dso-backup.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: backup-cronjob
+    spec:
+      backoffLimit: {{ .Values.schedule.backoffLimit | default 0 }}
+      ttlSecondsAfterFinished: {{ .Values.schedule.ttlSecondsAfterFinished | default 3600 }}
+      template:
+        metadata:
+          labels:
+            {{- include "dso-backup.selectorLabels" . | nindent 12 }}
+            app.kubernetes.io/component: backup-cronjob
+        spec:
+          serviceAccountName: {{ include "dso-backup.serviceAccountName" . }}
+          restartPolicy: Never
+          containers:
+          - name: backup-orchestrator
+            image: "{{ .Values.schedule.image.repository }}:{{ .Values.schedule.image.tag }}"
+            imagePullPolicy: {{ .Values.schedule.image.pullPolicy }}
+            command: ["/bin/bash", "/scripts/orchestrator.sh"]
+            env:
+            - name: NAMESPACE
+              value: {{ include "dso-backup.namespace" . | quote }}
+            - name: APP_NAME
+              value: {{ .Values.global.appName | quote }}
+            - name: VELERO_NAMESPACE
+              value: {{ .Values.velero.namespace | quote }}
+            - name: STORAGE_LOCATION
+              value: {{ .Values.velero.storageLocation | quote }}
+            - name: TTL
+              value: {{ .Values.velero.ttl | quote }}
+            - name: BACKUP_TIMEOUT
+              value: {{ .Values.velero.backupTimeout | default "1800" | quote }}
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                cpu: 1000m
+                memory: 512Mi
+            volumeMounts:
+            - name: orchestrator
+              mountPath: /scripts
+              readOnly: true
+            - name: app-scaler
+              mountPath: /scripts/app
+              readOnly: true
+            - name: velero-backup
+              mountPath: /scripts/velero
+              readOnly: true
+            {{- if eq .Values.strategy "cnpg" }}
+            - name: cnpg-hooks
+              mountPath: /scripts/strategy
+              readOnly: true
+            {{- end }}
+          volumes:
+          - name: orchestrator
+            configMap:
+              name: backup-cronjob-scripts-{{ .Values.global.appName }}
+              defaultMode: 0755
+          - name: app-scaler
+            configMap:
+              name: backup-scripts-app-scaler-{{ .Values.global.appName }}
+              defaultMode: 0755
+          - name: velero-backup
+            configMap:
+              name: backup-scripts-velero-backup-{{ .Values.global.appName }}
+              defaultMode: 0755
+          {{- if eq .Values.strategy "cnpg" }}
+          - name: cnpg-hooks
+            configMap:
+              name: backup-scripts-cnpg-hooks-{{ .Values.global.appName }}
+              defaultMode: 0755
+          {{- end }}
+{{- end }}

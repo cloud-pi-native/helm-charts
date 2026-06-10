@@ -1,0 +1,395 @@
+{{- if eq .Values.strategy "cnpg" }}
+---
+# ConfigMap for CNPG strategy hooks (conditional - only for CNPG strategy)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backup-scripts-cnpg-hooks-{{ .Values.global.appName }}
+  namespace: {{ include "dso-backup.namespace" . }}
+  labels:
+    {{- include "dso-backup.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backup-scripts
+    script-type: cnpg-hooks
+    backup-strategy: cnpg
+data:
+  cnpg-pre-hook.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "=========================================="
+    echo "  CNPG PRE-HOOK"
+    echo "=========================================="
+    echo ""
+
+    NAMESPACE="${NAMESPACE}"
+    APP_NAME="${APP_NAME}"
+    CNPG_CLUSTER="{{ include "dso-backup.cnpgClusterName" . }}"
+
+    # Step 1: Disable CNPG reconciliation
+    echo "Step 1: Disabling CNPG reconciliation loop..."
+
+    if ! kubectl get cluster ${CNPG_CLUSTER} -n ${NAMESPACE} &>/dev/null; then
+      echo "❌ ERROR: CNPG Cluster ${CNPG_CLUSTER} not found in namespace ${NAMESPACE}"
+      exit 1
+    fi
+
+    kubectl annotate cluster ${CNPG_CLUSTER} \
+      -n ${NAMESPACE} \
+      cnpg.io/reconciliationLoop=disabled \
+      --overwrite
+
+    RECONCILIATION_STATUS=$(kubectl get cluster ${CNPG_CLUSTER} -n ${NAMESPACE} \
+      -o jsonpath='{.metadata.annotations.cnpg\.io/reconciliationLoop}' 2>/dev/null || echo "")
+
+    if [ "$RECONCILIATION_STATUS" != "disabled" ]; then
+      echo "❌ ERROR: Failed to disable CNPG reconciliation loop"
+      exit 1
+    fi
+
+    echo "✓ CNPG reconciliation disabled"
+    sleep 5
+
+    # Step 2: Trigger CNPG on-demand backup
+    echo ""
+    echo "Step 2: Creating CNPG on-demand backup..."
+    CNPG_BACKUP_NAME="velero-triggered-$(date +%Y%m%d-%H%M%S)"
+
+    cat <<EOF | kubectl apply -f -
+    apiVersion: postgresql.cnpg.io/v1
+    kind: Backup
+    metadata:
+      name: ${CNPG_BACKUP_NAME}
+      namespace: ${NAMESPACE}
+      labels:
+        velero.io/triggered: "true"
+        app: ${APP_NAME}
+    spec:
+      method: barmanObjectStore
+      cluster:
+        name: ${CNPG_CLUSTER}
+      target: primary
+    EOF
+
+    echo "Waiting for CNPG backup to start..."
+    sleep 10
+
+    echo "Waiting for CNPG backup to complete..."
+    for i in {1..60}; do
+      STATUS=$(kubectl get backup ${CNPG_BACKUP_NAME} -n ${NAMESPACE} \
+        -o jsonpath='{.status.phase}' 2>/dev/null || echo "pending")
+
+      if [ "$STATUS" = "completed" ]; then
+        echo "✓ CNPG backup completed successfully: ${CNPG_BACKUP_NAME}"
+        break
+      elif [ "$STATUS" = "failed" ]; then
+        echo "❌ ERROR: CNPG backup failed"
+        kubectl describe backup ${CNPG_BACKUP_NAME} -n ${NAMESPACE}
+        exit 1
+      fi
+
+      echo "  Backup status: $STATUS (attempt $i/60)"
+      sleep 10
+    done
+
+    if [ "$STATUS" != "completed" ]; then
+      echo "❌ ERROR: Timeout waiting for CNPG backup"
+      kubectl describe backup ${CNPG_BACKUP_NAME} -n ${NAMESPACE}
+      exit 1
+    fi
+
+    # Extract backupId
+    BACKUP_ID=$(kubectl get backup ${CNPG_BACKUP_NAME} -n ${NAMESPACE} \
+      -o jsonpath='{.status.backupId}' 2>/dev/null || echo "")
+
+    if [ -z "$BACKUP_ID" ]; then
+      echo "⚠️  Warning: Could not extract backupId from backup ${CNPG_BACKUP_NAME}"
+      echo "   Restore will use latest available backup instead"
+    else
+      echo "✓ Backup ID: ${BACKUP_ID}"
+    fi
+
+    # Store backup info in Cluster CR annotations
+    kubectl annotate cluster ${CNPG_CLUSTER} \
+      -n ${NAMESPACE} \
+      velero.io/last-cnpg-backup=${CNPG_BACKUP_NAME} \
+      velero.io/last-cnpg-backup-id=${BACKUP_ID:-latest} \
+      --overwrite
+
+    echo ""
+    echo "✓ CNPG PRE-HOOK COMPLETED"
+    echo "  CNPG Backup: ${CNPG_BACKUP_NAME}"
+    echo "  Backup ID: ${BACKUP_ID:-<not-available>}"
+    echo ""
+
+  cnpg-post-hook.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "=========================================="
+    echo "  CNPG POST-HOOK"
+    echo "=========================================="
+    echo ""
+
+    NAMESPACE="${NAMESPACE}"
+    CNPG_CLUSTER="{{ include "dso-backup.cnpgClusterName" . }}"
+
+    # Re-enable CNPG reconciliation loop
+    echo "Re-enabling CNPG reconciliation loop..."
+    kubectl annotate cluster ${CNPG_CLUSTER} \
+      -n ${NAMESPACE} \
+      cnpg.io/reconciliationLoop- \
+      --overwrite || true
+
+    echo "✓ CNPG reconciliation re-enabled"
+    sleep 5
+
+    echo ""
+    echo "✓ CNPG POST-HOOK COMPLETED"
+    echo ""
+
+  restore.sh: |
+    #!/bin/bash
+    # Complete CNPG restore script
+    # Restores CNPG cluster with bootstrap and scales the application
+    #
+    # Usage:
+    #   Create a manual Job from the CronJob and override the command to run this script
+    #
+    # Prerequisites:
+    #   1. Velero restore completed
+    #   2. Cluster CR exists with cnpg.io/reconciliationLoop=disabled annotation
+
+    set -e
+
+    NAMESPACE="{{ include "dso-backup.namespace" . }}"
+    CLUSTER_NAME="{{ include "dso-backup.cnpgClusterName" . }}"
+    APP_NAME="{{ .Values.global.appName }}"
+
+    echo "=========================================="
+    echo "  CNPG Restore Script - ${APP_NAME}"
+    echo "=========================================="
+    echo ""
+
+    # 1. Verify that the CR exists and has the disabled annotation
+    echo "Step 1: Verifying Cluster CR..."
+    if ! kubectl get cluster ${CLUSTER_NAME} -n ${NAMESPACE} &>/dev/null; then
+      echo "❌ ERROR: Cluster CR ${CLUSTER_NAME} does not exist in ${NAMESPACE}"
+      echo "Make sure you ran Velero restore first"
+      exit 1
+    fi
+
+    RECONCILIATION_STATUS=$(kubectl get cluster ${CLUSTER_NAME} -n ${NAMESPACE} \
+      -o jsonpath='{.metadata.annotations.cnpg\.io/reconciliationLoop}' 2>/dev/null || echo "")
+
+    if [ "$RECONCILIATION_STATUS" != "disabled" ]; then
+      echo "⚠️  WARNING: cnpg.io/reconciliationLoop is not 'disabled'"
+      echo "The operator may have already created the cluster without bootstrap!"
+      echo "Continuing anyway (non-interactive mode)..."
+    else
+      echo "✓ Cluster CR has annotation cnpg.io/reconciliationLoop=disabled"
+    fi
+
+    # 2. Retrieve complete barmanObjectStore object from CR
+    echo ""
+    echo "Step 2: Extracting barmanObjectStore from Cluster CR..."
+
+    BARMAN_CONFIG=$(kubectl get cluster ${CLUSTER_NAME} -n ${NAMESPACE} \
+      -o jsonpath='{.spec.backup.barmanObjectStore}')
+
+    if [ -z "$BARMAN_CONFIG" ]; then
+      echo "❌ ERROR: spec.backup.barmanObjectStore not found in Cluster CR"
+      exit 1
+    fi
+
+    echo "✓ barmanObjectStore config extracted"
+
+    # 3. Check/define serverName
+    echo ""
+    echo "Step 3: Processing serverName..."
+
+    ORIGINAL_SERVERNAME=$(echo "$BARMAN_CONFIG" | jq -r '.serverName // empty')
+
+    if [ -z "$ORIGINAL_SERVERNAME" ]; then
+      # If serverName not defined, use metadata.name
+      ORIGINAL_SERVERNAME="${CLUSTER_NAME}"
+      echo "  serverName not defined in CR, using: ${ORIGINAL_SERVERNAME}"
+    else
+      echo "  serverName found in CR: ${ORIGINAL_SERVERNAME}"
+    fi
+
+    # 4. Generate new serverName with timestamp
+    echo ""
+    echo "Step 4: Generating new serverName..."
+
+    RESTORE_TIMESTAMP=$(date -u +%Y%m%d%H%M%S)
+    NEW_SERVERNAME="${CLUSTER_NAME}-restored-${RESTORE_TIMESTAMP}"
+
+    echo "  New serverName: ${NEW_SERVERNAME}"
+
+    # 5. Create externalClusters config (copy of barmanObjectStore + original serverName)
+    echo ""
+    echo "Step 5: Creating externalClusters config..."
+
+    EXTERNAL_CLUSTER_CONFIG=$(echo "$BARMAN_CONFIG" | jq \
+      --arg serverName "$ORIGINAL_SERVERNAME" \
+      '. + {serverName: $serverName}')
+
+    echo "✓ externalClusters config created"
+
+    # 6. Extract database and owner from existing bootstrap.initdb
+    echo ""
+    echo "Step 6: Extracting database and owner from bootstrap.initdb..."
+
+    DATABASE=$(kubectl get cluster ${CLUSTER_NAME} -n ${NAMESPACE} \
+      -o jsonpath='{.spec.bootstrap.initdb.database}' 2>/dev/null || echo "")
+
+    OWNER=$(kubectl get cluster ${CLUSTER_NAME} -n ${NAMESPACE} \
+      -o jsonpath='{.spec.bootstrap.initdb.owner}' 2>/dev/null || echo "")
+
+    if [ -n "$DATABASE" ]; then
+      echo "  Found database: ${DATABASE}"
+      DATABASE_JSON='"database": "'${DATABASE}'",'
+    else
+      echo "  No database found in initdb, using default"
+      DATABASE_JSON=""
+    fi
+
+    if [ -n "$OWNER" ]; then
+      echo "  Found owner: ${OWNER}"
+      OWNER_JSON='"owner": "'${OWNER}'",'
+    else
+      echo "  No owner found in initdb"
+      OWNER_JSON=""
+    fi
+
+    # 7. Retrieve backupId from Cluster annotation (if available)
+    echo ""
+    echo "Step 7: Retrieving backupId from annotation..."
+
+    BACKUP_ID=$(kubectl get cluster ${CLUSTER_NAME} -n ${NAMESPACE} \
+      -o jsonpath='{.metadata.annotations.velero\.io/last-cnpg-backup-id}' 2>/dev/null || echo "")
+
+    if [ -n "$BACKUP_ID" ] && [ "$BACKUP_ID" != "latest" ]; then
+      echo "  Found backupId in annotation: ${BACKUP_ID}"
+      echo "  Will restore from this specific backup"
+      RECOVERY_TARGET_JSON='"recoveryTarget": {"backupID": "'${BACKUP_ID}'"},'
+    else
+      echo "  No specific backupId found, will use latest available backup"
+      RECOVERY_TARGET_JSON=""
+    fi
+
+    # 8. Create complete JSON patch
+    echo ""
+    echo "Step 8: Creating JSON patch..."
+
+    cat > /tmp/cluster-patch.json <<EOF
+    {
+      "spec": {
+        "backup": {
+          "barmanObjectStore": {
+            "serverName": "${NEW_SERVERNAME}"
+          }
+        },
+        "bootstrap": {
+          "initdb": null,
+          "recovery": {
+            ${DATABASE_JSON}
+            ${OWNER_JSON}
+            ${RECOVERY_TARGET_JSON}
+            "source": "${CLUSTER_NAME}-original-backup"
+          }
+        },
+        "externalClusters": [
+          {
+            "name": "${CLUSTER_NAME}-original-backup",
+            "barmanObjectStore": ${EXTERNAL_CLUSTER_CONFIG}
+          }
+        ]
+      }
+    }
+    EOF
+
+    echo "✓ Patch created:"
+    cat /tmp/cluster-patch.json | jq '.'
+
+    # 9. Apply patch
+    echo ""
+    echo "Step 9: Applying patch..."
+    kubectl patch cluster ${CLUSTER_NAME} -n ${NAMESPACE} \
+      --type merge \
+      --patch-file /tmp/cluster-patch.json
+
+    echo "✓ Patch applied"
+
+    # 10. Remove reconciliationLoop annotation
+    echo ""
+    echo "Step 10: Activating CNPG operator..."
+    kubectl annotate cluster ${CLUSTER_NAME} -n ${NAMESPACE} \
+      cnpg.io/reconciliationLoop-
+
+    echo "✓ CNPG operator activated - Cluster will be created with bootstrap"
+
+    # 11. Wait for CNPG recovery
+    echo ""
+    echo "Step 11: Waiting for CNPG recovery..."
+    echo "Monitoring cluster (may take 5-10min)..."
+
+    if ! kubectl wait --for=condition=Ready \
+      cluster/${CLUSTER_NAME} \
+      -n ${NAMESPACE} \
+      --timeout=600s; then
+      echo ""
+      echo "❌ ERROR: CNPG cluster not ready after 10min"
+      echo "Check logs: kubectl logs -n ${NAMESPACE} -l cnpg.io/cluster=${CLUSTER_NAME} -c postgres --tail=100"
+      exit 1
+    fi
+
+    echo "✓ CNPG cluster ready"
+
+    # 12. Scale application
+    echo ""
+    echo "Step 12: Scaling application..."
+
+    {{- if .Values.application.workloads }}
+    {{- range $index, $workload := .Values.application.workloads }}
+    echo "Scaling {{ $workload.type }}/{{ $workload.name }} to {{ $workload.replicas }} replicas..."
+    kubectl scale {{ $workload.type }} {{ $workload.name }} -n ${NAMESPACE} --replicas={{ $workload.replicas }}
+    sleep 5
+
+    echo "Waiting for pods to be ready..."
+    {{- if $workload.podLabelSelector }}
+    kubectl wait --for=condition=ready pod \
+      {{- range $key, $value := $workload.podLabelSelector }}
+      -l {{ $key }}={{ $value }} \
+      {{- end }}
+      -n ${NAMESPACE} \
+      --timeout=600s || echo "⚠️  Timeout - check pods manually"
+    {{- else }}
+    sleep 30
+    {{- end }}
+
+    echo "✓ {{ $workload.type }}/{{ $workload.name }} scaled to {{ $workload.replicas }} replicas"
+    {{- end }}
+    {{- else }}
+    echo "⚠️  No workloads configured for scaling"
+    {{- end }}
+
+    echo "✓ Application scaling completed"
+
+    # Final verification
+    echo ""
+    echo "=========================================="
+    echo "  ✅ RESTORE COMPLETED"
+    echo "=========================================="
+    echo ""
+    echo "Summary:"
+    echo "  - Cluster: ${CLUSTER_NAME}"
+    echo "  - Namespace: ${NAMESPACE}"
+    echo "  - Source serverName: ${ORIGINAL_SERVERNAME}"
+    echo "  - Source backupId: ${BACKUP_ID:-latest available}"
+    echo "  - New serverName: ${NEW_SERVERNAME}"
+    echo ""
+    kubectl get pods -n ${NAMESPACE}
+    echo ""
+    echo "✅ Application restored and operational!"
+{{- end }}
