@@ -89,6 +89,53 @@ Check if resources-only strategy is enabled
 {{- end }}
 
 {{/*
+Check if vault strategy is enabled
+*/}}
+{{- define "dso-backup.isVault" -}}
+{{- eq .Values.strategy "vault" }}
+{{- end }}
+
+{{/*
+Check if a backup CronJob should be rendered.
+The chart currently renders a CronJob for strategies that need orchestration.
+*/}}
+{{- define "dso-backup.cronjobEnabled" -}}
+{{- or (eq .Values.strategy "cnpg") (eq .Values.strategy "vault") }}
+{{- end }}
+
+{{/*
+Resolve the image used by the backup CronJob.
+For the vault strategy, vault.image overrides schedule.image because the
+default schedule image (bitnami/kubectl) lacks aws-cli.
+*/}}
+{{- define "dso-backup.image" -}}
+{{- if eq .Values.strategy "vault" -}}
+{{ .Values.vault.image.repository }}:{{ .Values.vault.image.tag }}
+{{- else -}}
+{{ .Values.schedule.image.repository }}:{{ .Values.schedule.image.tag }}
+{{- end -}}
+{{- end }}
+
+{{- define "dso-backup.imagePullPolicy" -}}
+{{- if eq .Values.strategy "vault" -}}
+{{ .Values.vault.image.pullPolicy }}
+{{- else -}}
+{{ .Values.schedule.image.pullPolicy }}
+{{- end -}}
+{{- end }}
+
+{{/*
+Render the Vault pod label selector as a comma-separated list (kubectl -l form).
+*/}}
+{{- define "dso-backup.vaultLabelSelector" -}}
+{{- $parts := list -}}
+{{- range $k, $v := .Values.vault.podLabelSelector -}}
+{{- $parts = append $parts (printf "%s=%s" $k $v) -}}
+{{- end -}}
+{{- join "," $parts -}}
+{{- end }}
+
+{{/*
 Get CNPG cluster name
 */}}
 {{- define "dso-backup.cnpgClusterName" -}}

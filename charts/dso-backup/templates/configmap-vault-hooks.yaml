@@ -1,0 +1,117 @@
+{{- if eq .Values.strategy "vault" }}
+{{- if not .Values.vault.s3.bucket }}
+{{- fail "vault.s3.bucket is required when strategy = vault" }}
+{{- end }}
+{{- if not .Values.vault.s3.credentialsSecret }}
+{{- fail "vault.s3.credentialsSecret is required when strategy = vault" }}
+{{- end }}
+---
+# ConfigMap for Vault strategy hooks (conditional - only for vault strategy)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backup-scripts-vault-hooks-{{ .Values.global.appName }}
+  namespace: {{ include "dso-backup.namespace" . }}
+  labels:
+    {{- include "dso-backup.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backup-scripts
+    script-type: vault-hooks
+    backup-strategy: vault
+data:
+  vault-pre-hook.sh: |
+    #!/bin/bash
+    set -euo pipefail
+
+    echo "=========================================="
+    echo "  VAULT PRE-HOOK (raft snapshot -> S3)"
+    echo "=========================================="
+    echo ""
+
+    NAMESPACE="${NAMESPACE}"
+    APP_NAME="${APP_NAME}"
+    LABEL_SELECTOR="{{ include "dso-backup.vaultLabelSelector" . }}"
+    SNAPSHOT_PATH="{{ .Values.vault.snapshotPath }}"
+    S3_BUCKET="${VAULT_S3_BUCKET}"
+    S3_PREFIX="${VAULT_S3_PREFIX}"
+    S3_REGION="${VAULT_S3_REGION}"
+    S3_ENDPOINT="${VAULT_S3_ENDPOINT:-}"
+    S3_FORCE_PATH_STYLE="${VAULT_S3_FORCE_PATH_STYLE:-false}"
+
+    # Install kubectl on the fly if missing (the default image is amazon/aws-cli).
+    if ! command -v kubectl >/dev/null 2>&1; then
+      echo "Installing kubectl..."
+      KUBECTL_VERSION="$(curl -sL https://dl.k8s.io/release/stable.txt)"
+      curl -sLo /usr/local/bin/kubectl \
+        "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+      chmod +x /usr/local/bin/kubectl
+      echo "  kubectl $(kubectl version --client --output=yaml | grep gitVersion | head -1)"
+    fi
+
+    # Step 1: discover the Vault leader pod.
+    echo "Step 1: Locating Vault leader pod (selector: ${LABEL_SELECTOR})..."
+
+    LEADER_POD="$(kubectl get pods -n "${NAMESPACE}" -l "${LABEL_SELECTOR}" \
+      -o jsonpath='{range .items[?(@.metadata.labels.vault-active=="true")]}{.metadata.name}{"\n"}{end}' \
+      | head -1)"
+
+    if [ -z "${LEADER_POD}" ]; then
+      echo "  No pod carries vault-active=true; falling back to first matching pod."
+      LEADER_POD="$(kubectl get pods -n "${NAMESPACE}" -l "${LABEL_SELECTOR}" \
+        -o jsonpath='{.items[0].metadata.name}')"
+    fi
+
+    if [ -z "${LEADER_POD}" ]; then
+      echo "ERROR: no Vault pod found in namespace ${NAMESPACE} with selector ${LABEL_SELECTOR}"
+      exit 1
+    fi
+
+    echo "  Using pod: ${LEADER_POD}"
+
+    # Step 2: take the raft snapshot inside the Vault container.
+    echo ""
+    echo "Step 2: Creating raft snapshot at ${SNAPSHOT_PATH}..."
+    kubectl exec -n "${NAMESPACE}" "${LEADER_POD}" -- \
+      vault operator raft snapshot save "${SNAPSHOT_PATH}"
+
+    SNAPSHOT_SIZE="$(kubectl exec -n "${NAMESPACE}" "${LEADER_POD}" -- \
+      stat -c %s "${SNAPSHOT_PATH}" 2>/dev/null || echo 'unknown')"
+    echo "  Snapshot size: ${SNAPSHOT_SIZE} bytes"
+
+    # Step 3: stream the snapshot from the Vault pod to S3.
+    SNAPSHOT_NAME="vault-${APP_NAME}-$(date -u +%Y%m%d-%H%M%S).snap"
+    S3_URI="s3://${S3_BUCKET}/${S3_PREFIX}/${SNAPSHOT_NAME}"
+
+    AWS_OPTS=(--region "${S3_REGION}")
+    if [ -n "${S3_ENDPOINT}" ]; then
+      AWS_OPTS+=(--endpoint-url "${S3_ENDPOINT}")
+    fi
+    if [ "${S3_FORCE_PATH_STYLE}" = "true" ]; then
+      export AWS_REQUEST_CHECKSUM_CALCULATION="when_required"
+      export AWS_RESPONSE_CHECKSUM_VALIDATION="when_required"
+    fi
+
+    echo ""
+    echo "Step 3: Uploading snapshot to ${S3_URI}..."
+    kubectl exec -n "${NAMESPACE}" "${LEADER_POD}" -- cat "${SNAPSHOT_PATH}" \
+      | aws s3 cp - "${S3_URI}" "${AWS_OPTS[@]}"
+
+    echo "  Upload completed"
+
+    # Step 4: cleanup snapshot file inside the Vault pod.
+    echo ""
+    echo "Step 4: Removing snapshot file from Vault pod..."
+    kubectl exec -n "${NAMESPACE}" "${LEADER_POD}" -- rm -f "${SNAPSHOT_PATH}" || true
+
+    # Persist the last snapshot reference as a pod annotation so restore tools
+    # can find the most recent object.
+    kubectl annotate pod "${LEADER_POD}" -n "${NAMESPACE}" \
+      backup.dso/last-vault-snapshot="${SNAPSHOT_NAME}" \
+      backup.dso/last-vault-snapshot-uri="${S3_URI}" \
+      --overwrite >/dev/null
+
+    echo ""
+    echo "VAULT PRE-HOOK COMPLETED"
+    echo "  Snapshot: ${SNAPSHOT_NAME}"
+    echo "  S3 URI:   ${S3_URI}"
+    echo ""
+{{- end }}
