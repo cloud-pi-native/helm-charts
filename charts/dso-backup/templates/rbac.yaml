@@ -25,10 +25,10 @@ metadata:
 rules:
 # Permissions for scaling workloads (get needed to check current state)
 - apiGroups: ["apps"]
-  resources: ["deployments", "statefulsets", replicasets" ]
+  resources: ["deployments", "statefulsets", "replicasets"]
   verbs: ["get"]
 - apiGroups: ["apps"]
-  resources: ["deployments/scale", "statefulsets/scale", replicasets/scale" ]
+  resources: ["deployments/scale", "statefulsets/scale", "replicasets/scale"]
   verbs: ["get", "patch"]
 
 # Permissions for waiting on pods (no delete needed, just watch for termination)
@@ -46,6 +46,16 @@ rules:
 - apiGroups: ["postgresql.cnpg.io"]
   resources: ["backups"]
   verbs: ["get", "create", "watch"]
+{{- end }}
+
+{{- if eq .Values.strategy "vault" }}
+# Permissions for Vault raft snapshot orchestration
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create", "get"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "patch"]
 {{- end }}
 
 {{- with .Values.rbac.additionalRules }}

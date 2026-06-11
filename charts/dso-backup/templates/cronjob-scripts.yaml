@@ -47,11 +47,13 @@ data:
       fi
       {{- end }}
 
+      {{- if and (ne .Values.strategy "vault") .Values.application.workloads }}
       # Scale application back up
       if [ -f /scripts/app/scale-up.sh ]; then
         echo "Scaling application back up..."
         bash /scripts/app/scale-up.sh || true
       fi
+      {{- end }}
 
       echo ""
       echo "Cleanup completed - check logs above for error details"
@@ -63,12 +65,17 @@ data:
     # =========================================
     # STEP 1: SCALE DOWN APPLICATION
     # =========================================
+    {{- if and (ne .Values.strategy "vault") .Values.application.workloads }}
     echo "=========================================="
     echo "  STEP 1: SCALE DOWN APPLICATION"
     echo "=========================================="
     echo ""
 
     bash /scripts/app/scale-down.sh
+    {{- else }}
+    echo "Step 1: scale-down skipped (strategy={{ .Values.strategy }})"
+    echo ""
+    {{- end }}
 
     # =========================================
     # STEP 2: STRATEGY PRE-HOOK
@@ -80,6 +87,13 @@ data:
     echo ""
 
     bash /scripts/strategy/cnpg-pre-hook.sh
+    {{- else if eq .Values.strategy "vault" }}
+    echo "=========================================="
+    echo "  STEP 2: VAULT PRE-HOOK"
+    echo "=========================================="
+    echo ""
+
+    bash /scripts/strategy/vault-pre-hook.sh
     {{- else }}
     echo "No strategy pre-hook for {{ .Values.strategy }} - skipping"
     echo ""
@@ -113,12 +127,17 @@ data:
     # =========================================
     # STEP 5: SCALE UP APPLICATION
     # =========================================
+    {{- if and (ne .Values.strategy "vault") .Values.application.workloads }}
     echo "=========================================="
     echo "  STEP 5: SCALE UP APPLICATION"
     echo "=========================================="
     echo ""
 
     bash /scripts/app/scale-up.sh
+    {{- else }}
+    echo "Step 5: scale-up skipped (strategy={{ .Values.strategy }})"
+    echo ""
+    {{- end }}
 
     # =========================================
     # FINAL SUMMARY

@@ -1,7 +1,9 @@
 # Default values for dso-backup
-# This chart supports 2 backup strategies:
+# This chart supports 3 backup strategies:
 #   1. resources-only: Backup K8s resources without database
-#   2. cnpg: Orchestrate app shutdown + CNPG backup + Velero resources
+#   2. cnpg:           Orchestrate app shutdown + CNPG backup + Velero resources
+#   3. vault:          Take a Vault raft snapshot, upload it to S3, then Velero
+#                      backup of K8s resources in the namespace
 
 # Global configuration
 global:
@@ -13,7 +15,7 @@ global:
   namespace: ""
 
 # Backup strategy
-# Possible values: resources-only | cnpg
+# Possible values: resources-only | cnpg | vault
 strategy: "resources-only"
 
 # Schedule configuration for CronJob
@@ -101,6 +103,43 @@ velero:
 cnpg:
   # Name of the CNPG Cluster resource
   clusterName: ""
+
+# Vault configuration (only for strategy = "vault")
+vault:
+  # Label selector to find Vault pods in the namespace.
+  # The leader is detected via the `vault-active=true` label set by the
+  # official Vault Helm chart; if not found, the first matching pod is used.
+  podLabelSelector:
+    app.kubernetes.io/name: vault
+
+  # Path where the raft snapshot is written inside the Vault container
+  # (it is removed at the end of the pre-hook)
+  snapshotPath: "/tmp/raft-snapshot.snap"
+
+  # S3 destination for the snapshot upload
+  s3:
+    # Bucket name (required when strategy = vault)
+    bucket: ""
+    # Prefix (folder) within the bucket
+    prefix: "vault-snapshots"
+    # S3 region
+    region: "us-east-1"
+    # Optional S3-compatible endpoint (Minio, Ceph, etc.). Leave empty for AWS S3.
+    endpoint: ""
+    # Force path-style addressing (needed for most S3-compatible backends)
+    forcePathStyle: false
+    # Existing Secret containing AWS credentials. Must expose the keys
+    # AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY (required when strategy = vault).
+    credentialsSecret: ""
+
+  # Override the cronjob image for the vault strategy.
+  # Default image bundles aws-cli; kubectl is downloaded at runtime so the
+  # script needs egress to dl.k8s.io. Override with a custom image that
+  # already bundles both kubectl and aws-cli to avoid the download.
+  image:
+    repository: "amazon/aws-cli"
+    tag: "2.15.0"
+    pullPolicy: "IfNotPresent"
 
 # Application orchestration
 application:
