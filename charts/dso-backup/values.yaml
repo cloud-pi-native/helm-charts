@@ -1,0 +1,178 @@
+# Default values for dso-backup
+# This chart supports 3 backup strategies:
+#   1. resources-only: Backup K8s resources without database
+#   2. cnpg:           Orchestrate app shutdown + CNPG backup + Velero resources
+#   3. vault:          Take a Vault raft snapshot, upload it to S3, then Velero
+#                      backup of K8s resources in the namespace
+
+# Global configuration
+global:
+  # Name of the application being backed up
+  appName: ""
+
+  # Namespace where the application is deployed
+  # If empty, uses Release.Namespace
+  namespace: ""
+
+# Backup strategy
+# Possible values: resources-only | cnpg | vault
+strategy: "resources-only"
+
+# Schedule configuration for CronJob
+schedule:
+  # Cron schedule (default: daily at 2 AM)
+  cron: "0 2 * * *"
+
+  # Number of successful jobs to keep in history
+  successfulJobsHistoryLimit: 3
+
+  # Number of failed jobs to keep in history
+  failedJobsHistoryLimit: 3
+
+  # Number of retries before marking job as failed
+  backoffLimit: 0
+
+  # TTL for completed jobs (seconds)
+  ttlSecondsAfterFinished: 3600  # 1 hour
+
+  # Container image for CronJob
+  image:
+    repository: "bitnami/kubectl"
+    tag: "latest"
+    pullPolicy: "IfNotPresent"
+
+# Velero backup configuration
+velero:
+  # Namespace where Velero operator is installed
+  # Backup CRs must be created in this namespace
+  namespace: "infra-velero"
+
+  # Backup retention (TTL)
+  ttl: "336h"  # 14 days
+
+  # Storage location (BSL name)
+  storageLocation: "default"
+
+  # Volume snapshot locations
+  volumeSnapshotLocations:
+    - "default"
+
+  # Timeout for Velero backup completion
+  backupTimeout: "1800"
+
+  # Resources to include/exclude in Velero backup
+  resources:
+    # Resources to INCLUDE (empty = all resources in namespace)
+    include: []
+    # Example:
+    # - deployments
+    # - statefulsets
+    # - services
+    # - ingresses
+    # - secrets
+    # - configmaps
+
+    # Resources to EXCLUDE from backup
+    exclude: []
+    # Example for CNPG strategy:
+    # - pods
+    # - persistentvolumeclaims
+    # - jobs.batch
+    # - backups.postgresql.cnpg.io
+
+    # Label selectors to filter resources
+    labelSelector: {}
+    # Example:
+    # app: keycloak
+
+    # OR label selectors (for multiple label sets)
+    orLabelSelectors: []
+    # Example:
+    # - matchLabels:
+    #     velero.io/backup: "required"
+
+  # Volume snapshot configuration
+  volumes:
+    # Snapshot PVs using cloud provider snapshots
+    snapshotVolumes: false
+
+    # Use Restic for volume backups
+    defaultVolumesToRestic: false
+
+# CNPG configuration (only for strategy = "cnpg")
+cnpg:
+  # Name of the CNPG Cluster resource
+  clusterName: ""
+
+# Vault configuration (only for strategy = "vault")
+vault:
+  # Label selector to find Vault pods in the namespace.
+  # The leader is detected via the `vault-active=true` label set by the
+  # official Vault Helm chart; if not found, the first matching pod is used.
+  podLabelSelector:
+    app.kubernetes.io/name: vault
+
+  # Path where the raft snapshot is written inside the Vault container
+  # (it is removed at the end of the pre-hook)
+  snapshotPath: "/tmp/raft-snapshot.snap"
+
+  # S3 destination for the snapshot upload
+  s3:
+    # Bucket name (required when strategy = vault)
+    bucket: ""
+    # Prefix (folder) within the bucket
+    prefix: "vault-snapshots"
+    # S3 region
+    region: "us-east-1"
+    # Optional S3-compatible endpoint (Minio, Ceph, etc.). Leave empty for AWS S3.
+    endpoint: ""
+    # Force path-style addressing (needed for most S3-compatible backends)
+    forcePathStyle: false
+    # Existing Secret containing AWS credentials. Must expose the keys
+    # AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY (required when strategy = vault).
+    credentialsSecret: ""
+
+  # Override the cronjob image for the vault strategy.
+  # Default image bundles aws-cli; kubectl is downloaded at runtime so the
+  # script needs egress to dl.k8s.io. Override with a custom image that
+  # already bundles both kubectl and aws-cli to avoid the download.
+  image:
+    repository: "amazon/aws-cli"
+    tag: "2.15.0"
+    pullPolicy: "IfNotPresent"
+
+# Application orchestration
+application:
+  # List of workloads to scale down during backup
+  workloads: []
+  # Example:
+  # - type: statefulset
+  #   name: sonarqube-sonarqube
+  #   replicas: 1
+  #   podLabelSelector:
+  #     app: sonarqube
+  #   shutdownTimeout: 300
+  # - type: deployment
+  #   name: sonarqube-worker
+  #   replicas: 2
+  #   podLabelSelector:
+  #     app: sonarqube-worker
+  #   shutdownTimeout: 180
+
+# RBAC configuration
+rbac:
+  # Create ServiceAccount for backup hooks
+  create: true
+
+  # ServiceAccount name (auto-generated if empty)
+  serviceAccountName: ""
+
+  # Additional annotations for ServiceAccount
+  serviceAccountAnnotations: {}
+
+  # Additional rules for Role
+  additionalRules: []
+  # Example:
+  # - apiGroups: [""]
+  #   resources: ["pods/exec"]
+  #   verbs: ["create"]

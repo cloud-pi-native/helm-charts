@@ -1,0 +1,163 @@
+---
+# ConfigMap containing orchestrator script for CronJob backup
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backup-cronjob-scripts-{{ .Values.global.appName }}
+  namespace: {{ include "dso-backup.namespace" . }}
+  labels:
+    {{- include "dso-backup.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backup-cronjob
+    backup-strategy: {{ .Values.strategy }}
+data:
+  orchestrator.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "=========================================="
+    echo "  Backup Orchestrator - {{ .Values.global.appName }}"
+    echo "  Strategy: {{ .Values.strategy }}"
+    echo "  $(date '+%Y-%m-%d %H:%M:%S')"
+    echo "=========================================="
+    echo ""
+
+    # Configuration from environment
+    export NAMESPACE="${NAMESPACE}"
+    export APP_NAME="${APP_NAME}"
+    export VELERO_NAMESPACE="${VELERO_NAMESPACE}"
+    export STORAGE_LOCATION="${STORAGE_LOCATION}"
+    export TTL="${TTL}"
+    export BACKUP_TIMEOUT="${BACKUP_TIMEOUT}"
+
+    BACKUP_NAME="${APP_NAME}-$(date +%Y%m%d-%H%M%S)"
+    export VELERO_BACKUP_NAME="${BACKUP_NAME}"
+
+    # Error handler
+    cleanup_on_error() {
+      echo ""
+      echo "=========================================="
+      echo "  ❌ ERROR OCCURRED - Running cleanup"
+      echo "=========================================="
+
+      {{- if eq .Values.strategy "cnpg" }}
+      # Run CNPG post-hook for cleanup
+      if [ -f /scripts/strategy/cnpg-post-hook.sh ]; then
+        echo "Running CNPG cleanup..."
+        bash /scripts/strategy/cnpg-post-hook.sh || true
+      fi
+      {{- end }}
+
+      {{- if and (ne .Values.strategy "vault") .Values.application.workloads }}
+      # Scale application back up
+      if [ -f /scripts/app/scale-up.sh ]; then
+        echo "Scaling application back up..."
+        bash /scripts/app/scale-up.sh || true
+      fi
+      {{- end }}
+
+      echo ""
+      echo "Cleanup completed - check logs above for error details"
+      exit 1
+    }
+
+    trap cleanup_on_error ERR
+
+    # =========================================
+    # STEP 1: SCALE DOWN APPLICATION
+    # =========================================
+    {{- if and (ne .Values.strategy "vault") .Values.application.workloads }}
+    echo "=========================================="
+    echo "  STEP 1: SCALE DOWN APPLICATION"
+    echo "=========================================="
+    echo ""
+
+    bash /scripts/app/scale-down.sh
+    {{- else }}
+    echo "Step 1: scale-down skipped (strategy={{ .Values.strategy }})"
+    echo ""
+    {{- end }}
+
+    # =========================================
+    # STEP 2: STRATEGY PRE-HOOK
+    # =========================================
+    {{- if eq .Values.strategy "cnpg" }}
+    echo "=========================================="
+    echo "  STEP 2: CNPG PRE-HOOK"
+    echo "=========================================="
+    echo ""
+
+    bash /scripts/strategy/cnpg-pre-hook.sh
+    {{- else if eq .Values.strategy "vault" }}
+    echo "=========================================="
+    echo "  STEP 2: VAULT PRE-HOOK"
+    echo "=========================================="
+    echo ""
+
+    bash /scripts/strategy/vault-pre-hook.sh
+    {{- else }}
+    echo "No strategy pre-hook for {{ .Values.strategy }} - skipping"
+    echo ""
+    {{- end }}
+
+    # =========================================
+    # STEP 3: VELERO BACKUP
+    # =========================================
+    echo "=========================================="
+    echo "  STEP 3: VELERO BACKUP"
+    echo "=========================================="
+    echo ""
+
+    bash /scripts/velero/velero-backup.sh
+
+    # =========================================
+    # STEP 4: STRATEGY POST-HOOK
+    # =========================================
+    {{- if eq .Values.strategy "cnpg" }}
+    echo "=========================================="
+    echo "  STEP 4: CNPG POST-HOOK"
+    echo "=========================================="
+    echo ""
+
+    bash /scripts/strategy/cnpg-post-hook.sh
+    {{- else }}
+    echo "No strategy post-hook for {{ .Values.strategy }} - skipping"
+    echo ""
+    {{- end }}
+
+    # =========================================
+    # STEP 5: SCALE UP APPLICATION
+    # =========================================
+    {{- if and (ne .Values.strategy "vault") .Values.application.workloads }}
+    echo "=========================================="
+    echo "  STEP 5: SCALE UP APPLICATION"
+    echo "=========================================="
+    echo ""
+
+    bash /scripts/app/scale-up.sh
+    {{- else }}
+    echo "Step 5: scale-up skipped (strategy={{ .Values.strategy }})"
+    echo ""
+    {{- end }}
+
+    # =========================================
+    # FINAL SUMMARY
+    # =========================================
+    echo ""
+    echo "=========================================="
+    echo "  ✅ BACKUP ORCHESTRATION COMPLETED"
+    echo "=========================================="
+    echo ""
+    echo "Summary:"
+    echo "  - Strategy: {{ .Values.strategy }}"
+    echo "  - Velero Backup: ${VELERO_BACKUP_NAME}"
+    echo "  - Storage Location: ${STORAGE_LOCATION}"
+    echo "  - TTL: ${TTL}"
+    {{- if .Values.application.workloads }}
+    echo "  - Workloads:"
+    {{- range .Values.application.workloads }}
+    echo "    - {{ .type }}/{{ .name }} ({{ .replicas }} replicas)"
+    {{- end }}
+    {{- end }}
+    echo ""
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - Backup completed successfully!"
+    echo ""

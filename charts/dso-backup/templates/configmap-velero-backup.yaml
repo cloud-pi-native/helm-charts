@@ -1,0 +1,133 @@
+---
+# ConfigMap for Velero backup creation (generic - used by all strategies)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backup-scripts-velero-backup-{{ .Values.global.appName }}
+  namespace: {{ include "dso-backup.namespace" . }}
+  labels:
+    {{- include "dso-backup.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backup-scripts
+    script-type: velero-backup
+data:
+  velero-backup.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "=========================================="
+    echo "  CREATE VELERO BACKUP"
+    echo "=========================================="
+    echo ""
+
+    NAMESPACE="${NAMESPACE}"
+    APP_NAME="${APP_NAME}"
+    VELERO_NAMESPACE="${VELERO_NAMESPACE}"
+    STORAGE_LOCATION="${STORAGE_LOCATION}"
+    TTL="${TTL}"
+    BACKUP_TIMEOUT="${BACKUP_TIMEOUT}"
+    VELERO_BACKUP_NAME="${VELERO_BACKUP_NAME}"
+
+    echo "Creating Velero Backup resource..."
+    echo "  Name: ${VELERO_BACKUP_NAME}"
+    echo "  Namespace: ${NAMESPACE}"
+    echo "  Storage: ${STORAGE_LOCATION}"
+    echo "  TTL: ${TTL}"
+    echo ""
+
+    cat <<EOF | kubectl apply -f -
+    apiVersion: velero.io/v1
+    kind: Backup
+    metadata:
+      name: ${VELERO_BACKUP_NAME}
+      namespace: ${VELERO_NAMESPACE}
+      labels:
+        app: ${APP_NAME}
+        backup-type: {{ .Values.strategy }}
+        triggered-by: cronjob
+    spec:
+      includedNamespaces:
+      - ${NAMESPACE}
+
+      {{- if .Values.velero.resources.include }}
+      includedResources:
+      {{- toYaml .Values.velero.resources.include | nindent 6 }}
+      {{- end }}
+
+      {{- $excludedResources := include "dso-backup.excludedResources" . | fromYamlArray }}
+      {{- if $excludedResources }}
+      excludedResources:
+      {{- toYaml $excludedResources | nindent 6 }}
+      {{- end }}
+
+      {{- if .Values.velero.resources.labelSelector }}
+      labelSelector:
+        {{- toYaml .Values.velero.resources.labelSelector | nindent 8 }}
+      {{- end }}
+
+      {{- $orSelectors := list }}
+      {{- if .Values.velero.resources.orLabelSelectors }}
+      {{- $orSelectors = .Values.velero.resources.orLabelSelectors }}
+      {{- end }}
+      {{- if eq .Values.strategy "cnpg" }}
+      {{- $cnpgSelector := dict "matchExpressions" (list (dict "key" "app.kubernetes.io/managed-by" "operator" "NotIn" "values" (list "cloudnative-pg"))) }}
+      {{- $orSelectors = append $orSelectors $cnpgSelector }}
+      {{- end }}
+      {{- if $orSelectors }}
+      orLabelSelectors:
+      {{- toYaml $orSelectors | nindent 6 }}
+      {{- end }}
+
+      snapshotVolumes: {{ .Values.velero.volumes.snapshotVolumes }}
+      defaultVolumesToRestic: {{ .Values.velero.volumes.defaultVolumesToRestic }}
+      ttl: ${TTL}
+      storageLocation: ${STORAGE_LOCATION}
+
+      {{- if .Values.velero.volumeSnapshotLocations }}
+      volumeSnapshotLocations:
+      {{- toYaml .Values.velero.volumeSnapshotLocations | nindent 6 }}
+      {{- end }}
+    EOF
+
+    echo "✓ Velero Backup created: ${VELERO_BACKUP_NAME}"
+    sleep 5
+
+    # Wait for backup completion
+    echo ""
+    echo "Waiting for Velero backup to complete (timeout: ${BACKUP_TIMEOUT})..."
+
+    SLEEP_INTERVAL=10
+    MAX_ATTEMPTS=$((BACKUP_TIMEOUT / SLEEP_INTERVAL))
+
+    for i in $(seq 1 ${MAX_ATTEMPTS}); do
+      VELERO_STATUS=$(kubectl get backups.velero.io ${VELERO_BACKUP_NAME} -n ${VELERO_NAMESPACE} \
+        -o jsonpath='{.status.phase}' 2>/dev/null || echo "")
+
+      if [ "$VELERO_STATUS" = "Completed" ]; then
+        echo "✓ Velero backup completed successfully"
+
+        # Show backup details
+        BACKUP_SIZE=$(kubectl get backups.velero.io ${VELERO_BACKUP_NAME} -n ${VELERO_NAMESPACE} \
+          -o jsonpath='{.status.progress.totalItems}' 2>/dev/null || echo "N/A")
+        echo "  Total items: ${BACKUP_SIZE}"
+        break
+      elif [ "$VELERO_STATUS" = "Failed" ] || [ "$VELERO_STATUS" = "PartiallyFailed" ]; then
+        echo "❌ ERROR: Velero backup ${VELERO_STATUS}"
+        kubectl describe backups.velero.io ${VELERO_BACKUP_NAME} -n ${VELERO_NAMESPACE}
+        exit 1
+      fi
+
+      echo "  Backup status: ${VELERO_STATUS:-InProgress} (attempt $i/${MAX_ATTEMPTS})"
+      sleep ${SLEEP_INTERVAL}
+    done
+
+    if [ "$VELERO_STATUS" != "Completed" ]; then
+      echo "❌ ERROR: Timeout waiting for Velero backup"
+      kubectl describe backups.velero.io ${VELERO_BACKUP_NAME} -n ${VELERO_NAMESPACE}
+      exit 1
+    fi
+
+    echo ""
+    echo "✓ VELERO BACKUP COMPLETED"
+    echo "  Backup name: ${VELERO_BACKUP_NAME}"
+    echo "  Location: ${STORAGE_LOCATION}"
+    echo ""
