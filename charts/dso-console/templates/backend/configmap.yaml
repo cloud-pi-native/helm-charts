@@ -4,6 +4,7 @@ metadata:
   name: {{ include "cpnConsole.fullname" . }}-backend
   labels: {{- include "cpnConsole.backend.labels" . | nindent 4 }}
 data:
+  SERVER_HOST: 0.0.0.0
   SERVER_PORT: {{ .Values.backend.container.port | quote }}
   KEYCLOAK_PROTOCOL: {{ .Values.global.keycloak.protocol.backend }}
   KEYCLOAK_DOMAIN: {{ .Values.global.keycloak.domain.backend }}
