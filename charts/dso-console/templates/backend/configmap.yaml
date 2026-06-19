@@ -8,6 +8,8 @@ data:
   SERVER_PORT: {{ .Values.backend.container.port | quote }}
   KEYCLOAK_PROTOCOL: {{ .Values.global.keycloak.protocol.backend }}
   KEYCLOAK_DOMAIN: {{ .Values.global.keycloak.domain.backend }}
+  KEYCLOAK_PUBLIC_PROTOCOL: {{ .Values.global.keycloak.protocol.backend | quote }}
+  KEYCLOAK_PUBLIC_DOMAIN: {{ .Values.global.keycloak.domain.frontend | quote }}
   KEYCLOAK_REALM: {{ .Values.global.keycloak.realm }}
   KEYCLOAK_REDIRECT_URI: {{ .Values.global.keycloak.redirectUri }}
   KEYCLOAK_CLIENT_ID: {{ .Values.global.keycloak.clientIds.backend }}
