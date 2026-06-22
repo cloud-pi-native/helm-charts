@@ -5169,6 +5169,33 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-argocd-zone-1.0.0/dso-argocd-zone-1.0.0.tgz
     version: 1.0.0
+  dso-backup:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-06-22T13:35:27.673726971Z"
+    description: 'Generic Helm chart for orchestrating Velero backups with different
+      strategies: - Resources only: Backup Kubernetes resources without database -
+      CNPG integrated: Orchestrate application shutdown + CNPG backup + Velero '
+    digest: e4334174524a66702dc7359e8a23d3e9790d09b8dc534247ab45e46b9bf5d647
+    home: https://cloud-pi-native.fr
+    icon: https://velero.io/img/Velero.svg
+    keywords:
+    - velero
+    - backup
+    - disaster-recovery
+    - cnpg
+    - postgresql
+    - cloudnative-pg
+    maintainers:
+    - name: Cloud Pi Native Team
+      url: https://cloud-pi-native.fr
+    name: dso-backup
+    sources:
+    - https://github.com/cloud-pi-native/helm-charts
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-backup-1.0.0/dso-backup-1.0.0.tgz
+    version: 1.0.0
   dso-env:
   - apiVersion: v2
     appVersion: 1.0.0
@@ -5876,4 +5903,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/socle-observability-1.0.0/socle-observability-1.0.0.tgz
     version: 1.0.0
-generated: "2026-06-19T15:47:16.654003275Z"
+generated: "2026-06-22T13:35:27.674156925Z"
