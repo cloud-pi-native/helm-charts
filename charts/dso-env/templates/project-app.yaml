@@ -95,7 +95,10 @@ spec:
     policies:
     - p, proj:{{ .Values.argocd.project }}-app:project-developer, applications, get, {{ .Values.argocd.project }}-app/*, allow
     - p, proj:{{ .Values.argocd.project }}-app:project-developer, applications, sync, {{ .Values.argocd.project }}-app/*, allow
+    - p, proj:{{ .Values.argocd.project }}-app:project-developer, applications, update, {{ .Values.argocd.project }}-app/*, allow
     - p, proj:{{ .Values.argocd.project }}-app:project-developer, projects, get, {{ .Values.argocd.project }}-app, allow
+    - p, proj:{{ .Values.argocd.project }}-app:project-developer, repositories, get, *, allow
+    - p, proj:{{ .Values.argocd.project }}-app:project-developer, clusters, get, *, allow
   - description: project security group
     groups:
     - {{ .Values.environment.projectSecurityGroup }}
