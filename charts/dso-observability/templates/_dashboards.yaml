@@ -1,55 +1,4 @@
-# implémente les règles de nommage des objets Kubernetes: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/
-# (caractères alphanumériques minscules, et tirets / points)
-# les noms des objets proviennent de noms de fichiers, donc il faut faire un peu de nettoyage:
-#
-# * un 1e replace/lower effectue des transformations (notez les parenthèses)
-# * ensuite le regexReplaceAllLiteral efface les caractères non valides
-# * enfin le trunc limite la taille à 253
-{{- define "lib.grafana-dns-name" }}
-{{- regexReplaceAllLiteral "[^a-z0-9\\-\\.]" ( . | lower | replace " " "-" | replace "_" "-") "" | trunc 253 }}
-{{- end }}
-
 {{- define "grafana-dashboards.dashboards" -}}
-{{/* ce bloc de code permet de gérer des arboresences de dossiers imbriqués */}}
-{{- $paths := dict }}{{/* on commence par se créer un tableau de correspondance entre un nom de dossier et son parent */}}
-{{- range $path, $_ := $.Files.Glob "files/dashboards/**.json" }}
-    {{- $path = $path | replace "files/dashboards/" "" | dir }}{{/* on récupère le chemin interne et on coupe le nom du fichier -> dossier/sous-dossier */}}
-    {{- if ne $path "." }}{{/* valeur pour le dossier racine, à ignorer */}}
-      {{- $liste := regexSplit "/" $path -1 | reverse }}{{/* on liste l'arboresence à l'envers -> [sous-dossier,dossier] */}}
-      {{- $parent := "" }}
-      {{- range $index, $name := $liste }}
-        {{- if lt ($index|add 1) ($liste | len) }}{{/* condition pour le dernier élément (racine) */}}
-          {{- $parent = index $liste ($index | add 1) -}}{{/* le dossier i+1 est le parent du dossier i */}}
-        {{- else }}
-          {{- $parent = "" }}{{/* sert de valeur "nil" */}}
-        {{- end }}
-        {{- $_ := set $paths . $parent }}{{/* assignation dans le dictionnaire. les doublons sont ignorés */}}
-      {{- end }}
-    {{- end }}
-{{- end }}
-
-{{- range $name, $parent := $paths }}{{/* on itère le dictionnaire créé précédemment */}}
----
-# https://grafana.github.io/grafana-operator/docs/api/#grafanafolder
-apiVersion: grafana.integreatly.org/v1beta1
-kind: GrafanaFolder
-metadata:
-  name: {{ $.Values.global.tenantId }}-{{ include "lib.grafana-dns-name" $name }}
-  labels:
-    tenant_id: {{ $.Values.global.tenantId }}
-spec:
-  allowCrossNamespaceImport: true
-  resyncPeriod: {{ $.Values.global.resyncPeriod | default "30s" }}
-  instanceSelector:
-    matchLabels:
-      app: {{ $.Values.global.tenantId }}
-  title: {{ $name }}{{/* contrairement au nom de la ressource, ici on peut avoir des majuscules, espaces, accents ... */}}
-  {{- with $parent }}{{/* on spécifie le dossier parent uniquement s'il existe ("" est traité comme null) */}}
-  parentFolderRef: {{ $.Values.global.tenantId }}-{{ include "lib.grafana-dns-name" . }}
-  {{- end }}
-{{ end }}
-
-
 {{ range $path, $_ := $.Files.Glob "files/dashboards/**.json" }}{{/* la double étoile permet de récupérer les ressources dans des dossiers imbriqués */}}
 {{ $folder := $path | replace "files/dashboards/" "" | dir }}
 {{ $parent := regexSplit "/" $folder -1 |reverse | first }}{{/* par rapport au fichier c'est le dossier grand-parent */}}
@@ -73,6 +22,7 @@ spec:
   {{- end }}
   json: >
 {{ $.Files.Get $path | indent 4 }}
-{{ end }}
-{{ end }}
+
+{{- end }}
+{{- end }}
 
