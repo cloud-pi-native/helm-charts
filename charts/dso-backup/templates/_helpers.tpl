@@ -98,23 +98,15 @@ Check if vault strategy is enabled
 
 {{/*
 Resolve the image used by the backup CronJob.
-For the vault strategy, vault.image overrides schedule.image because the
-default schedule image (bitnami/kubectl) lacks aws-cli.
+The image must bundle kubectl and mc (used by all strategies).
+Tag falls back to .Chart.AppVersion when not provided.
 */}}
 {{- define "dso-backup.image" -}}
-{{- if eq .Values.strategy "vault" -}}
-{{ .Values.vault.image.repository }}:{{ .Values.vault.image.tag }}
-{{- else -}}
-{{ .Values.schedule.image.repository }}:{{ .Values.schedule.image.tag }}
-{{- end -}}
+{{ .Values.schedule.image.repository }}:{{ .Values.schedule.image.tag | default .Chart.AppVersion }}
 {{- end }}
 
 {{- define "dso-backup.imagePullPolicy" -}}
-{{- if eq .Values.strategy "vault" -}}
-{{ .Values.vault.image.pullPolicy }}
-{{- else -}}
 {{ .Values.schedule.image.pullPolicy }}
-{{- end -}}
 {{- end }}
 
 {{/*

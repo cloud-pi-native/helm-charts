@@ -78,13 +78,14 @@ data:
       {{- end }}
 
       snapshotVolumes: {{ .Values.velero.volumes.snapshotVolumes }}
-      defaultVolumesToRestic: {{ .Values.velero.volumes.defaultVolumesToRestic }}
+      snapshotMoveData: {{ .Values.velero.volumes.snapshotMoveData }}
+      defaultVolumesToFsBackup: {{ .Values.velero.volumes.defaultVolumesToFsBackup }}
       ttl: ${TTL}
       storageLocation: ${STORAGE_LOCATION}
 
-      {{- if .Values.velero.volumeSnapshotLocations }}
+      {{- if .Values.velero.volumes.snapshotLocations }}
       volumeSnapshotLocations:
-      {{- toYaml .Values.velero.volumeSnapshotLocations | nindent 6 }}
+      {{- toYaml .Values.velero.volumes.snapshotLocations | nindent 6 }}
       {{- end }}
     EOF
 
