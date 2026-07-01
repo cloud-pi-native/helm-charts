@@ -50,22 +50,18 @@ spec:
               value: {{ .Values.vault.s3.bucket | quote }}
             - name: VAULT_S3_PREFIX
               value: {{ .Values.vault.s3.prefix | quote }}
-            - name: VAULT_S3_REGION
-              value: {{ .Values.vault.s3.region | quote }}
             - name: VAULT_S3_ENDPOINT
               value: {{ .Values.vault.s3.endpoint | quote }}
-            - name: VAULT_S3_FORCE_PATH_STYLE
-              value: {{ .Values.vault.s3.forcePathStyle | quote }}
-            - name: AWS_ACCESS_KEY_ID
+            - name: S3_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.vault.s3.credentialsSecret }}
-                  key: AWS_ACCESS_KEY_ID
-            - name: AWS_SECRET_ACCESS_KEY
+                  key: S3_ACCESS_KEY
+            - name: S3_SECRET_KEY
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.vault.s3.credentialsSecret }}
-                  key: AWS_SECRET_ACCESS_KEY
+                  key: S3_SECRET_KEY
             {{- end }}
             resources:
               requests:

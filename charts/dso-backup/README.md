@@ -1,6 +1,6 @@
 # dso-backup
 
-![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Generic Helm chart for orchestrating Velero backups with different strategies:
 - Resources only: Backup Kubernetes resources without database
@@ -34,21 +34,16 @@ Generic Helm chart for orchestrating Velero backups with different strategies:
 | schedule.cron | string | `"0 2 * * *"` |  |
 | schedule.failedJobsHistoryLimit | int | `3` |  |
 | schedule.image.pullPolicy | string | `"IfNotPresent"` |  |
-| schedule.image.repository | string | `"bitnami/kubectl"` |  |
-| schedule.image.tag | string | `"latest"` |  |
+| schedule.image.repository | string | `"ghcr.io/cloud-pi-native/backup-tools"` |  |
+| schedule.image.tag | string | `""` |  |
 | schedule.successfulJobsHistoryLimit | int | `3` |  |
 | schedule.ttlSecondsAfterFinished | int | `3600` |  |
 | strategy | string | `"resources-only"` |  |
-| vault.image.pullPolicy | string | `"IfNotPresent"` |  |
-| vault.image.repository | string | `"amazon/aws-cli"` |  |
-| vault.image.tag | string | `"2.15.0"` |  |
 | vault.podLabelSelector."app.kubernetes.io/name" | string | `"vault"` |  |
 | vault.s3.bucket | string | `""` |  |
 | vault.s3.credentialsSecret | string | `""` |  |
 | vault.s3.endpoint | string | `""` |  |
-| vault.s3.forcePathStyle | bool | `false` |  |
 | vault.s3.prefix | string | `"vault-snapshots"` |  |
-| vault.s3.region | string | `"us-east-1"` |  |
 | vault.snapshotPath | string | `"/tmp/raft-snapshot.snap"` |  |
 | velero.backupTimeout | string | `"1800"` |  |
 | velero.namespace | string | `"infra-velero"` |  |
@@ -58,8 +53,9 @@ Generic Helm chart for orchestrating Velero backups with different strategies:
 | velero.resources.orLabelSelectors | list | `[]` |  |
 | velero.storageLocation | string | `"velero"` |  |
 | velero.ttl | string | `"336h"` |  |
-| velero.volumeSnapshotLocations | list | `[]` |  |
-| velero.volumes.defaultVolumesToRestic | bool | `false` |  |
+| velero.volumes.defaultVolumesToFsBackup | bool | `true` |  |
+| velero.volumes.snapshotLocations | list | `[]` |  |
+| velero.volumes.snapshotMoveData | bool | `false` |  |
 | velero.volumes.snapshotVolumes | bool | `false` |  |
 
 ----------------------------------------------

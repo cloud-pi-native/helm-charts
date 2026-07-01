@@ -34,7 +34,7 @@ rules:
 # Permissions for waiting on pods (no delete needed, just watch for termination)
 - apiGroups: [""]
   resources: ["pods"]
-  verbs: ["list", "watch"]
+  verbs: ["get", "list", "watch"]
 
 {{- if eq .Values.strategy "cnpg" }}
 # Permissions for CNPG Cluster (patch for annotations)

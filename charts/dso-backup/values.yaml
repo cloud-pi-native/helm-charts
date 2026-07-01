@@ -35,10 +35,12 @@ schedule:
   # TTL for completed jobs (seconds)
   ttlSecondsAfterFinished: 3600  # 1 hour
 
-  # Container image for CronJob
+  # Container image for the backup CronJob.
+  # Bundles kubectl + mc (used by all strategies, including vault).
   image:
-    repository: "bitnami/kubectl"
-    tag: "latest"
+    repository: "ghcr.io/cloud-pi-native/backup-tools"
+    # Falls back to .Chart.AppVersion when empty.
+    tag: ""
     pullPolicy: "IfNotPresent"
 
 # Velero backup configuration
@@ -52,9 +54,6 @@ velero:
 
   # Storage location (BSL name)
   storageLocation: "velero"
-
-  # Volume snapshot locations
-  volumeSnapshotLocations: []
 
   # Timeout for Velero backup completion
   backupTimeout: "1800"
@@ -95,8 +94,14 @@ velero:
     # Snapshot PVs using cloud provider snapshots
     snapshotVolumes: false
 
-    # Use Restic for volume backups
-    defaultVolumesToRestic: false
+    # Move snapshot data to object storage (CSI snapshot data movement)
+    snapshotMoveData: false
+
+    # Use file system backup (node-agent) for volume backups
+    defaultVolumesToFsBackup: true
+
+    # Volume snapshot locations (VSL names)
+    snapshotLocations: []
 
 # CNPG configuration (only for strategy = "cnpg")
 cnpg:
@@ -115,30 +120,17 @@ vault:
   # (it is removed at the end of the pre-hook)
   snapshotPath: "/tmp/raft-snapshot.snap"
 
-  # S3 destination for the snapshot upload
+  # S3 destination for the snapshot upload (uses mc / MinIO client).
   s3:
     # Bucket name (required when strategy = vault)
     bucket: ""
     # Prefix (folder) within the bucket
     prefix: "vault-snapshots"
-    # S3 region
-    region: "us-east-1"
-    # Optional S3-compatible endpoint (Minio, Ceph, etc.). Leave empty for AWS S3.
+    # S3 endpoint URL — works for AWS S3, MinIO, Ceph, etc. (required)
     endpoint: ""
-    # Force path-style addressing (needed for most S3-compatible backends)
-    forcePathStyle: false
-    # Existing Secret containing AWS credentials. Must expose the keys
-    # AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY (required when strategy = vault).
+    # Existing Secret exposing keys S3_ACCESS_KEY and S3_SECRET_KEY
+    # (required when strategy = vault).
     credentialsSecret: ""
-
-  # Override the cronjob image for the vault strategy.
-  # Default image bundles aws-cli; kubectl is downloaded at runtime so the
-  # script needs egress to dl.k8s.io. Override with a custom image that
-  # already bundles both kubectl and aws-cli to avoid the download.
-  image:
-    repository: "amazon/aws-cli"
-    tag: "2.15.0"
-    pullPolicy: "IfNotPresent"
 
 # Application orchestration
 application:
