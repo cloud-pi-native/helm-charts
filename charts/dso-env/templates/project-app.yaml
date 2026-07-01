@@ -117,3 +117,10 @@ spec:
   {{- range .Values.application.sourceRepositories }}
     - {{ . }}
   {{- end }}
+  {{- range .Values.application.repositories }}
+    {{- range .valueSources }}
+      {{- if eq .type "external" }}
+    - {{ .repoURL }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
