@@ -1,7 +1,3 @@
-{{- if eq (include "dso-backup.cronjobEnabled" .) "true" }}
----
-# CronJob for orchestrated backup ({{ .Values.strategy }})
-# Runs pre-hook, creates Velero backup, runs post-hook sequentially
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -123,4 +119,3 @@ spec:
               name: backup-scripts-vault-hooks-{{ .Values.global.appName }}
               defaultMode: 0755
           {{- end }}
-{{- end }}

@@ -95,13 +95,6 @@ Check if vault strategy is enabled
 {{- eq .Values.strategy "vault" }}
 {{- end }}
 
-{{/*
-Check if a backup CronJob should be rendered.
-The chart currently renders a CronJob for strategies that need orchestration.
-*/}}
-{{- define "dso-backup.cronjobEnabled" -}}
-{{- or (eq .Values.strategy "cnpg") (eq .Values.strategy "vault") }}
-{{- end }}
 
 {{/*
 Resolve the image used by the backup CronJob.

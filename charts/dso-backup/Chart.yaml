@@ -5,7 +5,7 @@ description: |
   - Resources only: Backup Kubernetes resources without database
   - CNPG integrated: Orchestrate application shutdown + CNPG backup + Velero
 type: application
-version: 1.0.0
+version: 1.0.1
 appVersion: "1.0.0"
 keywords:
   - velero
@@ -15,8 +15,9 @@ keywords:
   - postgresql
   - cloudnative-pg
 maintainers:
-  - name: Cloud Pi Native Team
-    url: https://cloud-pi-native.fr
+  - name: omiladi
+    email: cloudpinative-relations@interieur.gouv.fr
+    url: https://www.interieur.gouv.fr/
 sources:
   - https://github.com/cloud-pi-native/helm-charts
 home: https://cloud-pi-native.fr
