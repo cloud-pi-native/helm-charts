@@ -26,11 +26,12 @@ dependencies:
 
 2- Create a file in your `template/` directory calling the two functions:
 ```yaml
+{{"{{"}}- include "grafana-dashboards.folders" . -}} # optionnal
 {{"{{"}}- include "grafana-dashboards.dashboards" . -}}
 {{"{{"}}- include "grafana-dashboards.rules" . -}}
 ```
 
-3- Add json et tpl files in `files/dashboards` and `files/rules` directories.
+3- Add json & tpl files in `files/dashboards` and `files/rules` directories.
 
 4- Add in your `values.yaml` file the value corresponding to the `app` label of your grafana instance:
 ```yaml

@@ -2,7 +2,7 @@
 
 A Helm chart for Kubernetes to deploy custom GrafanaDashboard and PrometheusRule
 
-![Version: 0.1.8](https://img.shields.io/badge/Version-0.1.8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
 
 ## Description
 
@@ -21,17 +21,18 @@ version: 0.1.0
 appVersion: "0.0.1"
 dependencies:
   - name: dso-observability
-    version: 0.1.8
+    version: 0.2.0
     repository: https://cloud-pi-native.github.io/helm-charts
 ```
 
 2- Create a file in your `template/` directory calling the two functions:
 ```yaml
+{{- include "grafana-dashboards.folders" . -}} # optionnal
 {{- include "grafana-dashboards.dashboards" . -}}
 {{- include "grafana-dashboards.rules" . -}}
 ```
 
-3- Add json et tpl files in `files/dashboards` and `files/rules` directories.
+3- Add json & tpl files in `files/dashboards` and `files/rules` directories.
 
 4- Add in your `values.yaml` file the value corresponding to the `app` label of your grafana instance:
 ```yaml

@@ -1,19 +1,28 @@
 {{- define "grafana-dashboards.dashboards" -}}
-{{- range $path, $_ := $.Files.Glob "files/dashboards/*.json" }}
+{{ range $path, $_ := $.Files.Glob "files/dashboards/**.json" }}{{/* la double étoile permet de récupérer les ressources dans des dossiers imbriqués */}}
+{{ $folder := $path | replace "files/dashboards/" "" | dir }}
+{{ $parent := regexSplit "/" $folder -1 |reverse | first }}{{/* par rapport au fichier c'est le dossier grand-parent */}}
+{{ $name := $path | base | replace ".json" "" }}
 ---
+# https://grafana.github.io/grafana-operator/docs/api/#grafanadashboard
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
-  name: {{ $.Values.global.tenantId }}-{{ $path | base | replace ".json"  "" }}
+  name: {{ $.Values.global.tenantId }}-{{ include "lib.grafana-dns-name" $name }}
   labels:
     tenant_id: {{ $.Values.global.tenantId }}
 spec:
   allowCrossNamespaceImport: true
-  resyncPeriod: 30s
+  resyncPeriod: {{ $.Values.global.resyncPeriod | default "30s" }}
   instanceSelector:
     matchLabels:
       app: {{ $.Values.global.tenantId }}
+  {{- if ne $folder "." }}{{/* si le fichier n'est pas dans le dossier racine, alors on spécifie son dossier parent */}}
+  folderRef: {{ $.Values.global.tenantId }}-{{ include "lib.grafana-dns-name" $parent }}
+  {{- end }}
   json: >
 {{ $.Files.Get $path | indent 4 }}
+
 {{- end }}
-{{- end -}}
+{{- end }}
+
