@@ -17,7 +17,33 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: {{ $.Values.argocd.project }}-app
-  source: 
+  {{- if .valueSources }}
+  {{- $externalSources := list }}
+  {{- range .valueSources }}
+    {{- if eq .type "external" }}
+      {{- $externalSources = append $externalSources . }}
+    {{- end }}
+  {{- end }}
+  sources:
+    - repoURL: {{ .repoURL }}
+      targetRevision: {{ .targetRevision }}
+      path: {{ .path }}
+      helm:
+        valueFiles:
+          {{- range .valueSources }}
+          {{- if eq .type "internal" }}
+          - {{ .path }}
+          {{- else if eq .type "external" }}
+          - ${{ .ref }}/{{ .path }}
+          {{- end }}
+          {{- end }}
+    {{- range $externalSources }}
+    - repoURL: {{ .repoURL }}
+      targetRevision: {{ .targetRevision }}
+      ref: {{ .ref }}
+    {{- end }}
+  {{- else }}
+  source:
     repoURL: {{ .repoURL }}
     targetRevision:  {{ .targetRevision }}
     path: {{ .path }}
@@ -25,6 +51,7 @@ spec:
     helm:
       valueFiles: {{ .valueFiles | toJson }}
     {{- end }}
+  {{- end }}
   destination:
     name: {{ $.Values.application.destination.name }}
     namespace: {{ $.Values.application.destination.namespace }}
@@ -35,5 +62,5 @@ spec:
       prune: true
       selfHeal: true
       allowEmpty: true
-  {{- end }}  
+  {{- end }}
 {{- end }}
