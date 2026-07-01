@@ -51,11 +51,10 @@ velero:
   ttl: "336h"  # 14 days
 
   # Storage location (BSL name)
-  storageLocation: "default"
+  storageLocation: "velero"
 
   # Volume snapshot locations
-  volumeSnapshotLocations:
-    - "default"
+  volumeSnapshotLocations: []
 
   # Timeout for Velero backup completion
   backupTimeout: "1800"
