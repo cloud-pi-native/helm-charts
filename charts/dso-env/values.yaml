@@ -59,6 +59,7 @@ application:
   #   targetRevision: main
   #   path: '.'
   #   autosync: true
+  #   # -- Rétrocompatibilité : liste de fichiers de values internes (ignoré si valueSources est défini)
   #   valueFiles: []
   # - name: tuto-java-infra-helm
   #   id: b1f4d3e2-3c4b-4d5e-9f6a-7b8c9d0e1f2a
@@ -66,9 +67,19 @@ application:
   #   targetRevision: HEAD
   #   path: .
   #   autosync: false
-  #   valueFiles:
-  #     - values.yaml
-  #     - values-integ.yaml
+  #   # -- Liste ordonnée de sources de valeurs (interne ou externe).
+  #   # L'ordre détermine la priorité Helm (les dernières entrées ont la priorité la plus haute).
+  #   # Remplace valueFiles si défini.
+  #   valueSources:
+  #     - type: internal
+  #       path: values.yaml
+  #     - type: external
+  #       ref: infra-values
+  #       repoURL: https://gitlab.com/projects/org/demo/infra-values.git
+  #       targetRevision: HEAD
+  #       path: values-integ.yaml
+  #     - type: internal
+  #       path: values-overrides.yaml
 # -- Ensemble de paramètres de fonctionnalités - expérimental
 features:
   # -- Support des rôles affinés
