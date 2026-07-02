@@ -45,6 +45,8 @@ spec:
               value: {{ .Values.velero.ttl | quote }}
             - name: BACKUP_TIMEOUT
               value: {{ .Values.velero.backupTimeout | default "1800" | quote }}
+            - name: VELERO_BACKUP_NAME_PREFIX
+              value: {{ .Values.velero.backupNamePrefix | quote }}
             {{- if eq .Values.strategy "vault" }}
             - name: VAULT_S3_BUCKET
               value: {{ .Values.vault.s3.bucket | quote }}
@@ -52,6 +54,8 @@ spec:
               value: {{ .Values.vault.s3.prefix | quote }}
             - name: VAULT_S3_ENDPOINT
               value: {{ .Values.vault.s3.endpoint | quote }}
+            - name: VAULT_S3_INSECURE
+              value: {{ .Values.vault.s3.insecure | quote }}
             - name: S3_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
@@ -62,6 +66,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.vault.s3.credentialsSecret }}
                   key: S3_SECRET_KEY
+            - name: VAULT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.vault.tokenSecret.name }}
+                  key: {{ .Values.vault.tokenSecret.key }}
             {{- end }}
             resources:
               requests:

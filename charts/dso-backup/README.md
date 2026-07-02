@@ -1,6 +1,6 @@
 # dso-backup
 
-![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.0.3](https://img.shields.io/badge/Version-1.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Generic Helm chart for orchestrating Velero backups with different strategies:
 - Resources only: Backup Kubernetes resources without database
@@ -43,8 +43,12 @@ Generic Helm chart for orchestrating Velero backups with different strategies:
 | vault.s3.bucket | string | `""` |  |
 | vault.s3.credentialsSecret | string | `""` |  |
 | vault.s3.endpoint | string | `""` |  |
+| vault.s3.insecure | bool | `false` |  |
 | vault.s3.prefix | string | `"vault-snapshots"` |  |
 | vault.snapshotPath | string | `"/tmp/raft-snapshot.snap"` |  |
+| vault.tokenSecret.key | string | `"VAULT_TOKEN"` |  |
+| vault.tokenSecret.name | string | `""` |  |
+| velero.backupNamePrefix | string | `""` |  |
 | velero.backupTimeout | string | `"1800"` |  |
 | velero.namespace | string | `"infra-velero"` |  |
 | velero.resources.exclude | list | `[]` |  |
