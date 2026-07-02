@@ -5244,6 +5244,33 @@ entries:
   dso-backup:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2026-07-02T14:53:01.43469106Z"
+    description: 'Generic Helm chart for orchestrating Velero backups with different
+      strategies: - Resources only: Backup Kubernetes resources without database -
+      CNPG integrated: Orchestrate application shutdown + CNPG backup + Velero '
+    digest: f4db3b89f2f3c8f478a868250bda5bac67ea921639fe10ef5242ddd9c26f7949
+    home: https://cloud-pi-native.fr
+    icon: https://velero.io/img/Velero.svg
+    keywords:
+    - velero
+    - backup
+    - disaster-recovery
+    - cnpg
+    - postgresql
+    - cloudnative-pg
+    maintainers:
+    - email: cloudpinative-relations@interieur.gouv.fr
+      name: omiladi
+      url: https://www.interieur.gouv.fr/
+    name: dso-backup
+    sources:
+    - https://github.com/cloud-pi-native/helm-charts
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-backup-1.0.3/dso-backup-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2026-07-01T16:12:24.121977081Z"
     description: 'Generic Helm chart for orchestrating Velero backups with different
       strategies: - Resources only: Backup Kubernetes resources without database -
@@ -6057,4 +6084,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/socle-observability-1.0.0/socle-observability-1.0.0.tgz
     version: 1.0.0
-generated: "2026-07-02T08:00:18.734289843Z"
+generated: "2026-07-02T14:53:01.43513082Z"
