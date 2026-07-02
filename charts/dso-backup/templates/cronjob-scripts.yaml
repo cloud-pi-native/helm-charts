@@ -30,6 +30,9 @@ data:
     export BACKUP_TIMEOUT="${BACKUP_TIMEOUT}"
 
     BACKUP_NAME="${APP_NAME}-$(date +%Y%m%d-%H%M%S)"
+    if [ -n "${VELERO_BACKUP_NAME_PREFIX:-}" ]; then
+      BACKUP_NAME="${VELERO_BACKUP_NAME_PREFIX}-${BACKUP_NAME}"
+    fi
     export VELERO_BACKUP_NAME="${BACKUP_NAME}"
 
     # Error handler

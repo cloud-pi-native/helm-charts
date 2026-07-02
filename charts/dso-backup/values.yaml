@@ -55,6 +55,10 @@ velero:
   # Storage location (BSL name)
   storageLocation: "velero"
 
+  # Prefix prepended to the Velero Backup name.
+  # Final name: <prefix>-<appName>-YYYYMMDD-HHMMSS (empty prefix = no prefix).
+  backupNamePrefix: ""
+
   # Timeout for Velero backup completion
   backupTimeout: "1800"
 
@@ -120,6 +124,14 @@ vault:
   # (it is removed at the end of the pre-hook)
   snapshotPath: "/tmp/raft-snapshot.snap"
 
+  # Existing Secret providing the Vault token used by the raft snapshot API.
+  # The token must have `sudo` capability on `sys/storage/raft/snapshot`.
+  tokenSecret:
+    # Secret name (required when strategy = vault)
+    name: ""
+    # Key holding the token value
+    key: "VAULT_TOKEN"
+
   # S3 destination for the snapshot upload (uses mc / MinIO client).
   s3:
     # Bucket name (required when strategy = vault)
@@ -131,6 +143,8 @@ vault:
     # Existing Secret exposing keys S3_ACCESS_KEY and S3_SECRET_KEY
     # (required when strategy = vault).
     credentialsSecret: ""
+    # Skip TLS certificate verification for the S3 endpoint (self-signed certs).
+    insecure: false
 
 # Application orchestration
 application:

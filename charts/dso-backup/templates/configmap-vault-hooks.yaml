@@ -5,6 +5,9 @@
 {{- if not .Values.vault.s3.credentialsSecret }}
 {{- fail "vault.s3.credentialsSecret is required when strategy = vault" }}
 {{- end }}
+{{- if not .Values.vault.tokenSecret.name }}
+{{- fail "vault.tokenSecret.name is required when strategy = vault" }}
+{{- end }}
 ---
 # ConfigMap for Vault strategy hooks (conditional - only for vault strategy)
 apiVersion: v1
@@ -34,6 +37,7 @@ data:
     S3_BUCKET="${VAULT_S3_BUCKET}"
     S3_PREFIX="${VAULT_S3_PREFIX}"
     S3_ENDPOINT="${VAULT_S3_ENDPOINT}"
+    S3_INSECURE="${VAULT_S3_INSECURE:-false}"
 
     for bin in kubectl mc; do
       if ! command -v "${bin}" >/dev/null 2>&1; then
@@ -42,8 +46,13 @@ data:
       fi
     done
 
+    MC_OPTS=()
+    if [ "${S3_INSECURE}" = "true" ]; then
+      MC_OPTS+=(--insecure)
+    fi
+
     # Configure mc alias for the S3 destination.
-    mc alias set s3backup "${S3_ENDPOINT}" "${S3_ACCESS_KEY}" "${S3_SECRET_KEY}" >/dev/null
+    mc "${MC_OPTS[@]}" alias set s3backup "${S3_ENDPOINT}" "${S3_ACCESS_KEY}" "${S3_SECRET_KEY}" >/dev/null
 
     # Step 1: discover the Vault leader pod.
     echo "Step 1: Locating Vault leader pod (selector: ${LABEL_SELECTOR})..."
@@ -66,9 +75,12 @@ data:
     echo "  Using pod: ${LEADER_POD}"
 
     # Step 2: take the raft snapshot inside the Vault container.
+    # Token is passed via `env` so the snapshot API accepts the call
+    # (requires `sudo` capability on sys/storage/raft/snapshot).
     echo ""
     echo "Step 2: Creating raft snapshot at ${SNAPSHOT_PATH}..."
     kubectl exec -n "${NAMESPACE}" "${LEADER_POD}" -- \
+      env VAULT_TOKEN="${VAULT_TOKEN}" \
       vault operator raft snapshot save "${SNAPSHOT_PATH}"
 
     SNAPSHOT_SIZE="$(kubectl exec -n "${NAMESPACE}" "${LEADER_POD}" -- \
@@ -83,7 +95,7 @@ data:
     echo ""
     echo "Step 3: Uploading snapshot to ${S3_URI}..."
     kubectl exec -n "${NAMESPACE}" "${LEADER_POD}" -- cat "${SNAPSHOT_PATH}" \
-      | mc pipe "${S3_TARGET}"
+      | mc "${MC_OPTS[@]}" pipe "${S3_TARGET}"
 
     echo "  Upload completed"
 
