@@ -45,6 +45,7 @@ metadata:
   namespace: {{ $.Values.argocd.namespace }}
   labels:
     app.kubernetes.io/managed-by: dso-console
+    dso/type: observability
   annotations:
     argocd.argoproj.io/sync-wave: "2"
   finalizers:

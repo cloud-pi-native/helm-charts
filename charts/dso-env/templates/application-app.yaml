@@ -10,6 +10,7 @@ metadata:
     {{- $.Values.common | toYaml | nindent 4 }}
     dso/repository: {{ .name }}
     dso/repository.id: {{ .id }}
+    dso/type: app
   annotations:
     argocd.argoproj.io/sync-wave: "4" # Force la suppression avant le AppProject
   finalizers:

@@ -39,6 +39,7 @@ spec:
         app.kubernetes.io/managed-by: dso-console
         dso/projet: {{"\"{{ index .path.segments 0 }}\""}}
         dso/environment: {{"\"{{ index .path.segments 2 }}\""}}
+        dso/type: root
     spec:
       project: dso-project
       sources:

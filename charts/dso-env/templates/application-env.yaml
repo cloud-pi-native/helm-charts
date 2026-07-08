@@ -7,6 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: dso-console
     {{- $.Values.common | toYaml | nindent 4 }}
+    dso/type: infrastructure
   annotations:
     argocd.argoproj.io/sync-wave: "4" # Force la suppression avant le AppProject
 spec:
