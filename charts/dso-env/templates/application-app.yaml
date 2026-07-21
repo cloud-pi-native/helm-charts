@@ -3,7 +3,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ printf "%s-%s-%s" $.Values.argocd.project .name (sha1sum .repoURL | trunc 4) | trunc 63 | trimSuffix "-" }}
+  name: {{ $.Values.argocd.project }}-{{ .name }}-{{ sha1sum .repoURL | trunc 4 }}
   namespace: {{ $.Values.argocd.namespace }}
   labels:
     app.kubernetes.io/managed-by: dso-console
