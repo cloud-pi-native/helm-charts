@@ -5297,6 +5297,21 @@ entries:
   dso-argocd-zone:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2026-07-21T10:11:07.161360006Z"
+    description: Creates an ApplicationSet that will scan and deploy all Console-managed
+      applications for its zone (multiple clusters).
+    digest: f9bfb5ab485ca9ba5919aa1470562d974d50862bd255ec0144aec5d7196010b2
+    maintainers:
+    - email: cloudpinative-relations@interieur.gouv.fr
+      name: cloud-pi-native
+      url: https://cloud-pi-native.fr
+    name: dso-argocd-zone
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-argocd-zone-1.0.6/dso-argocd-zone-1.0.6.tgz
+    version: 1.0.6
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2025-12-22T15:10:25.065772951Z"
     description: Creates an ApplicationSet that will scan and deploy all Console-managed
       applications for its zone (multiple clusters).
@@ -5494,6 +5509,20 @@ entries:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-backup-1.0.0/dso-backup-1.0.0.tgz
     version: 1.0.0
   dso-env:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2026-07-21T10:11:07.406195757Z"
+    description: Creates argocd Project and Applications to deploy DSO project repositories.
+    digest: 87550422979d9c2ed9974322cde17c3ffbeb007ddb41be0f49152234b4ef4b77
+    maintainers:
+    - email: thibault.colin@interieur.gouv.fr
+      name: this-is-tobi
+      url: https://this-is-tobi.com
+    name: dso-env
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-env-1.9.1/dso-env-1.9.1.tgz
+    version: 1.9.1
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2026-07-02T08:00:18.733798391Z"
@@ -5717,6 +5746,24 @@ entries:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-env-1.0.0/dso-env-1.0.0.tgz
     version: 1.0.0
   dso-grafana:
+  - apiVersion: v2
+    created: "2026-07-21T10:11:07.625675588Z"
+    dependencies:
+    - name: grafana-operator
+      repository: oci://ghcr.io/grafana/helm-charts
+      version: v5.10.0
+    description: This Helm chart deploy Grafana instances and default dashboards for
+      each projects read from values file.
+    digest: 0a307ce8928b5945ed6397ec9936cff5e74926bd823c71d27a336a449de1d985
+    maintainers:
+    - email: cloudpinative-relations@interieur.gouv.fr
+      name: cloud-pi-native
+      url: https://cloud-pi-native.fr
+    name: dso-grafana
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/dso-grafana-1.8.1/dso-grafana-1.8.1.tgz
+    version: 1.8.1
   - apiVersion: v2
     created: "2026-04-16T09:34:33.740605443Z"
     dependencies:
@@ -6228,4 +6275,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/socle-observability-1.0.0/socle-observability-1.0.0.tgz
     version: 1.0.0
-generated: "2026-07-21T08:13:46.469189731Z"
+generated: "2026-07-21T10:11:07.626426553Z"
