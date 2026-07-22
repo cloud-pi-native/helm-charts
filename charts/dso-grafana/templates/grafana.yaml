@@ -50,6 +50,9 @@ spec:
               env:
                 {{- toYaml $.Values.grafana.env | nindent 14 }}
   {{- end }}
+  {{- with $.Values.grafana.version }}
+  version: {{ . | quote }}
+  {{- end }}
   {{- if not $.Values.grafana.isOpenShift }}
   ingress:
     {{- if $.Values.server.certManager.enabled }}

@@ -23,10 +23,11 @@ This Helm chart deploy Grafana instances and default dashboards for each project
 | argocd.namespace | string | `"dso-argocd"` | Namespace to use for additional Applications |
 | dashboards | list | `["k8s-logs.json","k8s-resources-namespace.json","falco-dashboard.json","kyverno-policy-reporter.json","security-overview.json","trivy-dashboard.json"]` | Select default dashboard creation among available json files |
 | global | object | `{"projects":[]}` | Global list of projects. One Grafana instance is created for each item. This list is provided dynamically by the Console webapp. |
-| grafana | object | `{"env":[],"isOpenShift":false,"observatorium_url":"http://observatorium-api.svc:8080"}` | Grafana instances configuration |
+| grafana | object | `{"env":[],"isOpenShift":false,"observatorium_url":"http://observatorium-api.svc:8080","version":""}` | Grafana instances configuration |
 | grafana.env | list | `[]` | Environment variables for the Grafana container |
 | grafana.isOpenShift | bool | `false` | Enable specific OpenShift configuration |
 | grafana.observatorium_url | string | `"http://observatorium-api.svc:8080"` | Url of Observatorium instance |
+| grafana.version | string | `""` | Grafana version to deploy |
 | grafanaNamespace | string | `"dso-grafana"` | Namespace to use for instances, dashboards and datasources creation |
 | oauth.aud | string | `"grafana"` | Audience value of the token |
 | oauth.enabled | bool | `true` | OAuth authentication enabling |
