@@ -27,6 +27,9 @@ spec:
         spec:
           serviceAccountName: {{ include "dso-backup.serviceAccountName" . }}
           restartPolicy: Never
+          {{- with .Values.schedule.activeDeadlineSeconds }}
+          activeDeadlineSeconds: {{ . }}
+          {{- end }}
           containers:
           - name: backup-orchestrator
             image: "{{ include "dso-backup.image" . }}"

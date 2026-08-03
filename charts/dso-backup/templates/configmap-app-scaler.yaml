@@ -27,17 +27,21 @@ data:
     echo "Scaling down {{ $workload.type }}/{{ $workload.name }} to 0 replicas..."
     kubectl scale {{ $workload.type }} {{ $workload.name }} -n ${NAMESPACE} --replicas=0
 
+    # Poll the workload's own .status.replicas
     echo "Waiting for pods to terminate (timeout: {{ $workload.shutdownTimeout }}s)..."
-    {{- if $workload.podLabelSelector }}
-    kubectl wait --for=delete pod \
-      {{- range $key, $value := $workload.podLabelSelector }}
-      -l {{ $key }}={{ $value }} \
-      {{- end }}
-      -n ${NAMESPACE} \
-      --timeout={{ $workload.shutdownTimeout }}s || true
-    {{- else }}
-    sleep 30
-    {{- end }}
+    _deadline=$((SECONDS + {{ $workload.shutdownTimeout }}))
+    while true; do
+      _current=$(kubectl get {{ $workload.type }} {{ $workload.name }} -n ${NAMESPACE} \
+        -o jsonpath='{.status.replicas}' --request-timeout=30s 2>/dev/null || echo "")
+      if [ -z "${_current}" ] || [ "${_current}" = "0" ]; then
+        break
+      fi
+      if [ ${SECONDS} -ge ${_deadline} ]; then
+        echo "⚠️  Timeout - {{ $workload.type }}/{{ $workload.name }} still reports ${_current} replica(s)"
+        break
+      fi
+      sleep 5
+    done
 
     echo "✓ {{ $workload.type }}/{{ $workload.name }} scaled down"
     echo ""
@@ -66,17 +70,10 @@ data:
     echo "Scaling {{ $workload.type }}/{{ $workload.name }} back to {{ $workload.replicas }} replicas..."
     kubectl scale {{ $workload.type }} {{ $workload.name }} -n ${NAMESPACE} --replicas={{ $workload.replicas }}
 
+    # Wait on the workload's own rollout (single object)
     echo "Waiting for pods to be ready..."
-    {{- if $workload.podLabelSelector }}
-    kubectl wait --for=condition=ready pod \
-      {{- range $key, $value := $workload.podLabelSelector }}
-      -l {{ $key }}={{ $value }} \
-      {{- end }}
-      -n ${NAMESPACE} \
+    kubectl rollout status {{ $workload.type }}/{{ $workload.name }} -n ${NAMESPACE} \
       --timeout=300s || echo "⚠️  Timeout - check pods manually"
-    {{- else }}
-    sleep 30
-    {{- end }}
 
     echo "✓ {{ $workload.type }}/{{ $workload.name }} scaled to {{ $workload.replicas }} replicas"
     echo ""

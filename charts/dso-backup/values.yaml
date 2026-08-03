@@ -30,7 +30,10 @@ schedule:
   failedJobsHistoryLimit: 3
 
   # Number of retries before marking job as failed
-  backoffLimit: 0
+  backoffLimit: 2
+
+  # Hard wall-clock limit (seconds) for a single backup pod.
+  activeDeadlineSeconds: 3600  # 1 hour
 
   # TTL for completed jobs (seconds)
   ttlSecondsAfterFinished: 3600  # 1 hour

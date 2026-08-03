@@ -1,6 +1,6 @@
 # dso-backup
 
-![Version: 1.0.3](https://img.shields.io/badge/Version-1.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.0.4](https://img.shields.io/badge/Version-1.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Generic Helm chart for orchestrating Velero backups with different strategies:
 - Resources only: Backup Kubernetes resources without database
@@ -30,7 +30,8 @@ Generic Helm chart for orchestrating Velero backups with different strategies:
 | rbac.create | bool | `true` |  |
 | rbac.serviceAccountAnnotations | object | `{}` |  |
 | rbac.serviceAccountName | string | `""` |  |
-| schedule.backoffLimit | int | `0` |  |
+| schedule.activeDeadlineSeconds | int | `3600` |  |
+| schedule.backoffLimit | int | `2` |  |
 | schedule.cron | string | `"0 2 * * *"` |  |
 | schedule.failedJobsHistoryLimit | int | `3` |  |
 | schedule.image.pullPolicy | string | `"IfNotPresent"` |  |
