@@ -23,7 +23,7 @@ metadata:
 data:
   vault-pre-hook.sh: |
     #!/bin/bash
-    set -euo pipefail
+    set -Eeuo pipefail
 
     echo "=========================================="
     echo "  VAULT PRE-HOOK (raft snapshot -> S3)"

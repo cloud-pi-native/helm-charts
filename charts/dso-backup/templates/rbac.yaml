@@ -26,7 +26,7 @@ rules:
 # Permissions for scaling workloads (get needed to check current state)
 - apiGroups: ["apps"]
   resources: ["deployments", "statefulsets", "replicasets"]
-  verbs: ["get"]
+  verbs: ["get", "list", "watch"]
 - apiGroups: ["apps"]
   resources: ["deployments/scale", "statefulsets/scale", "replicasets/scale"]
   verbs: ["get", "patch"]

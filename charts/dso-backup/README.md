@@ -1,6 +1,6 @@
 # dso-backup
 
-![Version: 1.0.4](https://img.shields.io/badge/Version-1.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.0.5](https://img.shields.io/badge/Version-1.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Generic Helm chart for orchestrating Velero backups with different strategies:
 - Resources only: Backup Kubernetes resources without database
@@ -30,15 +30,15 @@ Generic Helm chart for orchestrating Velero backups with different strategies:
 | rbac.create | bool | `true` |  |
 | rbac.serviceAccountAnnotations | object | `{}` |  |
 | rbac.serviceAccountName | string | `""` |  |
-| schedule.activeDeadlineSeconds | int | `3600` |  |
+| schedule.activeDeadlineSeconds | int | `7200` |  |
 | schedule.backoffLimit | int | `2` |  |
-| schedule.cron | string | `"0 2 * * *"` |  |
+| schedule.cron | string | `"0 0 * * *"` |  |
 | schedule.failedJobsHistoryLimit | int | `3` |  |
 | schedule.image.pullPolicy | string | `"IfNotPresent"` |  |
 | schedule.image.repository | string | `"ghcr.io/cloud-pi-native/backup-tools"` |  |
 | schedule.image.tag | string | `""` |  |
 | schedule.successfulJobsHistoryLimit | int | `3` |  |
-| schedule.ttlSecondsAfterFinished | int | `3600` |  |
+| schedule.ttlSecondsAfterFinished | int | `7200` |  |
 | strategy | string | `"resources-only"` |  |
 | vault.podLabelSelector."app.kubernetes.io/name" | string | `"vault"` |  |
 | vault.s3.bucket | string | `""` |  |

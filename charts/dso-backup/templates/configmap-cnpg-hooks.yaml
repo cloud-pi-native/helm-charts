@@ -14,7 +14,7 @@ metadata:
 data:
   cnpg-pre-hook.sh: |
     #!/bin/bash
-    set -e
+    set -Eeo pipefail
 
     echo "=========================================="
     echo "  CNPG PRE-HOOK"
@@ -88,7 +88,7 @@ data:
       fi
 
       echo "  Backup status: $STATUS (attempt $i/60)"
-      sleep 10
+      sleep 30
     done
 
     if [ "$STATUS" != "completed" ]; then
@@ -123,7 +123,7 @@ data:
 
   cnpg-post-hook.sh: |
     #!/bin/bash
-    set -e
+    set -Eeo pipefail
 
     echo "=========================================="
     echo "  CNPG POST-HOOK"
@@ -159,7 +159,7 @@ data:
     #   1. Velero restore completed
     #   2. Cluster CR exists with cnpg.io/reconciliationLoop=disabled annotation
 
-    set -e
+    set -Eeo pipefail
 
     NAMESPACE="{{ include "dso-backup.namespace" . }}"
     CLUSTER_NAME="{{ include "dso-backup.cnpgClusterName" . }}"

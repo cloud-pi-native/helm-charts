@@ -12,7 +12,7 @@ metadata:
 data:
   velero-backup.sh: |
     #!/bin/bash
-    set -e
+    set -Eeo pipefail
 
     echo "=========================================="
     echo "  CREATE VELERO BACKUP"
