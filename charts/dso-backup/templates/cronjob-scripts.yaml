@@ -12,7 +12,7 @@ metadata:
 data:
   orchestrator.sh: |
     #!/bin/bash
-    set -e
+    set -Eeo pipefail
 
     echo "=========================================="
     echo "  Backup Orchestrator - {{ .Values.global.appName }}"
@@ -35,35 +35,62 @@ data:
     fi
     export VELERO_BACKUP_NAME="${BACKUP_NAME}"
 
-    # Error handler
-    cleanup_on_error() {
-      echo ""
-      echo "=========================================="
-      echo "  ❌ ERROR OCCURRED - Running cleanup"
-      echo "=========================================="
+    # Single "finally" handler, run on EVERY exit path via the EXIT trap
+    # (success, explicit exit, or set -e abort - e.g. a hook timing out).
+    #   - on failure only: run the CNPG cleanup post-hook
+    #   - in ALL cases: scale the application back up
+    #   - re-exit with the original code so a failed backup stays failed
+    on_exit() {
+      rc=$?
 
-      {{- if eq .Values.strategy "cnpg" }}
-      # Run CNPG post-hook for cleanup
-      if [ -f /scripts/strategy/cnpg-post-hook.sh ]; then
-        echo "Running CNPG cleanup..."
-        bash /scripts/strategy/cnpg-post-hook.sh || true
+      if [ "${rc}" -ne 0 ]; then
+        echo ""
+        echo "=========================================="
+        echo "  ❌ ERROR OCCURRED (exit code ${rc}) - Running cleanup"
+        echo "=========================================="
+        {{- if eq .Values.strategy "cnpg" }}
+        if [ -f /scripts/strategy/cnpg-post-hook.sh ]; then
+          echo "Running CNPG cleanup..."
+          bash /scripts/strategy/cnpg-post-hook.sh || true
+        fi
+        {{- end }}
       fi
-      {{- end }}
 
       {{- if and (ne .Values.strategy "vault") .Values.application.workloads }}
-      # Scale application back up
+      # Always scale the application back up (idempotent).
       if [ -f /scripts/app/scale-up.sh ]; then
+        echo ""
         echo "Scaling application back up..."
-        bash /scripts/app/scale-up.sh || true
+        bash /scripts/app/scale-up.sh || echo "⚠️  WARNING: scale-up failed - check application replicas manually"
       fi
       {{- end }}
 
-      echo ""
-      echo "Cleanup completed - check logs above for error details"
-      exit 1
+      if [ "${rc}" -eq 0 ]; then
+        echo ""
+        echo "=========================================="
+        echo "  ✅ BACKUP ORCHESTRATION COMPLETED"
+        echo "=========================================="
+        echo ""
+        echo "Summary:"
+        echo "  - Strategy: {{ .Values.strategy }}"
+        echo "  - Velero Backup: ${VELERO_BACKUP_NAME}"
+        echo "  - Storage Location: ${STORAGE_LOCATION}"
+        echo "  - TTL: ${TTL}"
+        {{- if .Values.application.workloads }}
+        echo "  - Workloads:"
+        {{- range .Values.application.workloads }}
+        echo "    - {{ .type }}/{{ .name }} ({{ .replicas }} replicas)"
+        {{- end }}
+        {{- end }}
+        echo ""
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - Backup completed successfully!"
+        echo ""
+      fi
+
+      exit "${rc}"
     }
 
-    trap cleanup_on_error ERR
+    trap on_exit EXIT
 
     # =========================================
     # STEP 1: SCALE DOWN APPLICATION
@@ -128,39 +155,8 @@ data:
     {{- end }}
 
     # =========================================
-    # STEP 5: SCALE UP APPLICATION
+    # STEP 5: SCALE UP APPLICATION + FINAL SUMMARY
     # =========================================
-    {{- if and (ne .Values.strategy "vault") .Values.application.workloads }}
-    echo "=========================================="
-    echo "  STEP 5: SCALE UP APPLICATION"
-    echo "=========================================="
-    echo ""
-
-    bash /scripts/app/scale-up.sh
-    {{- else }}
-    echo "Step 5: scale-up skipped (strategy={{ .Values.strategy }})"
-    echo ""
-    {{- end }}
-
-    # =========================================
-    # FINAL SUMMARY
-    # =========================================
-    echo ""
-    echo "=========================================="
-    echo "  ✅ BACKUP ORCHESTRATION COMPLETED"
-    echo "=========================================="
-    echo ""
-    echo "Summary:"
-    echo "  - Strategy: {{ .Values.strategy }}"
-    echo "  - Velero Backup: ${VELERO_BACKUP_NAME}"
-    echo "  - Storage Location: ${STORAGE_LOCATION}"
-    echo "  - TTL: ${TTL}"
-    {{- if .Values.application.workloads }}
-    echo "  - Workloads:"
-    {{- range .Values.application.workloads }}
-    echo "    - {{ .type }}/{{ .name }} ({{ .replicas }} replicas)"
-    {{- end }}
-    {{- end }}
-    echo ""
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - Backup completed successfully!"
-    echo ""
+    # Both handled by the on_exit trap: the application is always scaled back up
+    # (success or failure, e.g. a hook timeout), and the success summary is
+    # printed afterwards only when the backup completed with exit code 0.

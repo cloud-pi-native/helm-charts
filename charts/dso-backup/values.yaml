@@ -20,8 +20,8 @@ strategy: "resources-only"
 
 # Schedule configuration for CronJob
 schedule:
-  # Cron schedule (default: daily at 2 AM)
-  cron: "0 2 * * *"
+  # Cron schedule
+  cron: "0 0 * * *"
 
   # Number of successful jobs to keep in history
   successfulJobsHistoryLimit: 3
@@ -33,10 +33,10 @@ schedule:
   backoffLimit: 2
 
   # Hard wall-clock limit (seconds) for a single backup pod.
-  activeDeadlineSeconds: 3600  # 1 hour
+  activeDeadlineSeconds: 7200  # 2 hour
 
   # TTL for completed jobs (seconds)
-  ttlSecondsAfterFinished: 3600  # 1 hour
+  ttlSecondsAfterFinished: 7200  # 2 hour
 
   # Container image for the backup CronJob.
   # Bundles kubectl + mc (used by all strategies, including vault).

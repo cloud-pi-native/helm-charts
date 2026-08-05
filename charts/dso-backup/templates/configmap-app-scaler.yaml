@@ -12,7 +12,7 @@ metadata:
 data:
   scale-down.sh: |
     #!/bin/bash
-    set -e
+    set -Eeo pipefail
 
     echo "=========================================="
     echo "  SCALE DOWN APPLICATION"
@@ -55,7 +55,7 @@ data:
 
   scale-up.sh: |
     #!/bin/bash
-    set -e
+    set -Eeo pipefail
 
     echo "=========================================="
     echo "  SCALE UP APPLICATION"
