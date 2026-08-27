@@ -58,7 +58,7 @@ jobs:
           npm i -g semver
           CHART_VERSION=$(yq .version charts/${{ inputs.CHART_NAME }}/Chart.yaml)
           NEXT_VERSION=$(semver -i ${{ inputs.UPGRADE_TYPE }} $CHART_VERSION)
-          sed -i "s/^appVersion: .*/appVersion: ${{ inputs.APP_VERSION }}/" charts/${{ inputs.CHART_NAME }}/Chart.yaml
+          sed -i "s/^appVersion: .*/appVersion: \"${{ inputs.APP_VERSION }}\"/" charts/${{ inputs.CHART_NAME }}/Chart.yaml
           sed -i "s/^version: .*/version: $NEXT_VERSION/" charts/${{ inputs.CHART_NAME }}/Chart.yaml
 
           docker run --rm --volume "$(pwd)/charts/${{ inputs.CHART_NAME }}:/helm-docs" -u $(id -u) jnorwood/helm-docs:latest
