@@ -18,9 +18,13 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: {{ $.Values.argocd.project }}-app
-  {{- if .valueSources }}
+  {{- $repo := . }}
+  {{- if or .valueSources .chart }}
   {{- $externalSources := list }}
   {{- range .valueSources }}
+    {{- if and $repo.chart (eq .type "internal") }}
+      {{- fail (printf "repository %q : les values de type 'internal' ne sont pas supportées pour un chart OCI/Helm (%s/%s), utilisez une source de type 'external'" $repo.name $repo.repoURL $repo.chart) }}
+    {{- end }}
     {{- if eq .type "external" }}
       {{- $externalSources = append $externalSources . }}
     {{- end }}
@@ -28,7 +32,12 @@ spec:
   sources:
     - repoURL: {{ .repoURL }}
       targetRevision: {{ .targetRevision }}
+      {{- if .chart }}
+      chart: {{ .chart }}
+      {{- else }}
       path: {{ .path }}
+      {{- end }}
+      {{- if .valueSources }}
       helm:
         valueFiles:
           {{- range .valueSources }}
@@ -38,6 +47,7 @@ spec:
           - ${{ .ref }}/{{ .path }}
           {{- end }}
           {{- end }}
+      {{- end }}
     {{- range $externalSources }}
     - repoURL: {{ .repoURL }}
       targetRevision: {{ .targetRevision }}
