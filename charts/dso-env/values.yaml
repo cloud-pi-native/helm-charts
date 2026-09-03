@@ -80,6 +80,20 @@ application:
   #       path: values-integ.yaml
   #     - type: internal
   #       path: values-overrides.yaml
+  # -- Dépôt de type registry Helm/OCI : renseigner `chart` (et `targetRevision` = version du chart) au lieu de `path`.
+  # Uniquement supporté avec `valueSources`, dont les entrées doivent toutes être de type `external`.
+  # - name: quota-explorer-oci
+  #   id: 7d2c1b90-4a5e-4f1c-8b3d-2e6f9a0c1d34
+  #   repoURL: oci://registry.example.com/charts
+  #   chart: quota-explorer
+  #   targetRevision: 1.2.3
+  #   autosync: true
+  #   valueSources:
+  #     - type: external
+  #       ref: infra-values
+  #       repoURL: https://gitlab.com/projects/org/demo/infra-values.git
+  #       targetRevision: HEAD
+  #       path: values-integ.yaml
 # -- Ensemble de paramètres de fonctionnalités - expérimental
 features:
   # -- Support des rôles affinés
