@@ -64,6 +64,8 @@ grafana:
   #    value: "example"
   #  - name: ANOTHER_VAR
   #    value: "another"
+  # -- Grafana version to deploy
+  version: ""
 
 # -- Select default dashboard creation among available json files
 dashboards:
