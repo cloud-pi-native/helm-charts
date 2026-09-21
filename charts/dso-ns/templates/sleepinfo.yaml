@@ -1,0 +1,28 @@
+{{- $env := index .Values.common "dso/environment" -}}
+{{- $skipSleep := false -}}
+{{- range .Values.application.sleep.skipEnvironmentPrefixes -}}
+{{- if hasPrefix . $env -}}
+{{- $skipSleep = true -}}
+{{- end -}}
+{{- end -}}
+{{- if and .Values.application.sleep.enabled (not $skipSleep) -}}
+apiVersion: kube-green.com/v1alpha1
+kind: SleepInfo
+metadata:
+  name: {{ index .Values.common "dso/project.slug" }}-sleep
+  namespace: {{ .Values.application.destination.namespace }}
+spec:
+  sleepAt: {{ .Values.application.sleep.sleepAt | quote }}
+  wakeUpAt: {{ .Values.application.sleep.wakeUpAt | quote }}
+  weekdays: {{ .Values.application.sleep.weekdays | quote }}
+  suspendCronJobs: {{ .Values.application.sleep.suspendCronJobs }}
+  timeZone: {{ .Values.application.sleep.timeZone }}
+  patches:
+      - target:
+          group: postgresql.cnpg.io
+          kind: Cluster
+        patch: |-
+          - op: add
+            path: /metadata/annotations/cnpg.io~1hibernation
+            value: "on"
+{{- end }}

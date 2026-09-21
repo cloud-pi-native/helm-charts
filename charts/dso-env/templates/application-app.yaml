@@ -64,4 +64,29 @@ spec:
       selfHeal: true
       allowEmpty: true
   {{- end }}
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+      managedFieldsManagers:
+        - kube-green-controller-manager
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/replicas
+      managedFieldsManagers:
+        - kube-green-controller-manager
+    - group: batch
+      kind: CronJob
+      jsonPointers:
+        - /spec/suspend
+      managedFieldsManagers:
+        - kube-green-controller-manager
+    - group: postgresql.cnpg.io
+      kind: Cluster
+      jsonPointers:
+        - /metadata/annotations/cnpg.io~1hibernation
+      managedFieldsManagers:
+        - kube-green-controller-manager
 {{- end }}
