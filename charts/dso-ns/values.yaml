@@ -25,3 +25,14 @@ application:
     secretId:
     # -- Répertoire racine des projets à utiliser dans Vault
     projectsRootDir: forge-mi/projects
+  sleep:
+    enabled: true
+    # -- Préfixes d'environnement pour lesquels le sleep n'est pas créé (ex. prod, prd)
+    skipEnvironmentPrefixes:
+      - prod
+      - prd
+    sleepAt: "18:30"
+    timeZone: Europe/Rome
+    wakeUpAt: "7:30"
+    weekdays: 1-5
+    suspendCronJobs: true
