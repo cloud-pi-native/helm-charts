@@ -15,7 +15,7 @@ groups:
           message: Vault {{`{{`}} $labels.pod {{`}}`}} pod in namespace {{`{{`}} $labels.namespace {{`}}`}} is not healthy (sealed?). Check its logs.
           summary: Vault instance is not healthy (sealed?)
         expr: |
-          up{job="(.*-)*vault-active",pod=~"(.*-)*vault(-.*)*"} == 0
+          up{job=~"(.*-)*vault(-.*)*-active",pod=~"(.*-)*vault(-.*)*"} == 0
         for: 5m
         labels:
           severity: warning
@@ -29,7 +29,7 @@ groups:
           container="vault",
           namespace="{{ .Values.app.namespacePrefix }}vault"}) == 1)
           or sum(kube_pod_container_status_ready{
-          pod=~"(.*-)*vault\\d+",
+          pod=~"(.*-)*vault-\\d+",
           container="vault",
           namespace="{{ .Values.app.namespacePrefix }}vault"}) == 0
         for: 5m
