@@ -67,6 +67,8 @@ This Helm chart deploy Observatorium API and help to manage tenant from values f
 | reverseProxy.image | string | `"nginxinc/nginx-unprivileged:1.28-alpine"` | Container image used for the reverse proxy (default: non-root NGINX image). |
 | reverseProxy.logsHost | string | `""` | Hostname of the logs backend to which requests should be proxied. |
 | reverseProxy.metricsHost | string | `""` | Hostname of the metrics backend to which requests should be proxied. |
+| reverseProxy.podSecurityContext | object | `{}` | Pod security context of the reverse proxy. |
+| reverseProxy.securityContext | object | `{}` | Container security context of the reverse proxy. |
 | securityContext | object | `{}` |  |
 | service.port | int | `80` |  |
 | service.type | string | `"ClusterIP"` |  |

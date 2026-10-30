@@ -15,9 +15,17 @@ spec:
       labels:
         {{- include "observatorium.selectorLabels" (dict "ctx" $ "component" "nginx") | nindent 8 }}
     spec:
+      {{- with .Values.reverseProxy.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: nginx
           image: {{ .Values.reverseProxy.image }}
+          {{- with .Values.reverseProxy.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           ports:
             - containerPort: 8080
           volumeMounts:
