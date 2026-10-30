@@ -36,8 +36,9 @@ This Helm chart deploy Grafana instances and default dashboards for each project
 | oauth.secret | string | `""` | Shared secret to autorize OAuth usage |
 | oauth.url | string | `"https://grafana.example.com/realms/dso"` | URL of the Idp provider to use |
 | projects | list | `[{"envs":{"hprod":{"groups":["Editors","Viewers"]},"prod":{"groups":["Editors","Viewers"]}},"projectName":"console","projectRepository":{"path":".","url":"https://gitlab.com/project/infra-observability.git"}}]` | Default list of sample projects. One Grafana instance is created for each item. This is list is overriden by the global.projects list if provided. |
-| server | object | `{"certManager":{"enabled":true},"ingressClassName":"nginx","ingressPathType":"ImplementationSpecific","url":"grafana.example.com"}` | Ingress server configuration |
-| server.certManager | object | `{"enabled":true}` | Enabling cert manager configuration |
+| server | object | `{"certManager":{"clusterIssuer":"","enabled":true},"ingressClassName":"nginx","ingressPathType":"ImplementationSpecific","url":"grafana.example.com"}` | Ingress server configuration |
+| server.certManager | object | `{"clusterIssuer":"","enabled":true}` | Enabling cert manager configuration |
+| server.certManager.clusterIssuer | string | `""` | Cluster issuer used for the cert-manager annotation (defaults to "letsencrypt-prod" when empty) |
 | server.ingressClassName | string | `"nginx"` | Class name of the ingress controller to use |
 | server.ingressPathType | string | `"ImplementationSpecific"` | Ingress path type to use for routing. Some ingress class controllers (e.g. Apisix), does not support `ImplementationSpecific` so we make it the default, but be optionally overridable. |
 | server.url | string | `"grafana.example.com"` | Url of the ingress frontend. The instance is reachable with a /<name> context. |
