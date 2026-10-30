@@ -31,6 +31,7 @@ This Helm chart deploy Observatorium API and help to manage tenant from values f
 | autoscaling.minReplicas | int | `1` |  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | extraEnv | list | `[]` |  |
+| extraObjects | list | `[]` | Extra Kubernetes objects rendered with the chart (list of maps or YAML strings, each passed through `tpl`). Objects without `metadata.namespace` land in the release namespace. |
 | fullnameOverride | string | `""` |  |
 | global.projects | string | `nil` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
