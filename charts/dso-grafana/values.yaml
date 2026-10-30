@@ -43,6 +43,8 @@ server:
   # -- Enabling cert manager configuration
   certManager:
     enabled: true
+    # -- Cluster issuer used for the cert-manager annotation (defaults to "letsencrypt-prod" when empty)
+    clusterIssuer: ""
   # -- Class name of the ingress controller to use
   ingressClassName: nginx
   # -- Ingress path type to use for routing.
