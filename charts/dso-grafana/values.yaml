@@ -73,3 +73,13 @@ dashboards:
   - kyverno-policy-reporter.json
   - security-overview.json
   - trivy-dashboard.json
+
+# -- Extra Kubernetes objects rendered with the chart (list of maps or YAML strings, each passed through `tpl`). Objects without `metadata.namespace` land in the release namespace. The chart's own resources use `grafanaNamespace`, so set `metadata.namespace` explicitly when targeting it.
+extraObjects: []
+# - apiVersion: networking.k8s.io/v1
+#   kind: NetworkPolicy
+#   metadata:
+#     name: default-deny-ingress
+#   spec:
+#     podSelector: {}
+#     policyTypes: [Ingress]
