@@ -158,5 +158,9 @@ reverseProxy:
   metricsHost: ""
   # -- Hostname of the logs backend to which requests should be proxied.
   logsHost: ""
+  # -- Pod security context of the reverse proxy.
+  podSecurityContext: {}
+  # -- Container security context of the reverse proxy.
+  securityContext: {}
   # -- Container image used for the reverse proxy (default: non-root NGINX image).
   image: nginxinc/nginx-unprivileged:1.28-alpine

@@ -1,6 +1,6 @@
 # observatorium
 
-![Version: 0.5.4](https://img.shields.io/badge/Version-0.5.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main-2025-02-10-1bcf722](https://img.shields.io/badge/AppVersion-main--2025--02--10--1bcf722-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: main-2025-02-10-1bcf722](https://img.shields.io/badge/AppVersion-main--2025--02--10--1bcf722-informational?style=flat-square)
 
 This Helm chart deploy Observatorium API and help to manage tenant from values file.
 
@@ -66,6 +66,8 @@ This Helm chart deploy Observatorium API and help to manage tenant from values f
 | reverseProxy.image | string | `"nginxinc/nginx-unprivileged:1.28-alpine"` | Container image used for the reverse proxy (default: non-root NGINX image). |
 | reverseProxy.logsHost | string | `""` | Hostname of the logs backend to which requests should be proxied. |
 | reverseProxy.metricsHost | string | `""` | Hostname of the metrics backend to which requests should be proxied. |
+| reverseProxy.podSecurityContext | object | `{}` | Pod security context of the reverse proxy. |
+| reverseProxy.securityContext | object | `{}` | Container security context of the reverse proxy. |
 | securityContext | object | `{}` |  |
 | service.port | int | `80` |  |
 | service.type | string | `"ClusterIP"` |  |
