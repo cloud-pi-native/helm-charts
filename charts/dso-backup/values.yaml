@@ -46,6 +46,28 @@ schedule:
     tag: ""
     pullPolicy: "IfNotPresent"
 
+  # Pod-level securityContext of the backup CronJob (empty by default: nothing is rendered).
+  # Example of a "restricted" Pod Security Standard profile (adapt the uid/gid to the
+  # image you use; the image must be able to run as non-root):
+  #
+  # podSecurityContext:
+  #   runAsNonRoot: true
+  #   runAsUser: 1000
+  #   runAsGroup: 1000
+  #   seccompProfile:
+  #     type: RuntimeDefault
+  podSecurityContext: {}
+
+  # Container-level securityContext of the backup CronJob (empty by default).
+  # Example of a "restricted" profile:
+  #
+  # containerSecurityContext:
+  #   allowPrivilegeEscalation: false
+  #   capabilities:
+  #     drop:
+  #       - ALL
+  containerSecurityContext: {}
+
 # Velero backup configuration
 velero:
   # Namespace where Velero operator is installed

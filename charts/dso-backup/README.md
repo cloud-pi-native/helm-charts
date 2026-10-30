@@ -32,11 +32,13 @@ Generic Helm chart for orchestrating Velero backups with different strategies:
 | rbac.serviceAccountName | string | `""` |  |
 | schedule.activeDeadlineSeconds | int | `7200` |  |
 | schedule.backoffLimit | int | `2` |  |
+| schedule.containerSecurityContext | object | `{}` | Container securityContext of the backup CronJob (empty by default) |
 | schedule.cron | string | `"0 0 * * *"` |  |
 | schedule.failedJobsHistoryLimit | int | `3` |  |
 | schedule.image.pullPolicy | string | `"IfNotPresent"` |  |
 | schedule.image.repository | string | `"ghcr.io/cloud-pi-native/backup-tools"` |  |
 | schedule.image.tag | string | `""` |  |
+| schedule.podSecurityContext | object | `{}` | Pod securityContext of the backup CronJob (empty by default) |
 | schedule.successfulJobsHistoryLimit | int | `3` |  |
 | schedule.ttlSecondsAfterFinished | int | `7200` |  |
 | strategy | string | `"resources-only"` |  |

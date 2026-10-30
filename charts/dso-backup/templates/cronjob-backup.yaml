@@ -27,6 +27,10 @@ spec:
         spec:
           serviceAccountName: {{ include "dso-backup.serviceAccountName" . }}
           restartPolicy: Never
+          {{- with .Values.schedule.podSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.schedule.activeDeadlineSeconds }}
           activeDeadlineSeconds: {{ . }}
           {{- end }}
@@ -35,6 +39,10 @@ spec:
             image: "{{ include "dso-backup.image" . }}"
             imagePullPolicy: {{ include "dso-backup.imagePullPolicy" . }}
             command: ["/bin/bash", "/scripts/orchestrator.sh"]
+            {{- with .Values.schedule.containerSecurityContext }}
+            securityContext:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
             env:
             - name: NAMESPACE
               value: {{ include "dso-backup.namespace" . | quote }}
