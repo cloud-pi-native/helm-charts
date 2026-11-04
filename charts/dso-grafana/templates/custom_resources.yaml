@@ -20,6 +20,8 @@ spec:
   namespaceResourceWhitelist:
   - group: '*'
     kind: 'GrafanaDashboard'
+  - group: 'grafana.integreatly.org'
+    kind: 'GrafanaFolder'
   - group: '*'
     kind: 'PrometheusRule'
   roles:
