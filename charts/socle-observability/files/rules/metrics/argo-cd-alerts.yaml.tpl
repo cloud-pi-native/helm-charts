@@ -28,7 +28,7 @@ groups:
       - alert: Argo CD Redis HA not available
         annotations:
           message: Argo CD Redis HA in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
-          summary: Argo CD Redis HA down (no ready pod)"
+          summary: Argo CD Redis HA down (no ready pod)
         expr: |
           sum by(namespace) (kube_pod_status_ready{
           pod=~"(.*-)*redis-ha-server(-.*)*",
@@ -40,7 +40,7 @@ groups:
       - alert: Argo CD Redis HA Haproxy not available
         annotations:
           message: Argo CD Redis HA Haproxy has not been available for the last 5 minutes.
-          summary: Argo CD Redis HA Haproxy down (no ready pod)"
+          summary: Argo CD Redis HA Haproxy down (no ready pod)
         expr: |
           sum by(namespace) (kube_pod_status_ready{
           pod=~"(.*-)*redis-ha-haproxy(-.*)*",
@@ -52,7 +52,7 @@ groups:
       - alert: Argo CD Server not available
         annotations:
           message: Argo CD Server has not been available for the last 5 minutes.
-          summary: Argo CD Server down (no ready pod)"
+          summary: Argo CD Server down (no ready pod)
         expr: |
           sum by(namespace) (kube_pod_status_ready{
           pod=~"(.*-)*argocd-server(-.*)*",
@@ -64,7 +64,7 @@ groups:
       - alert: Argo CD Repo Server not available
         annotations:
           message: Argo CD Repo Server has not been available for the last 5 minutes.
-          summary: Argo CD Repo Server down (no ready pod)"
+          summary: Argo CD Repo Server down (no ready pod)
         expr: |
           sum by(namespace) (kube_pod_status_ready{
           pod=~"(.*-)*argocd-repo-server(-.*)*",
@@ -76,7 +76,7 @@ groups:
       - alert: Argo CD Applicationset Controller not available
         annotations:
           message: Argo CD Applicationset Controller has not been available for the last 5 minutes.
-          summary: Argo CD Applicationset Controller down (no ready pod)"
+          summary: Argo CD Applicationset Controller down (no ready pod)
         expr: |
           sum by(namespace) (kube_pod_status_ready{
           pod=~"(.*-)*argocd-applicationset-controller(-.*)*",
@@ -88,7 +88,7 @@ groups:
       - alert: Argo CD Application Controller not available
         annotations:
           message: Argo CD Application Controller has not been available for the last 5 minutes.
-          summary: Argo CD Application Controller down (no ready pod)"
+          summary: Argo CD Application Controller down (no ready pod)
         expr: |
           sum by(namespace) (kube_pod_status_ready{
           pod=~"(.*-)*argocd-application-controller(-.*)*",
