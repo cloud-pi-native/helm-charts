@@ -51,15 +51,35 @@ data:
       MC_OPTS+=(--insecure)
     fi
 
+    # Keep the mc config in a writable location: the pod may run with a read-only
+    # root filesystem and/or an arbitrary non-root uid that cannot write to $HOME.
+    export MC_CONFIG_DIR="${MC_CONFIG_DIR:-/tmp/.mc}"
+
     # Configure mc alias for the S3 destination.
     mc "${MC_OPTS[@]}" alias set s3backup "${S3_ENDPOINT}" "${S3_ACCESS_KEY}" "${S3_SECRET_KEY}" >/dev/null
 
     # Step 1: discover the Vault leader pod.
     echo "Step 1: Locating Vault leader pod (selector: ${LABEL_SELECTOR})..."
 
-    LEADER_POD="$(kubectl get pods -n "${NAMESPACE}" -l "${LABEL_SELECTOR}" \
-      -o jsonpath='{range .items[?(@.metadata.labels.vault-active=="true")]}{.metadata.name}{"\n"}{end}' \
-      | head -1)"
+    # The vault-active label is maintained by Vault through the Kubernetes API and can be stale
+    # (e.g. failed PATCH after a leader change): ask each pod for its real HA mode first.
+    LEADER_POD=""
+    for POD in $(kubectl get pods -n "${NAMESPACE}" -l "${LABEL_SELECTOR}" \
+      -o jsonpath='{.items[*].metadata.name}'); do
+      HA_MODE="$(kubectl exec -n "${NAMESPACE}" "${POD}" -- vault status 2>/dev/null \
+        | awk '/^HA Mode/ {print $3}' || true)"
+      if [ "${HA_MODE}" = "active" ]; then
+        LEADER_POD="${POD}"
+        break
+      fi
+    done
+
+    if [ -z "${LEADER_POD}" ]; then
+      echo "  No pod reports HA mode active; falling back to the vault-active label."
+      LEADER_POD="$(kubectl get pods -n "${NAMESPACE}" -l "${LABEL_SELECTOR}" \
+        -o jsonpath='{range .items[?(@.metadata.labels.vault-active=="true")]}{.metadata.name}{"\n"}{end}' \
+        | head -1)"
+    fi
 
     if [ -z "${LEADER_POD}" ]; then
       echo "  No pod carries vault-active=true; falling back to first matching pod."
@@ -105,11 +125,13 @@ data:
     kubectl exec -n "${NAMESPACE}" "${LEADER_POD}" -- rm -f "${SNAPSHOT_PATH}" || true
 
     # Persist the last snapshot reference as a pod annotation so restore tools
-    # can find the most recent object.
+    # can find the most recent object. Best effort: the update of the Vault pod may be
+    # rejected (RBAC, admission), and the snapshot is already safe in S3.
     kubectl annotate pod "${LEADER_POD}" -n "${NAMESPACE}" \
       backup.dso/last-vault-snapshot="${SNAPSHOT_NAME}" \
       backup.dso/last-vault-snapshot-uri="${S3_URI}" \
-      --overwrite >/dev/null
+      --overwrite >/dev/null \
+      || echo "  WARNING: could not annotate ${LEADER_POD} (snapshot is in S3, see URI below)"
 
     echo ""
     echo "VAULT PRE-HOOK COMPLETED"
