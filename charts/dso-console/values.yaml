@@ -284,7 +284,7 @@ backend:
   replicaCount: 1
   ## Console CPN backend image.
   image:
-    # -- Repository to use for the Console CPN server.
+    # -- Repository to use for the Console CPN backend.
     repository: "ghcr.io/cloud-pi-native/console/server-nestjs"
     # -- Image pull policy for the Console CPN backend.
     pullPolicy: "Always"

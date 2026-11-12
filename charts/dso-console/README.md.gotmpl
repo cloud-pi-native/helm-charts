@@ -4,11 +4,9 @@
 
 {{ template "chart.description" . }}
 
-## Compatibility and upgrades
+## Compatibility
 
-This chart deploys only the NestJS backend (`console/server-nestjs`), without the legacy server or nginx-strangler. It targets Console **v9.29.0**, which will be published after the preparatory chart MR. **Do not deploy this chart with the transitional v9.28.0 default image tags.** Before deployment, use the chart associated with v9.29.0 or explicitly set both `client.image.tag` and `backend.image.tag` to the published `v9.29.0` images.
-
-Chart 3.x removes `server.*` and `strangler.*`. Read [UPGRADING.md](UPGRADING.md) before upgrading from 2.x, including Ingress settings, Prisma migrations and data-preservation checks. Helm lint and rendering do not qualify a real installation or upgrade.
+This chart targets Console **v9.29.0**. Before deployment, use the chart associated with v9.29.0 or explicitly set both `client.image.tag` and `backend.image.tag` to the published `v9.29.0` images. **Do not deploy with v9.28.0 image tags.**
 
 {{ template "chart.homepageLine" . }}
 
