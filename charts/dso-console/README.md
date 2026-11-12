@@ -4,11 +4,9 @@
 
 A Helm chart to deploy Cloud Pi Native Console
 
-## Compatibility and upgrades
+## Compatibility
 
-This chart deploys only the NestJS backend (`console/server-nestjs`), without the legacy server or nginx-strangler. It targets Console **v9.29.0**, which will be published after the preparatory chart MR. **Do not deploy this chart with the transitional v9.28.0 default image tags.** Before deployment, use the chart associated with v9.29.0 or explicitly set both `client.image.tag` and `backend.image.tag` to the published `v9.29.0` images.
-
-Chart 3.x removes `server.*` and `strangler.*`. Read [UPGRADING.md](UPGRADING.md) before upgrading from 2.x, including Ingress settings, Prisma migrations and data-preservation checks. Helm lint and rendering do not qualify a real installation or upgrade.
+This chart targets Console **v9.29.0**. Before deployment, use the chart associated with v9.29.0 or explicitly set both `client.image.tag` and `backend.image.tag` to the published `v9.29.0` images. **Do not deploy with v9.28.0 image tags.**
 
 **Homepage:** <https://cloud-pi-native.fr>
 
@@ -61,7 +59,7 @@ Chart 3.x removes `server.*` and `strangler.*`. Read [UPGRADING.md](UPGRADING.md
 | backend.healthcheckPath | string | `"/api/v1/healthz"` | Console CPN backend container healthcheck endpoint. |
 | backend.hostAliases | list | `[]` | Host aliases that will be injected at pod-level into /etc/hosts. |
 | backend.image.pullPolicy | string | `"Always"` | Image pull policy for the Console CPN backend. |
-| backend.image.repository | string | `"ghcr.io/cloud-pi-native/console/server-nestjs"` | Repository to use for the Console CPN server. |
+| backend.image.repository | string | `"ghcr.io/cloud-pi-native/console/server-nestjs"` | Repository to use for the Console CPN backend. |
 | backend.image.tag | string | `""` | Tag to use for the Console CPN backend. # Overrides the image tag whose default is the chart appVersion. |
 | backend.initContainers | list | `[]` | Init containers to add to the Console CPN client pod. |
 | backend.livenessProbe.enabled | bool | `true` | Whether or not enable the probe. |
