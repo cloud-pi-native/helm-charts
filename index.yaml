@@ -376,6 +376,42 @@ entries:
   cpn-console:
   - apiVersion: v2
     appVersion: v9.28.0
+    created: "2026-11-12T14:49:57.543804788Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.7.3
+    - condition: keycloak.enabled
+      name: keycloak
+      repository: https://charts.bitnami.com/bitnami
+      version: 19.3.0
+    - alias: cnpg-operator
+      condition: cnpg-operator.enabled
+      name: cloudnative-pg
+      repository: https://cloudnative-pg.github.io/charts
+      version: 0.21.5
+    description: A Helm chart to deploy Cloud Pi Native Console
+    digest: b67747c435a4acdfbb603a30bba82eb8300d2a6a339f6dc9f8ed3ecb544a4f2f
+    home: https://cloud-pi-native.fr
+    icon: https://cloud-pi-native.fr/favicon.ico
+    maintainers:
+    - email: cloudpinative-relations@interieur.gouv.fr
+      name: omiladi
+      url: https://www.interieur.gouv.fr/
+    - email: cloudpinative-relations@interieur.gouv.fr
+      name: KepoParis
+      url: https://www.interieur.gouv.fr/
+    name: cpn-console
+    sources:
+    - https://github.com/cloud-pi-native/helm-charts
+    - https://github.com/cloud-pi-native/console
+    type: application
+    urls:
+    - https://github.com/cloud-pi-native/helm-charts/releases/download/cpn-console-3.0.0/cpn-console-3.0.0.tgz
+    version: 3.0.0
+  - apiVersion: v2
+    appVersion: v9.28.0
     created: "2026-11-02T09:44:17.27597758Z"
     dependencies:
     - condition: postgresql.enabled
@@ -7339,4 +7375,4 @@ entries:
     urls:
     - https://github.com/cloud-pi-native/helm-charts/releases/download/socle-observability-1.0.0/socle-observability-1.0.0.tgz
     version: 1.0.0
-generated: "2026-11-10T15:20:51.865074119Z"
+generated: "2026-11-12T14:49:57.544312352Z"
