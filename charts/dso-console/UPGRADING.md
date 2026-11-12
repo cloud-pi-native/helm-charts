@@ -133,18 +133,15 @@ The client Nginx remains useful for static files; it is not an API reverse proxy
    recovery procedure and the verified backup rather than assuming automatic
    database rollback.
 
-## Automated checks and remaining qualification
+## Chart checks and remaining qualification
 
-Run from the repository root with Helm 3 and PyYAML 6.0.3:
+Run from the repository root with Helm 3:
 
 ```sh
-python3 -m unittest discover -s ci/tests -v
 helm lint charts/dso-console
 ```
 
-These checks cover resource removal, API/Swagger routes, configurable ports,
-Ingress options, backend probes/default command, credentials and rendering with
-old values in upgrade mode. They do **not** install a release or execute Prisma.
+Helm lint and rendering do **not** install a release or execute Prisma.
 Real fresh-install/upgrade, authentication, WebSocket and data-preservation
 qualification remains required after the v9.29.0 images are available. Track those
 proofs and the delivered version pairing in issue
