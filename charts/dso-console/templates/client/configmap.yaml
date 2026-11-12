@@ -4,8 +4,8 @@ metadata:
   name: {{ include "cpnConsole.fullname" . }}-client
   labels: {{- include "cpnConsole.client.labels" . | nindent 4 }}
 data:
-  SERVER_HOST: {{ include "cpnConsole.fullname" . }}-strangler
-  SERVER_PORT: {{ .Values.strangler.service.port | quote }}
+  SERVER_HOST: {{ include "cpnConsole.fullname" . }}-backend
+  SERVER_PORT: {{ .Values.backend.service.port | quote }}
   KEYCLOAK_PROTOCOL: {{ .Values.global.keycloak.protocol.frontend }}
   KEYCLOAK_DOMAIN: {{ .Values.global.keycloak.domain.frontend }}
   KEYCLOAK_REALM: {{ .Values.global.keycloak.realm }}

@@ -2,3 +2,6 @@
 /charts/*/charts
 **/Chart.lock
 **/.DS_Store
+
+# Python rendering tests
+__pycache__/
