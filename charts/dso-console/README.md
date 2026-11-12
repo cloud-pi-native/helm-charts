@@ -4,10 +4,6 @@
 
 A Helm chart to deploy Cloud Pi Native Console
 
-## Compatibility
-
-This chart targets Console **v9.29.0**. Before deployment, use the chart associated with v9.29.0 or explicitly set both `client.image.tag` and `backend.image.tag` to the published `v9.29.0` images. **Do not deploy with v9.28.0 image tags.**
-
 **Homepage:** <https://cloud-pi-native.fr>
 
 ## Maintainers
