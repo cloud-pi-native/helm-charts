@@ -1,8 +1,14 @@
 # cpn-console
 
-![Version: 2.4.50](https://img.shields.io/badge/Version-2.4.50-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v9.28.0](https://img.shields.io/badge/AppVersion-v9.28.0-informational?style=flat-square)
+![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v9.28.0](https://img.shields.io/badge/AppVersion-v9.28.0-informational?style=flat-square)
 
 A Helm chart to deploy Cloud Pi Native Console
+
+## Compatibility and upgrades
+
+This chart deploys only the NestJS backend (`console/server-nestjs`), without the legacy server or nginx-strangler. It targets Console **v9.29.0**, which will be published after the preparatory chart MR. **Do not deploy this chart with the transitional v9.28.0 default image tags.** Before deployment, use the chart associated with v9.29.0 or explicitly set both `client.image.tag` and `backend.image.tag` to the published `v9.29.0` images.
+
+Chart 3.x removes `server.*` and `strangler.*`. Read [UPGRADING.md](UPGRADING.md) before upgrading from 2.x, including Ingress settings, Prisma migrations and data-preservation checks. Rendering tests do not qualify a real installation or upgrade.
 
 **Homepage:** <https://cloud-pi-native.fr>
 
@@ -266,126 +272,6 @@ A Helm chart to deploy Cloud Pi Native Console
 | postgresql.primary.service.ports.postgresql | int | `5432` |  |
 | postgresql.primary.service.type | string | `"ClusterIP"` |  |
 | postgresql.readReplicas.persistence.size | string | `"1Gi"` |  |
-| server | object | `{"affinity":{},"autoscaling":{"enabled":false,"maxReplicas":3,"minReplicas":1,"targetCPUUtilizationPercentage":80,"targetMemoryUtilizationPercentage":80},"container":{"args":[],"command":[],"port":8080,"securityContext":{}},"dbDataCm":"","disabledPlugins":"","env":{},"envFrom":[],"extraCa":{"key":"","mountSubPath":"ca_certs","name":""},"extraContainers":[],"extraVolumeMounts":[],"extraVolumes":[],"fetchContainer":{"image":"docker.io/wbitt/network-multitool:alpine-minimal","pullPolicy":"IfNotPresent"},"healthcheckPath":"/api/v1/healthz","hostAliases":[],"image":{"pullPolicy":"Always","repository":"ghcr.io/cloud-pi-native/console/server","tag":""},"initContainers":[],"livenessProbe":{"enabled":true,"failureThreshold":3,"initialDelaySeconds":30,"periodSeconds":30,"successThreshold":1,"timeoutSeconds":5},"nodeSelector":{},"plugins":[],"podAnnotations":{},"podLabels":{},"podSecurityContext":{},"proxy":{"enabled":false,"env":[{"name":"http_proxy","value":"http://proxy.example.com:3128"},{"name":"https_proxy","value":"http://proxy.example.com:3128"},{"name":"no_proxy","value":".cluster.local,.svc.cluster.local,.svc"}]},"readinessProbe":{"enabled":true,"failureThreshold":2,"initialDelaySeconds":15,"periodSeconds":10,"successThreshold":2,"timeoutSeconds":5},"replicaCount":1,"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"250m","memory":"128Mi"}},"secrets":{},"service":{"port":80,"type":"ClusterIP"},"serviceAccount":{"annotations":{},"create":true,"name":"cpn-console-server"},"startupProbe":{"enabled":true,"failureThreshold":10,"initialDelaySeconds":0,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":5},"strategy":{"type":"RollingUpdate"},"tolerations":[]}` | DEPRECATED. Will be progressively replaced by `backend` |
-| server.affinity | object | `{}` | Default affinity for Console CPN backend. |
-| server.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the Console CPN backend. |
-| server.autoscaling.maxReplicas | int | `3` | Maximum number of replicas for the Console CPN backend [HPA]. |
-| server.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the Console CPN backend [HPA]. |
-| server.autoscaling.targetCPUUtilizationPercentage | int | `80` | Average CPU utilization percentage for the Console CPN backend [HPA]. |
-| server.autoscaling.targetMemoryUtilizationPercentage | int | `80` | Average memory utilization percentage for the Console CPN backend [HPA]. |
-| server.container.args | list | `[]` | Console CPN backend container command args. |
-| server.container.command | list | `[]` | Console CPN backend container command. |
-| server.container.port | int | `8080` | Console CPN backend container port. |
-| server.container.securityContext | object | `{}` | Toggle and define container-level security context. |
-| server.dbDataCm | string | `""` | Name of the configmap with javascript data that need to be imported by the backend at start up. |
-| server.disabledPlugins | string | `""` | CSV list of plugins to disabled. |
-| server.env | object | `{}` | Console CPN backend container env variables, it will be injected into a configmap and loaded into the container. |
-| server.envFrom | list | `[]` | Console CPN backend container env variables loaded from configmap or secret reference. |
-| server.extraCa.key | string | `""` | The key to lookup. |
-| server.extraCa.mountSubPath | string | `"ca_certs"` | The path inside the container where the certificate file should be mount. This is a native Nodejs environment variable to extends certificates, see: https://nodejs.org/api/cli.html#node_extra_ca_certsfile. This mount path represent the subpath to use under the `/config` config root path. |
-| server.extraCa.name | string | `""` | The name of the configmap in namespace where certificates are stored. |
-| server.extraContainers | list | `[]` | Extra containers to add to the Console CPN backend pod as sidecars. |
-| server.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes) |
-| server.extraVolumes | list | `[]` | List of extra volumes to add. |
-| server.fetchContainer.image | string | `"docker.io/wbitt/network-multitool:alpine-minimal"` | Image used to fetch plugins inside the initContainer. |
-| server.fetchContainer.pullPolicy | string | `"IfNotPresent"` | Image pull policy to fetch plugins inside the initContainer. |
-| server.healthcheckPath | string | `"/api/v1/healthz"` | Console CPN backend container healthcheck endpoint. |
-| server.hostAliases | list | `[]` | Host aliases that will be injected at pod-level into /etc/hosts. |
-| server.image.pullPolicy | string | `"Always"` | Image pull policy for the Console CPN backend. |
-| server.image.repository | string | `"ghcr.io/cloud-pi-native/console/server"` | Repository to use for the Console CPN backend. |
-| server.image.tag | string | `""` | Tag to use for the Console CPN backend. # Overrides the image tag whose default is the chart appVersion. |
-| server.initContainers | list | `[]` | Init containers to add to the Console CPN client pod. |
-| server.livenessProbe.enabled | bool | `true` | Whether or not enable the probe. |
-| server.livenessProbe.failureThreshold | int | `3` | Minimum consecutive successes for the probe to be considered successful after having failed. |
-| server.livenessProbe.initialDelaySeconds | int | `30` | Whether or not enable the probe. |
-| server.livenessProbe.periodSeconds | int | `30` | Minimum consecutive failures for the probe to be considered failed after having succeeded. |
-| server.livenessProbe.successThreshold | int | `1` | Number of seconds after the container has started before probe is initiated. |
-| server.livenessProbe.timeoutSeconds | int | `5` | How often (in seconds) to perform the probe. |
-| server.nodeSelector | object | `{}` | Default node selector for Console CPN backend. |
-| server.plugins | list | `[]` | List of zips to download; basically curl url, unzip and stores it in plugins/external/<dir_name>. |
-| server.podAnnotations | object | `{}` | Annotations for the Console CPN backend deployed pods. |
-| server.podLabels | object | `{}` | Labels for the Console CPN backend deployed pods. |
-| server.podSecurityContext | object | `{}` | Toggle and define pod-level security context. |
-| server.proxy.enabled | bool | `false` | Enable Proxy configuration for the plugins initContainer. |
-| server.proxy.env | list | `[{"name":"http_proxy","value":"http://proxy.example.com:3128"},{"name":"https_proxy","value":"http://proxy.example.com:3128"},{"name":"no_proxy","value":".cluster.local,.svc.cluster.local,.svc"}]` | Map of environment variables to inject into the plugins initContainers. |
-| server.readinessProbe.enabled | bool | `true` | Whether or not enable the probe. |
-| server.readinessProbe.failureThreshold | int | `2` | Minimum consecutive failures for the probe to be considered failed after having succeeded. |
-| server.readinessProbe.initialDelaySeconds | int | `15` | Number of seconds after the container has started before probe is initiated. |
-| server.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the probe. |
-| server.readinessProbe.successThreshold | int | `2` | Minimum consecutive successes for the probe to be considered successful after having failed. |
-| server.readinessProbe.timeoutSeconds | int | `5` | Number of seconds after which the probe times out. |
-| server.replicaCount | int | `1` | The number of application controller pods to run. |
-| server.resources.limits.cpu | string | `"500m"` | CPU limit for the Console CPN backend. |
-| server.resources.limits.memory | string | `"512Mi"` | Memory limit for the Console CPN backend. |
-| server.resources.requests.cpu | string | `"250m"` | CPU request for the Console CPN backend. |
-| server.resources.requests.memory | string | `"128Mi"` | Memory request for the Console CPN backend. |
-| server.secrets | object | `{}` | Console CPN backend container env secrets, it will be injected into a secret and loaded into the container. |
-| server.service.port | int | `80` | Console CPN backend service port. |
-| server.service.type | string | `"ClusterIP"` | Console CPN backend service type. |
-| server.serviceAccount.annotations | object | `{}` | Annotations applied to created service account. |
-| server.serviceAccount.create | bool | `true` | Create a service account for the Console CPN backend. |
-| server.serviceAccount.name | string | `"cpn-console-server"` | Service account name. |
-| server.startupProbe.enabled | bool | `true` | Whether or not enable the probe. |
-| server.startupProbe.failureThreshold | int | `10` | Minimum consecutive failures for the probe to be considered failed after having succeeded. |
-| server.startupProbe.initialDelaySeconds | int | `0` | Number of seconds after the container has started before probe is initiated. |
-| server.startupProbe.periodSeconds | int | `10` | How often (in seconds) to perform the probe. |
-| server.startupProbe.successThreshold | int | `1` | Minimum consecutive successes for the probe to be considered successful after having failed. |
-| server.startupProbe.timeoutSeconds | int | `5` | Number of seconds after which the probe times out. |
-| server.strategy.type | string | `"RollingUpdate"` | Strategy type used to replace old Pods by new ones, can be "Recreate" or "RollingUpdate". |
-| server.tolerations | list | `[]` | Default tolerations for Console CPN backend. |
-| strangler.affinity | object | `{}` | Default affinity for Console CPN strangler. |
-| strangler.autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler ([HPA]) for the Console CPN strangler. |
-| strangler.autoscaling.maxReplicas | int | `3` | Maximum number of replicas for the Console CPN strangler [HPA]. |
-| strangler.autoscaling.minReplicas | int | `1` | Minimum number of replicas for the Console CPN strangler [HPA]. |
-| strangler.autoscaling.targetCPUUtilizationPercentage | int | `80` | Average CPU utilization percentage for the Console CPN strangler [HPA]. |
-| strangler.autoscaling.targetMemoryUtilizationPercentage | int | `80` | Average memory utilization percentage for the Console CPN strangler [HPA]. |
-| strangler.container.args | list | `[]` | Console CPN strangler container command args. |
-| strangler.container.command | list | `[]` | Console CPN strangler container command. |
-| strangler.container.port | int | `8080` | Console CPN strangler container port. |
-| strangler.container.securityContext | object | `{}` | Toggle and define container-level security context. |
-| strangler.env | object | `{}` | Console CPN strangler container env variables, it will be injected into a configmap and loaded into the container. |
-| strangler.envFrom | list | `[]` | Console CPN strangler container env variables loaded from configmap or secret reference. |
-| strangler.extraContainers | list | `[]` | Extra containers to add to the Console CPN strangler pod as sidecars. |
-| strangler.extraVolumeMounts | list | `[]` | List of extra mounts to add (normally used with extraVolumes). |
-| strangler.extraVolumes | list | `[]` | List of extra volumes to add. |
-| strangler.healthcheckPath | string | `"/health"` | Console CPN strangler container healthcheck endpoint. |
-| strangler.hostAliases | list | `[]` | Host aliases that will be injected at pod-level into /etc/hosts. |
-| strangler.image.pullPolicy | string | `"Always"` | Image pull policy for the Console CPN strangler. |
-| strangler.image.repository | string | `"ghcr.io/cloud-pi-native/console/nginx-strangler"` | Repository to use for the Console CPN strangler. |
-| strangler.image.tag | string | `""` | Tag to use for the Console CPN strangler. # Overrides the image tag whose default is the chart appVersion. |
-| strangler.initContainers | list | `[]` | Init containers to add to the Console CPN strangler pod. |
-| strangler.livenessProbe.enabled | bool | `true` | Whether or not enable the probe. |
-| strangler.livenessProbe.failureThreshold | int | `3` | Minimum consecutive failures for the probe to be considered failed after having succeeded. |
-| strangler.livenessProbe.initialDelaySeconds | int | `30` | Number of seconds after the container has started before probe is initiated. |
-| strangler.livenessProbe.periodSeconds | int | `30` | How often (in seconds) to perform the probe. |
-| strangler.livenessProbe.successThreshold | int | `1` | Minimum consecutive successes for the probe to be considered successful after having failed. |
-| strangler.livenessProbe.timeoutSeconds | int | `5` | Number of seconds after which the probe times out |
-| strangler.nodeSelector | object | `{}` | Default node selector for Console CPN strangler. |
-| strangler.podAnnotations | object | `{}` | Annotations for the Console CPN strangler deployed pods. |
-| strangler.podLabels | object | `{}` | Labels for the Console CPN strangler deployed pods. |
-| strangler.podSecurityContext | object | `{}` | Toggle and define pod-level security context. |
-| strangler.readinessProbe.enabled | bool | `true` | Whether or not enable the probe. |
-| strangler.readinessProbe.failureThreshold | int | `2` | Minimum consecutive failures for the probe to be considered failed after having succeeded. |
-| strangler.readinessProbe.initialDelaySeconds | int | `15` | Number of seconds after the container has started before probe is initiated. |
-| strangler.readinessProbe.periodSeconds | int | `10` | How often (in seconds) to perform the probe. |
-| strangler.readinessProbe.successThreshold | int | `2` | Minimum consecutive successes for the probe to be considered successful after having failed. |
-| strangler.readinessProbe.timeoutSeconds | int | `5` | Number of seconds after which the probe times out. |
-| strangler.replicaCount | int | `1` | The number of application controller pods to run. |
-| strangler.resources.limits.cpu | string | `"500m"` | CPU limit for the Console CPN strangler. |
-| strangler.resources.limits.memory | string | `"512Mi"` | Memory limit for the Console CPN strangler. |
-| strangler.resources.requests.cpu | string | `"250m"` | CPU request for the Console CPN strangler. |
-| strangler.resources.requests.memory | string | `"128Mi"` | Memory request for the Console CPN strangler. |
-| strangler.secrets | object | `{}` | Console CPN strangler container env secrets, it will be injected into a secret and loaded into the container. |
-| strangler.service.port | int | `80` | Console CPN strangler service port. |
-| strangler.service.type | string | `"ClusterIP"` | Console CPN strangler service type. |
-| strangler.startupProbe.enabled | bool | `true` | Whether or not enable the probe. |
-| strangler.startupProbe.failureThreshold | int | `10` | Minimum consecutive failures for the probe to be considered failed after having succeeded. |
-| strangler.startupProbe.initialDelaySeconds | int | `0` | Number of seconds after the container has started before probe is initiated. |
-| strangler.startupProbe.periodSeconds | int | `10` | How often (in seconds) to perform the probe. |
-| strangler.startupProbe.successThreshold | int | `1` | Minimum consecutive successes for the probe to be considered successful after having failed. |
-| strangler.startupProbe.timeoutSeconds | int | `5` | Number of seconds after which the probe times out. |
-| strangler.strategy.type | string | `"RollingUpdate"` | Strategy type used to replace old Pods by new ones, can be "Recreate" or "RollingUpdate". |
-| strangler.tolerations | list | `[]` | Default tolerations for Console CPN strangler. |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)

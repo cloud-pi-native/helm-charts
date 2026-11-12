@@ -8,13 +8,13 @@ Uniquement ce dépôt : chart dso-console, tests et documentation de migration. 
 
 Retirer les templates `server` et `strangler`, leurs valeurs et helpers dédiés. Conserver les noms et sélecteurs du backend existant (`backend`) et son dépôt d'image `ghcr.io/cloud-pi-native/console/server-nestjs`. Conserver le client Nginx, l'Ingress, les dépendances PostgreSQL/Keycloak et la configuration CNPG.
 
-Router `/api` et `/swagger-ui-server-nestjs` directement vers le service backend, sans réécriture du chemin. Retirer la route Swagger du serveur supprimé. Raccorder les variables SERVER_HOST/SERVER_PORT du client au backend. Le Nginx client examiné ne fait que servir les fichiers statiques : ne pas lui ajouter un proxy inutile.
+Router `/api` et `/swagger-ui-server-nestjs` directement vers le service backend, sans réécriture du chemin. Ajouter deux routes Exact pour `/swagger-ui-server-nestjs-json` et `/swagger-ui-server-nestjs-yaml` : NestJS expose ces documents séparément et un Prefix Kubernetes sur le chemin de l'UI ne couvre pas leurs suffixes. Retirer la route Swagger du serveur supprimé. Raccorder les variables SERVER_HOST/SERVER_PORT du client au backend. Le Nginx client examiné ne fait que servir les fichiers statiques : ne pas lui ajouter un proxy inutile.
 
 Alternative écartée : conserver un strangler de compatibilité ; cela maintiendrait une dépendance explicitement retirée. Autre alternative écartée : renommer backend en server ; cela provoquerait des remplacements de ressources sans nécessité.
 
 ## Compatibilité et migration
 
-Le chart actuel est 2.4.50 avec appVersion v9.28.0. Cette version applicative précède les PR de retrait du legacy : ne pas affirmer qu'elle fournit l'intégralité de l'API NestJS. Avant livraison, établir la version ou le digest effectivement compatible ; ne pas inventer un tag futur. Si aucune image publiée compatible n'est disponible, signaler ce blocage de livraison explicitement.
+Le chart actuel est 2.4.50 avec appVersion v9.28.0. La version applicative cible, confirmée par le mainteneur, est v9.29.0 ; elle sera publiée après cette MR. Préparer le chart et documenter sa compatibilité avec v9.29.0 sans attendre cette publication pour soumettre la MR. Ne pas modifier appVersion vers un tag encore indisponible dans cette MR : l'association à v9.29.0 sera effectuée lors de la publication applicative. Signaler explicitement que l'appVersion v9.28.0 conservée transitoirement n'est pas compatible avec le nouveau routage complet et que le chart ne doit pas être déployé tel quel avec cette ancienne version. La qualification avec les images publiées v9.29.0 reste à effectuer après leur disponibilité.
 
 Les personnalisations utiles de `server.*` doivent être reportées explicitement dans `backend.*` (environnement, secrets, ressources, volumes, plugins et identité Kubernetes). Les valeurs `strangler.*` n'ont plus d'effet. Documenter la suppression des ressources lors d'un upgrade et la nécessité de conserver les valeurs de base de données, secrets et volumes existants. Ne pas modifier les ressources de stockage.
 

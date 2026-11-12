@@ -17,14 +17,6 @@ Create chart name and version as used by the chart label.
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "cpnConsole.server.serviceAccountName" -}}
-{{- if .Values.server.serviceAccount.create }}
-{{- default (include "cpnConsole.name" .) .Values.server.serviceAccount.name }}
-{{- else }}
-{{- default "cpn-server" .Values.server.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
 {{- define "cpnConsole.backend.serviceAccountName" -}}
 {{- if .Values.backend.serviceAccount.create }}
 {{- default (include "cpnConsole.name" .) .Values.backend.serviceAccount.name }}
@@ -122,16 +114,6 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{ include "cpnConsole.client.selectorLabels" . }}
 {{- end }}
 
-{{- define "cpnConsole.server.labels" -}}
-{{ include "cpnConsole.common.labels" . }}
-{{ include "cpnConsole.server.selectorLabels" . }}
-{{- end }}
-
-{{- define "cpnConsole.strangler.labels" -}}
-{{ include "cpnConsole.common.labels" . }}
-{{ include "cpnConsole.strangler.selectorLabels" . }}
-{{- end }}
-
 {{- define "cpnConsole.backend.labels" -}}
 {{ include "cpnConsole.common.labels" . }}
 {{ include "cpnConsole.backend.selectorLabels" . }}
@@ -142,16 +124,6 @@ Selector labels
 */}}
 {{- define "cpnConsole.client.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "cpnConsole.name" . }}-client
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{- define "cpnConsole.strangler.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "cpnConsole.name" . }}-strangler
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{- define "cpnConsole.server.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "cpnConsole.name" . }}-server
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
