@@ -69,7 +69,8 @@ application:
   #   autosync: false
   #   # -- Liste ordonnée de sources de valeurs (interne ou externe).
   #   # L'ordre détermine la priorité Helm (les dernières entrées ont la priorité la plus haute).
-  #   # Remplace valueFiles si défini.
+  #   # Remplace valueFiles si défini. Plusieurs sources externes peuvent partager le même ref :
+  #   # une seule source ArgoCD est alors générée pour ce ref.
   #   valueSources:
   #     - type: internal
   #       path: values.yaml
@@ -80,6 +81,11 @@ application:
   #       path: values-integ.yaml
   #     - type: internal
   #       path: values-overrides.yaml
+  #     - type: external
+  #       ref: infra-values
+  #       repoURL: https://gitlab.com/projects/org/demo/infra-values.git
+  #       targetRevision: HEAD
+  #       path: secrets-integ.yaml
 # -- Ensemble de paramètres de fonctionnalités - expérimental
 features:
   # -- Support des rôles affinés
