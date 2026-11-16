@@ -19,10 +19,11 @@ metadata:
 spec:
   project: {{ $.Values.argocd.project }}-app
   {{- if .valueSources }}
-  {{- $externalSources := list }}
+  {{- /* Several value files may share one external ref: ArgoCD needs a single source per ref */}}
+  {{- $externalSources := dict }}
   {{- range .valueSources }}
     {{- if eq .type "external" }}
-      {{- $externalSources = append $externalSources . }}
+      {{- $_ := set $externalSources .ref . }}
     {{- end }}
   {{- end }}
   sources:
@@ -38,10 +39,10 @@ spec:
           - ${{ .ref }}/{{ .path }}
           {{- end }}
           {{- end }}
-    {{- range $externalSources }}
-    - repoURL: {{ .repoURL }}
-      targetRevision: {{ .targetRevision }}
-      ref: {{ .ref }}
+    {{- range $ref, $source := $externalSources }}
+    - repoURL: {{ $source.repoURL }}
+      targetRevision: {{ $source.targetRevision }}
+      ref: {{ $ref }}
     {{- end }}
   {{- else }}
   source:

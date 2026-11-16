@@ -123,10 +123,14 @@ spec:
   {{- range .Values.application.sourceRepositories }}
     - {{ . }}
   {{- end }}
+  {{- $externalRepoURLs := list }}
   {{- range .Values.application.repositories }}
     {{- range .valueSources }}
       {{- if eq .type "external" }}
-    - {{ .repoURL }}
+        {{- $externalRepoURLs = append $externalRepoURLs .repoURL }}
       {{- end }}
     {{- end }}
+  {{- end }}
+  {{- range uniq $externalRepoURLs }}
+    - {{ . }}
   {{- end }}
