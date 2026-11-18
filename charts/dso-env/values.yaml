@@ -35,6 +35,8 @@ environment:
   projectDevopsGroup: /project1/console/devops
   # -- Nom du groupe Développeur du projet (experimentale)
   projectDevelopperGroup: /project1/console/developer
+  # -- Nom du groupe propriétaire du projet (experimentale)
+  projectOwnerGroup: /project1/console/owner
   # -- Nom du groupe de sécurité du projet (experimentale)
   projectSecurityGroup: /project1/console/security
   # -- Nom du groupe de lecture seule du projet (experimentale)

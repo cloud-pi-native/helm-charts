@@ -67,6 +67,7 @@ spec:
   - description: project admin group
     groups:
     - {{ .Values.environment.projectAdminGroup }}
+    - {{ .Values.environment.projectOwnerGroup }}
     name: project-admin
     policies:
     - p, proj:{{ .Values.argocd.project }}-app:project-admin, applications, get, {{ .Values.argocd.project }}-app/*, allow

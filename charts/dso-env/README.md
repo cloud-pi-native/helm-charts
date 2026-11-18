@@ -30,6 +30,7 @@ Creates argocd Project and Applications to deploy DSO project repositories.
 | environment.projectAdminGroup | string | `"/project1/console/admin"` | Nom du groupe d'administration du projet (experimentale) |
 | environment.projectDevelopperGroup | string | `"/project1/console/developer"` | Nom du groupe Développeur du projet (experimentale) |
 | environment.projectDevopsGroup | string | `"/project1/console/devops"` | Nom du groupe DevOps du projet (experimentale) |
+| environment.projectOwnerGroup | string | `"/project1/console/owner"` | Nom du groupe propriétaire du projet (experimentale) |
 | environment.projectReadonlyGroup | string | `"/project1/console/readonly"` | Nom du groupe de lecture seule du projet (experimentale) |
 | environment.projectSecurityGroup | string | `"/project1/console/security"` | Nom du groupe de sécurité du projet (experimentale) |
 | environment.roGroup | string | `"/project/environment/RO"` | Nom du groupe à autoriser en lecture seule sur les objets applicatifs (-app) déployés par ArgoCD |
