@@ -14,7 +14,8 @@ spec:
       tlsSkipVerify: true
     name: "cardinality-{{ $tenant }}"
     type: marcusolsson-json-datasource
-    uid: "cardinality-{{ $tenant }}"
+    # Grafana >= 12 rejects data source UIDs longer than 40 characters ("cardinality-" + tenant id was 43).
+    uid: "card-{{ $tenant }}"
     url: "{{ $.Values.grafana.observatorium_url }}/api/metrics/v1/{{ $tenant }}/prometheus/api/v1/cardinality/"
   instanceSelector:
     matchLabels:
@@ -22,9 +23,9 @@ spec:
   resyncPeriod: 5m
   plugins:
     - name: marcusolsson-json-datasource
-      version: 1.3.17
+      version: 1.4.5
     - name: marcusolsson-treemap-panel
-      version: 2.0.1
+      version: 2.1.1
 ---
 {{- end }}
 {{- end }}

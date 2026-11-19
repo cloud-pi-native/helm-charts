@@ -54,6 +54,9 @@ server:
 
 # -- Grafana instances configuration
 grafana:
+  # -- Grafana version (image tag of docker.io/grafana/grafana, or full image reference) applied to every instance.
+  # Existing instances are not upgraded by the operator unless this value is set.
+  version: "13.3.1"
   # -- Enable specific OpenShift configuration
   isOpenShift: false
   # -- Url of Observatorium instance
