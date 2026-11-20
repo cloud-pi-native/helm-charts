@@ -56,6 +56,10 @@ spec:
           value: none
         image: ghcr.io/mailgun/gubernator:v2.0.0-rc.36
         imagePullPolicy: IfNotPresent
+        {{- with .Values.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         name: {{ include "observatorium.resourceName" (dict "ctx" $ "component" "rate-limiter") }}
         ports:
         - containerPort: 8081
