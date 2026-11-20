@@ -8,7 +8,7 @@ groups:
         expr: |
           kube_pod_container_status_ready{
           pod=~"cert-manager(-.*)*",
-          namespace="{{ .Values.app.namespacePrefix }}certmanager"} == 0
+          namespace="cert-manager"} == 0
         for: 5m
         labels:
           severity: critical

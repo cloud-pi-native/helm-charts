@@ -113,7 +113,7 @@ groups:
         expr: harbor:project:quota_used_ratio > 0.9
         for: 15m
         labels:
-          severity: critical
+          severity: warning
       - alert: Harbor core not available
         annotations:
           message: Harbor core in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
