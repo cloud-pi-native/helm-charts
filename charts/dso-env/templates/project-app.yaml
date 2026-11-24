@@ -75,6 +75,8 @@ spec:
     - p, proj:{{ .Values.argocd.project }}-app:project-admin, applications, update, {{ .Values.argocd.project }}-app/*, allow
     - p, proj:{{ .Values.argocd.project }}-app:project-admin, applications, delete/*, {{ .Values.argocd.project }}-app/*, allow
     - p, proj:{{ .Values.argocd.project }}-app:project-admin, applications, delete, {{ .Values.argocd.project }}-app/*, allow
+    - p, proj:{{ .Values.argocd.project }}-app:project-admin, applications, action/batch/CronJob/*, {{ .Values.argocd.project }}-app/*, allow
+    - p, proj:{{ .Values.argocd.project }}-app:project-admin, applications, action/batch/Job/*, {{ .Values.argocd.project }}-app/*, allow
     - p, proj:{{ .Values.argocd.project }}-app:project-admin, projects, get, {{ .Values.argocd.project }}-app, allow
     - p, proj:{{ .Values.argocd.project }}-app:project-admin, projects, update, {{ .Values.argocd.project }}-app, allow
     - p, proj:{{ .Values.argocd.project }}-app:project-admin, repositories, get, *, allow
