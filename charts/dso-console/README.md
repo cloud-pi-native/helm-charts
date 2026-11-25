@@ -55,7 +55,7 @@ A Helm chart to deploy Cloud Pi Native Console
 | backend.healthcheckPath | string | `"/api/v1/healthz"` | Console CPN backend container healthcheck endpoint. |
 | backend.hostAliases | list | `[]` | Host aliases that will be injected at pod-level into /etc/hosts. |
 | backend.image.pullPolicy | string | `"Always"` | Image pull policy for the Console CPN backend. |
-| backend.image.repository | string | `"ghcr.io/cloud-pi-native/console/server-nestjs"` | Repository to use for the Console CPN backend. |
+| backend.image.repository | string | `"ghcr.io/cloud-pi-native/console/backend"` | Repository to use for the Console CPN backend. |
 | backend.image.tag | string | `""` | Tag to use for the Console CPN backend. # Overrides the image tag whose default is the chart appVersion. |
 | backend.initContainers | list | `[]` | Init containers to add to the Console CPN client pod. |
 | backend.livenessProbe.enabled | bool | `true` | Whether or not enable the probe. |
