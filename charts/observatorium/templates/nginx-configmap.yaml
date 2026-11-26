@@ -11,18 +11,39 @@ data:
     http {
       client_header_buffer_size 4k;
       large_client_header_buffers 4 16k;
+
+      upstream loki {
+        server {{ .Values.reverseProxy.logsHost }};
+      }
+
+      upstream mimir {
+        server {{ .Values.reverseProxy.metricsHost }};
+      }
+
+      # Forward the raw (still-encoded) request path to the backends.
+      # "proxy_pass http://host/;" sends the normalized URI, which decodes %2F
+      # into "/" and breaks ruler namespaces containing slashes
+      # (e.g. alloy/<namespace>/<name>/<uid>).
+      map $request_uri $loki_raw_path {
+        ~^/loki(?<path>/[^?]*) $path;
+      }
+
+      map $request_uri $mimir_raw_path {
+        ~^/mimir(?<path>/[^?]*) $path;
+      }
+
       server {
         listen 8080;
 
         location /loki/ {
-          proxy_pass http://{{ .Values.reverseProxy.logsHost }}/;
+          proxy_pass http://loki$loki_raw_path$is_args$args;
           proxy_set_header Host {{ .Values.reverseProxy.logsHost }};
           proxy_ssl_server_name on;
         }
 
         location /mimir/ {
-          proxy_pass http://{{ .Values.reverseProxy.metricsHost }}/; 
-          proxy_set_header Host {{ .Values.reverseProxy.metricsHost }}; 
+          proxy_pass http://mimir$mimir_raw_path$is_args$args;
+          proxy_set_header Host {{ .Values.reverseProxy.metricsHost }};
           proxy_ssl_server_name on;
         }
       }
