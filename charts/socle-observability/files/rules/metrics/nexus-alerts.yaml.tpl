@@ -10,7 +10,7 @@ groups:
           pod=~"nexus-.*",
           container="nexus3",
           namespace="{{ .Values.app.namespacePrefix }}nexus"}) == 1)
-          or sum(kube_pod_container_status_ready{
+          or sum by (ocp_cluster, namespace) (kube_pod_container_status_ready{
           pod=~"nexus(-.*)*",
           container="nexus3",
           namespace="{{ .Values.app.namespacePrefix }}nexus"}) == 0
