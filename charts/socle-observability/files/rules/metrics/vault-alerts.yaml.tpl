@@ -6,7 +6,7 @@ groups:
           message: Vault instance in namespace {{`{{`}} $labels.namespace {{`}}`}} is sealed.
           summary: Vault instance sealed
         expr: |
-          max(1 + vault_core_unsealed{namespace="{{ .Values.app.namespacePrefix }}vault"}) == 1
+          max by (ocp_cluster, namespace) (1 + vault_core_unsealed{namespace="{{ .Values.app.namespacePrefix }}vault"}) == 1
         for: 5m
         labels:
           severity: critical
@@ -15,7 +15,7 @@ groups:
           message: Vault {{`{{`}} $labels.pod {{`}}`}} pod in namespace {{`{{`}} $labels.namespace {{`}}`}} is not healthy (sealed?). Check its logs.
           summary: Vault instance is not healthy (sealed?)
         expr: |
-          up{job="(.*-)*vault-active",pod=~"(.*-)*vault(-.*)*"} == 0
+          up{job=~"(.*-)*vault-active",pod=~"(.*-)*vault(-.*)*",namespace="{{ .Values.app.namespacePrefix }}vault"} == 0
         for: 5m
         labels:
           severity: warning
@@ -28,8 +28,8 @@ groups:
           pod=~"(.*-)*vault-\\d+",
           container="vault",
           namespace="{{ .Values.app.namespacePrefix }}vault"}) == 1)
-          or sum(kube_pod_container_status_ready{
-          pod=~"(.*-)*vault\\d+",
+          or sum by (ocp_cluster, namespace) (kube_pod_container_status_ready{
+          pod=~"(.*-)*vault-\\d+",
           container="vault",
           namespace="{{ .Values.app.namespacePrefix }}vault"}) == 0
         for: 5m
@@ -44,7 +44,7 @@ groups:
           pod=~"(.*-)*vault-agent-injector(-.*)*",
           container="sidecar-injector",
           namespace="{{ .Values.app.namespacePrefix }}vault"}) == 1)
-          or sum(kube_pod_container_status_ready{
+          or sum by (ocp_cluster, namespace) (kube_pod_container_status_ready{
           pod=~"(.*-)*vault-agent-injector(-.*)*",
           container="sidecar-injector",
           namespace="{{ .Values.app.namespacePrefix }}vault"}) == 0
@@ -60,6 +60,9 @@ groups:
           pod!~"(.*-)*backup-utils-vault(-.*)*",
           pod!~"(.*-)*cpn-ansible-job(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}vault"} == 0
+          unless on (ocp_cluster, namespace, pod) (kube_pod_status_phase{
+          phase=~"Succeeded|Failed",
+          namespace=~"{{ .Values.app.namespacePrefix }}.*"} == 1)
         for: 5m
         labels:
           severity: warning

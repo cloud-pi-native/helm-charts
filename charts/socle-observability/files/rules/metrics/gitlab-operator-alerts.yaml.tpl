@@ -9,6 +9,9 @@ groups:
           kube_pod_container_status_ready{
           pod=~"(.*-)*controller-manager(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}gitlab"} == 0
+          unless on (ocp_cluster, namespace, pod) (kube_pod_status_phase{
+          phase=~"Succeeded|Failed",
+          namespace=~"{{ .Values.app.namespacePrefix }}.*"} == 1)
         for: 5m
         labels:
           severity: critical

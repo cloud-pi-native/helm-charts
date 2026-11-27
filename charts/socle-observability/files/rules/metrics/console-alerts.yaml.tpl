@@ -6,7 +6,7 @@ groups:
           message: DSO Console client in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
           summary: DSO Console client down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"dso-cpn-console-client-.*",
           namespace="{{ .Values.app.namespacePrefix }}console",
           condition="true"}) == 0
@@ -18,7 +18,7 @@ groups:
           message: DSO Console server in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
           summary: DSO Console server down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"dso-cpn-console-server(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}console",
           condition="true"}) == 0
@@ -33,6 +33,9 @@ groups:
           kube_pod_container_status_ready{
           pod=~"dso-cpn-console(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}console"} == 0
+          unless on (ocp_cluster, namespace, pod) (kube_pod_status_phase{
+          phase=~"Succeeded|Failed",
+          namespace=~"{{ .Values.app.namespacePrefix }}.*"} == 1)
         for: 5m
         labels:
           severity: warning
@@ -44,7 +47,7 @@ groups:
           (absent(kube_pod_container_status_ready{
           pod=~"pg-cluster-console-\\d+",
           container="postgres", namespace="{{ .Values.app.namespacePrefix }}console"}) == 1)
-          or sum(kube_pod_container_status_ready{
+          or sum by (ocp_cluster, namespace) (kube_pod_container_status_ready{
           pod=~"pg-cluster-console-\\d+",
           container="postgres", namespace="{{ .Values.app.namespacePrefix }}console"}) == 0
         for: 5m
@@ -58,6 +61,9 @@ groups:
           kube_pod_container_status_ready{
           pod=~"pg-cluster-console-\\d+",
           container="postgres", namespace="{{ .Values.app.namespacePrefix }}console"} == 0
+          unless on (ocp_cluster, namespace, pod) (kube_pod_status_phase{
+          phase=~"Succeeded|Failed",
+          namespace=~"{{ .Values.app.namespacePrefix }}.*"} == 1)
         for: 5m
         labels:
           severity: warning

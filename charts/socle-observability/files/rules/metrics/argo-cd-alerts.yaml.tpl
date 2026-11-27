@@ -30,7 +30,7 @@ groups:
           message: Argo CD Redis HA in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
           summary: Argo CD Redis HA down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"(.*-)*redis-ha-server(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}argocd",
           condition="true"}) == 0
@@ -42,7 +42,7 @@ groups:
           message: Argo CD Redis HA Haproxy has not been available for the last 5 minutes.
           summary: Argo CD Redis HA Haproxy down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"(.*-)*redis-ha-haproxy(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}argocd",
           condition="true"}) == 0
@@ -54,7 +54,7 @@ groups:
           message: Argo CD Server has not been available for the last 5 minutes.
           summary: Argo CD Server down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"(.*-)*argocd-server(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}argocd",
           condition="true"}) == 0
@@ -66,7 +66,7 @@ groups:
           message: Argo CD Repo Server has not been available for the last 5 minutes.
           summary: Argo CD Repo Server down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"(.*-)*argocd-repo-server(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}argocd",
           condition="true"}) == 0
@@ -78,7 +78,7 @@ groups:
           message: Argo CD Applicationset Controller has not been available for the last 5 minutes.
           summary: Argo CD Applicationset Controller down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"(.*-)*argocd-applicationset-controller(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}argocd",
           condition="true"}) == 0
@@ -90,7 +90,7 @@ groups:
           message: Argo CD Application Controller has not been available for the last 5 minutes.
           summary: Argo CD Application Controller down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"(.*-)*argocd-application-controller(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}argocd",
           condition="true"}) == 0
@@ -106,6 +106,9 @@ groups:
           pod=~".*",
           container!~"secret-init",
           namespace="{{ .Values.app.namespacePrefix }}argocd"} == 0
+          unless on (ocp_cluster, namespace, pod) (kube_pod_status_phase{
+          phase=~"Succeeded|Failed",
+          namespace=~"{{ .Values.app.namespacePrefix }}.*"} == 1)
         for: 5m
         labels:
           severity: warning

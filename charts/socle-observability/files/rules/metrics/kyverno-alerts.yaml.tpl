@@ -6,7 +6,7 @@ groups:
           message: Kyverno admission controller in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
           summary: Kyverno admission controller down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"kyverno-admission-controller-.*",
           namespace="{{ .Values.app.namespacePrefix }}kyverno",
           condition="true"}) == 0
@@ -18,7 +18,7 @@ groups:
           message: Kyverno background controller in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
           summary: Kyverno background controller down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"kyverno-background-controller-.*",
           namespace="{{ .Values.app.namespacePrefix }}kyverno",
           condition="true"}) == 0
@@ -30,7 +30,7 @@ groups:
           message: Kyverno cleanup controller in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
           summary: Kyverno cleanup controller down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"kyverno-cleanup-controller-.*",
           namespace="{{ .Values.app.namespacePrefix }}kyverno",
           condition="true"}) == 0
@@ -42,7 +42,7 @@ groups:
           message: Kyverno reports controller in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
           summary: Kyverno reports controller down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"kyverno-reports-controller-.*",
           namespace="{{ .Values.app.namespacePrefix }}kyverno",
           condition="true"}) == 0
@@ -57,6 +57,9 @@ groups:
           kube_pod_container_status_ready{
           pod!~"(.*-)*admission-reports(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}kyverno"} == 0
+          unless on (ocp_cluster, namespace, pod) (kube_pod_status_phase{
+          phase=~"Succeeded|Failed",
+          namespace=~"{{ .Values.app.namespacePrefix }}.*"} == 1)
         for: 5m
         labels:
           severity: warning

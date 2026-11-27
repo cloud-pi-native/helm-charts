@@ -10,7 +10,7 @@ groups:
           pod=~"sonarqube-.*",
           container="sonarqube",
           namespace="{{ .Values.app.namespacePrefix }}sonarqube"}) == 1)
-          or sum(kube_pod_container_status_ready{
+          or sum by (ocp_cluster, namespace) (kube_pod_container_status_ready{
           pod=~"sonarqube(-.*)*",
           container="sonarqube",
           namespace="{{ .Values.app.namespacePrefix }}sonarqube"}) == 0
@@ -25,7 +25,7 @@ groups:
           (absent(kube_pod_container_status_ready{
           pod=~"pg-cluster-sonar-\\d+",
           container="postgres", namespace="{{ .Values.app.namespacePrefix }}sonarqube"}) == 1)
-          or sum(kube_pod_container_status_ready{
+          or sum by (ocp_cluster, namespace) (kube_pod_container_status_ready{
           pod=~"pg-cluster-sonar-\\d+",
           container="postgres", namespace="{{ .Values.app.namespacePrefix }}sonarqube"}) == 0
         for: 5m
@@ -39,6 +39,9 @@ groups:
           kube_pod_container_status_ready{
           pod=~"pg-cluster-sonar-\\d+",
           container="postgres", namespace="{{ .Values.app.namespacePrefix }}sonarqube"} == 0
+          unless on (ocp_cluster, namespace, pod) (kube_pod_status_phase{
+          phase=~"Succeeded|Failed",
+          namespace=~"{{ .Values.app.namespacePrefix }}.*"} == 1)
         for: 5m
         labels:
           severity: warning

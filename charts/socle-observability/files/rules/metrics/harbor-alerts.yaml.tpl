@@ -119,7 +119,7 @@ groups:
           message: Harbor core in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
           summary: Harbor core down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"harbor-core(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}harbor",
           condition="true"}) == 0
@@ -131,7 +131,7 @@ groups:
           message: Harbor exporter in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
           summary: Harbor exporter down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"harbor-exporter(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}harbor",
           condition="true"}) == 0
@@ -143,7 +143,7 @@ groups:
           message: Harbor jobservice in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
           summary: Harbor jobservice down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"harbor-jobservice(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}harbor",
           condition="true"}) == 0
@@ -155,7 +155,7 @@ groups:
           message: Harbor portal in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
           summary: Harbor portal down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"harbor-portal(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}harbor",
           condition="true"}) == 0
@@ -167,7 +167,7 @@ groups:
           message: Harbor redis in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
           summary: Harbor redis down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"harbor-redis(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}harbor",
           condition="true"}) == 0
@@ -179,7 +179,7 @@ groups:
           message: Harbor registry in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
           summary: Harbor registry down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"harbor-registry(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}harbor",
           condition="true"}) == 0
@@ -191,7 +191,7 @@ groups:
           message: Harbor trivy in namespace {{`{{`}} $labels.namespace {{`}}`}} has not been available for the last 5 minutes.
           summary: Harbor trivy down (no ready pod)"
         expr: |
-          sum by(namespace) (kube_pod_status_ready{
+          sum by (ocp_cluster, namespace) (kube_pod_status_ready{
           pod=~"harbor-trivy(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}harbor",
           condition="true"}) == 0
@@ -206,6 +206,9 @@ groups:
           kube_pod_container_status_ready{
           pod=~"harbor(-.*)*",
           namespace="{{ .Values.app.namespacePrefix }}harbor"} == 0
+          unless on (ocp_cluster, namespace, pod) (kube_pod_status_phase{
+          phase=~"Succeeded|Failed",
+          namespace=~"{{ .Values.app.namespacePrefix }}.*"} == 1)
         for: 5m
         labels:
           severity: warning
@@ -217,7 +220,7 @@ groups:
           (absent(kube_pod_container_status_ready{
           pod=~"pg-cluster-harbor-\\d+",
           container="postgres", namespace="{{ .Values.app.namespacePrefix }}harbor"}) == 1)
-          or sum(kube_pod_container_status_ready{
+          or sum by (ocp_cluster, namespace) (kube_pod_container_status_ready{
           pod=~"pg-cluster-harbor-\\d+",
           container="postgres", namespace="{{ .Values.app.namespacePrefix }}harbor"}) == 0
         for: 5m
@@ -231,6 +234,9 @@ groups:
           kube_pod_container_status_ready{
           pod=~"pg-cluster-harbor-\\d+",
           container="postgres", namespace="{{ .Values.app.namespacePrefix }}harbor"} == 0
+          unless on (ocp_cluster, namespace, pod) (kube_pod_status_phase{
+          phase=~"Succeeded|Failed",
+          namespace=~"{{ .Values.app.namespacePrefix }}.*"} == 1)
         for: 5m
         labels:
           severity: warning

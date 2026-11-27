@@ -10,7 +10,7 @@ groups:
           pod!~"pg-cluster.*",
           container="keycloak",
           namespace="{{ .Values.app.namespacePrefix }}keycloak"}) == 1)
-          or sum(kube_pod_container_status_ready{
+          or sum by (ocp_cluster, namespace) (kube_pod_container_status_ready{
           pod!~"pg-cluster.*",
           container="keycloak",
           namespace="{{ .Values.app.namespacePrefix }}keycloak"}) == 0
@@ -26,6 +26,9 @@ groups:
           pod!~"pg-cluster.*",
           container="keycloak",
           namespace="{{ .Values.app.namespacePrefix }}keycloak"} == 0
+          unless on (ocp_cluster, namespace, pod) (kube_pod_status_phase{
+          phase=~"Succeeded|Failed",
+          namespace=~"{{ .Values.app.namespacePrefix }}.*"} == 1)
         for: 5m
         labels:
           severity: warning
@@ -37,7 +40,7 @@ groups:
           (absent(kube_pod_container_status_ready{
           pod=~"pg-cluster-keycloak-\\d+",
           container="postgres", namespace="{{ .Values.app.namespacePrefix }}keycloak"}) == 1)
-          or sum(kube_pod_container_status_ready{
+          or sum by (ocp_cluster, namespace) (kube_pod_container_status_ready{
           pod=~"pg-cluster-keycloak-\\d+",
           container="postgres", namespace="{{ .Values.app.namespacePrefix }}keycloak"}) == 0
         for: 5m
@@ -51,6 +54,9 @@ groups:
           kube_pod_container_status_ready{
           pod=~"pg-cluster-keycloak-\\d+",
           container="postgres", namespace="{{ .Values.app.namespacePrefix }}keycloak"} == 0
+          unless on (ocp_cluster, namespace, pod) (kube_pod_status_phase{
+          phase=~"Succeeded|Failed",
+          namespace=~"{{ .Values.app.namespacePrefix }}.*"} == 1)
         for: 5m
         labels:
           severity: warning
